@@ -71,11 +71,13 @@ export function LibraryView({ data, context, onContextChange, editing, onEditing
     setCollapsed(previous => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   }
   return <section className="library-page">
-    <div className="page-heading library-heading"><h1>Bibliothèque</h1><button className="button secondary" onClick={onNewDeck}><Plus size={17} />Nouveau deck</button></div>
     <div className="library-search-row">
       <label className="search-field library-search"><Search size={20} /><input id="library-search" type="search" placeholder="Mot, lecture ou romaji…" value={search} onChange={event => onContextChange({ search: event.target.value, expanded: null, scrollY: 0 })} aria-label="Rechercher des fiches" /></label>
+      <div className="library-search-actions">
+      <button className="icon-button library-new-deck" aria-label="Nouveau deck" title="Nouveau deck" onClick={onNewDeck}><Plus size={18} /></button>
       <button className={`button secondary library-deck-toggle ${sidebarHidden ? '' : 'enabled'}`} aria-expanded={!sidebarHidden} aria-controls={treeId} onClick={() => setSidebarHidden(!sidebarHidden)}>{sidebarHidden ? <PanelRightOpen size={17} /> : <PanelRightClose size={17} />}Decks</button>
       <button ref={mobileDeckButton} className={`button secondary mobile-deck-toggle ${mobileDecksOpen ? 'enabled' : ''}`} aria-expanded={mobileDecksOpen} aria-controls={treeId} onClick={() => setMobileDecksOpen(!mobileDecksOpen)}><Folder size={17} />Decks<ChevronDown size={13} /></button>
+      </div>
     </div>
     <div className={`library-workspace ${sidebarHidden ? 'decks-hidden' : ''} ${mobileDecksOpen ? 'mobile-decks-open' : ''}`}>
       <section className="dictionary library-dictionary" aria-label="Fiches du deck">

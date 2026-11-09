@@ -1,4 +1,5 @@
 .writing-view { width:100%; }
+.writing-meta { max-width:800px; margin:0 auto 12px; text-align:right; line-height:16px; }
 .writing-save-status { color:#a0a0aa; font-size:11px; }
 .writing-save-status.unsaved { color:var(--red); }
 .writing-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; width:100%; max-width:800px; padding:0 0 14px; border-bottom:1px solid var(--line); margin:0 auto 18px; }

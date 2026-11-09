@@ -241,7 +241,7 @@ export function WritingView({ data }: { data: Snapshot }) {
   }
 
   return <section className="writing-view">
-    <div className="page-heading"><h1>Écriture</h1><span className={`writing-save-status ${saved ? '' : 'unsaved'}`} role="status">{saved ? 'Brouillon local' : 'Brouillon non sauvegardé'}</span></div>
+    <div className="writing-meta"><span className={`writing-save-status ${saved ? '' : 'unsaved'}`} role="status">{saved ? 'Brouillon local' : 'Brouillon non sauvegardé'}</span></div>
     <div className="writing-toolbar" aria-label="Outils d’écriture">
       <div className="writing-input-modes" role="group" aria-label="Mode de saisie">{(['hiragana', 'katakana', 'latin'] as const).map((mode, index) => <button type="button" key={mode} aria-pressed={inputMode === mode} aria-label={`Saisie en ${['hiragana', 'katakana', 'latin'][index]}`} title={['Hiragana', 'Katakana', 'Latin'][index]} onClick={() => changeInputMode(mode)}>{['あ', 'ア', 'ABC'][index]}</button>)}</div>
       <div className="writing-font-sizes" aria-label="Taille du texte">{(['small', 'medium', 'large'] as const).map((value, index) => <button type="button" key={value} aria-pressed={size === value} aria-label={`Taille ${['petite', 'moyenne', 'grande'][index]}`} onClick={() => setSize(value)}>{['S', 'M', 'L'][index]}</button>)}</div>

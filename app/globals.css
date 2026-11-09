@@ -1,5 +1,6 @@
 :root { --paper:#fff; --ink:#171719; --muted:#77777e; --line:#e9e9ec; --soft:#f7f7f8; --red:#bc002d; --red-soft:#fff2f4; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; --jp:'Yu Mincho','Hiragino Mincho ProN','Noto Serif JP',serif; }
 * { box-sizing:border-box; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 html { min-height:100%; scrollbar-gutter:stable; }
 @supports not (scrollbar-gutter:stable) { html { overflow-y:scroll; } }
 body { margin:0; background:var(--paper); color:var(--ink); font:14px/1.5 var(--font); -webkit-font-smoothing:antialiased; }
