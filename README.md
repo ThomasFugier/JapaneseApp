@@ -44,6 +44,7 @@ L’ancien mode OAuth reste disponible pour un déploiement personnel configuré
 
 ## Lecture et révisions
 
+- Bibliothèque : recherche centrée en haut, fiches compactes et arborescence à droite. Les chevrons replient les branches sans changer le deck sélectionné ; leur état est mémorisé localement. Sur téléphone, le bouton Decks ouvre l’arborescence au-dessus des fiches.
 - Fil d’Ariane cliquable, retour au parent et sous-decks accessibles sur mobile.
 - Tri par lecture japonaise, traduction ou date d’ajout. Pour les anciennes fiches sans date de création, la date de dernière modification sert de référence.
 - Recherche limitée au deck ou étendue à toute la bibliothèque ; les résultats indiquent leurs decks. Romaji, hiragana et katakana sont rapprochés via les lectures enregistrées, y compris on/kun : ringo retrouve 林檎 si sa lecture りんご ou リンゴ existe. Aucune lecture n’est déduite automatiquement d’un kanji.

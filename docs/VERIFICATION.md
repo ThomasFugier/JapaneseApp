@@ -74,3 +74,12 @@ La connexion OAuth et l’écriture sur un dépôt GitHub réel ne sont pas conf
 - Cause reproduite à 1440 × 1000 : le logo passait de x=136 à x=128,4 avec l’apparition de la barre de défilement. Après correction, x=164,4 et même hauteur dans les quatre onglets ; titres également alignés.
 - Mesures à 641 px et 390 px : logo fixe, aucun débordement ou chevauchement. Titres mobiles à la même hauteur ; outils d’écriture répartis sur deux lignes.
 - 61 tests passent ; build de production et TypeScript validés.
+
+## Bibliothèque compacte et arborescence à droite
+
+- Recherche placée au-dessus de la liste et centrée sur la page ; panneau des decks à droite, masquable.
+- Lignes normales mesurées à 56 px. Lectures en ligne, tags déplacés dans le détail ; lecture identique au mot masquée pour éviter la répétition.
+- Branches avec connecteurs visuels et chevrons indépendants. Replier Vocabulaire masque ses enfants sans changer la liste ; état conservé après aller-retour entre onglets et rechargement.
+- Recherche rango → 林檎, masquage/révélation des traductions et passage en édition vérifiés dans le navigateur.
+- Sur mobile, le bouton Decks ouvre l’arbre ; choisir Cuisine ferme le panneau et affiche ses fiches. Aucun débordement horizontal à 390 px.
+- 61 tests passent ; build et TypeScript validés.
