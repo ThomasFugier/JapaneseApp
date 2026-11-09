@@ -37,8 +37,9 @@
 .active .deck-select svg { color:var(--red); }
 .library-page .dictionary-top { gap:14px; min-height:38px; margin-bottom:12px; }
 .library-page .dictionary-top>div:first-child { min-width:0; }
+.library-page .dictionary-top .dictionary-title { min-width:0; overflow-wrap:anywhere; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
 .library-page .dictionary-top h2 { font-size:20px; gap:9px; letter-spacing:-.4px; }
-.library-page .count-bubble { min-width:22px; text-align:center; padding:2px 6px; font-size:10px; }
+.library-page .count-bubble { flex-shrink:0; min-width:22px; text-align:center; padding:2px 6px; font-size:10px; }
 .dictionary-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
 .library-page .dictionary-actions .library-review { min-height:36px; padding:8px 13px; gap:12px; border-radius:7px; font-size:12px; font-weight:500; }
 .library-page .dictionary-top .edit-toggle { width:36px; height:36px; min-height:36px; padding:0; border:0; border-radius:7px; color:#8a8a94; }
@@ -60,13 +61,13 @@
 .library-page .entry-chevron { width:14px; color:#bebec6; }
 .library-page .entry-actions { flex:0 0 var(--entry-actions-width); flex-direction:row; padding-right:8px; }
 .library-page .entry-actions .icon-button { width:30px; height:34px; }
-.library-page .entry-row>.reveal-translation { margin-right:5px; min-height:36px; width:34px; color:#a9808b; }
+.library-page .entry-row>.reveal-translation { flex-shrink:0; margin-right:5px; min-height:36px; width:34px; color:#a9808b; }
 .library-page .entry-detail { padding:0 12px 16px; }
 .entry-tags { display:flex; align-items:center; flex-wrap:wrap; gap:5px; padding:2px 0 12px; }
 .library-page .entry-detail blockquote { margin-bottom:12px; }
 .library-page .entry-detail blockquote>span { font-size:17px; }
 .library-page .result-decks { display:flex; align-items:center; flex-wrap:wrap; gap:4px 12px; padding:0 12px 8px; }
-.library-page .result-decks button { display:inline-flex; align-items:center; gap:4px; min-height:20px; padding:0; color:#a0a0aa; font-size:10px; text-align:left; }
+.library-page .result-decks button { min-width:0; max-width:100%; overflow-wrap:anywhere; display:inline-flex; align-items:center; gap:4px; min-height:20px; padding:0; color:#a0a0aa; font-size:10px; text-align:left; }
 .result-decks button:hover { color:var(--red); }
 .result-decks>span { color:#a4a4ad; font-size:10px; }
 .library-page .dictionary-footer { margin-top:14px; font-size:10px; }
@@ -90,7 +91,7 @@
   .deck-children>li:last-child:before { height:20px; }
 }
 @media (max-width:640px) {
-  .library-page,.library-page.is-editing { --entry-actions-width:32px; }
+  .library-page,.library-page.is-editing { --entry-actions-width:46px; }
   .library-page .dictionary-top { align-items:center; gap:8px; margin-bottom:8px; }
   .library-page .dictionary-top h2 { font-size:19px; min-height:34px; }
   .dictionary-actions { gap:3px; }
@@ -106,7 +107,8 @@
   .library-page .entry-detail { padding:0 6px 14px; }
   .library-page .entry-detail blockquote>span { font-size:16px; }
   .library-page .entry-actions { padding-right:2px; flex-direction:column; }
-  .library-page .entry-actions .icon-button { width:30px; height:30px; }
+  .library-page .entry-actions .icon-button { width:44px; height:44px; }
+  .library-page .entry-row>.reveal-translation { width:44px; min-height:44px; margin-right:0; }
   .library-page .result-decks { padding:0 6px 7px; }
   .library-page .subdeck-chips button { min-height:32px; }
 }

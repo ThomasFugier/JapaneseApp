@@ -90,7 +90,7 @@ export function LibraryView({ data, searchActions, context, onContextChange, edi
       <section className="dictionary library-dictionary" aria-label="Deck notes">
         <div className="dictionary-top">
           <div>
-            <h2><JapaneseText text={selectedDeck?.name || 'All cards'} /> <span className="count-bubble">{notes.length}</span></h2>
+            <h2><span className="dictionary-title" title={selectedDeck?.name || 'All cards'}><JapaneseText text={selectedDeck?.name || 'All cards'} /></span><span className="count-bubble">{notes.length}</span></h2>
           </div>
           <div className="dictionary-actions"><button className={`icon-button edit-toggle ${editing ? 'active' : ''}`} title={editing ? 'Finish editing' : 'Edit notes'} aria-label={editing ? 'Finish editing' : 'Edit notes'} aria-pressed={editing} onClick={() => onEditingChange(!editing)}>{editing ? <Check size={17} /> : <Pencil size={17} />}</button><button className="button primary library-review" onClick={() => onReview(deckId)}>Review<ArrowRight size={15} /></button></div>
         </div>

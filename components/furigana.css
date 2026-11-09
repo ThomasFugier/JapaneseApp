@@ -16,9 +16,6 @@
 .has-furigana .answer-example>span,.has-furigana .entry-detail blockquote>span { line-height:2.1; }
 .has-furigana .answer-explanation,.has-furigana .explanation { line-height:2.1; }
 @media (pointer:coarse) { .furigana-toggle { height:44px; } }
-@media (max-width:640px) {
-  .is-studying .toast { bottom:calc(var(--review-nav-height) + var(--review-dock-height) + 78px); }
-}
 @media (prefers-reduced-motion:reduce) { .furigana-switch,.furigana-switch i { transition:none; } }
 .dictionary-credits { margin:12px 0 0; color:var(--muted); font-size:10px; }
 .dictionary-credits a { text-decoration:underline; text-underline-offset:3px; }
