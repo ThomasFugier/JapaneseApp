@@ -9,7 +9,7 @@ type Props = { connected: boolean; repository: string | null; onConnect(config: 
 const PREFERENCE_KEY = 'kotoba-github-repository-v1';
 
 export function GitHubConnection({ connected, repository, onConnect, onDisconnect }: Props) {
-  const [repo, setRepo] = useState('');
+  const [repo, setRepo] = useState('ThomasFugier/NihongoData');
   const [branch, setBranch] = useState('main');
   const [token, setToken] = useState('');
   const [busy, setBusy] = useState(false);
@@ -40,7 +40,7 @@ export function GitHubConnection({ connected, repository, onConnect, onDisconnec
 
   if (connected) return <div className="github-connected"><div><Github size={19} /><span><strong>GitHub connecté</strong><span>{repository}</span></span></div><button type="button" className="text-button" onClick={() => { setToken(''); onDisconnect(); }}>Déconnecter</button><p>Clé conservée pour cette session uniquement.</p></div>;
   return <form className="github-connection-form" onSubmit={connect}>
-    <label>Dépôt privé<input required maxLength={300} placeholder="ThomasFugier/japonais-data" value={repo} onChange={event => setRepo(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
+    <label>Dépôt privé<input required maxLength={300} placeholder="ThomasFugier/NihongoData" value={repo} onChange={event => setRepo(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
     <label>Branche<input required maxLength={255} value={branch} onChange={event => setBranch(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
     <label>Clé GitHub<input required type="password" name="kotoba-github-token" maxLength={1024} value={token} onChange={event => setToken(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="github_pat_…" /></label>
     <p>Dépôt privé, initialisé avec un README. Clé conservée pour cette session uniquement, avec Contents en lecture/écriture pour ce seul dépôt.</p>
