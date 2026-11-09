@@ -44,7 +44,7 @@ export function matchesNote(note: SearchableNote, query: string): boolean {
 }
 
 /** Adjacent swaps count as one typo, like a missing, extra or replaced letter. */
-function editDistance(left: string, right: string): number {
+export function editDistance(left: string, right: string): number {
   let previous = Array.from({ length: right.length + 1 }, (_, index) => index);
   let beforePrevious = previous;
   for (let i = 1; i <= left.length; i++) {

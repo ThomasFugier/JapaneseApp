@@ -11,14 +11,16 @@ export function useWorkspaceContext() {
   const [tab, setTabState] = useState<WorkspaceTab>('home');
   const [reading, setReadingState] = useState<ReadingContext>({ ...defaultReadingContext });
   const [japaneseFont, setJapaneseFontState] = useState<JapaneseFont>('brush');
+  const [furiganaEnabled, setFuriganaEnabledState] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const readingRef = useRef(reading);
   const tabRef = useRef(tab);
   const japaneseFontRef = useRef(japaneseFont);
+  const furiganaRef = useRef(false);
   const loaded = useRef(false);
   const save = useCallback(() => {
     if (!loaded.current) return;
-    try { localStorage.setItem(KEY, JSON.stringify({ tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
   }, []);
   const setReading = useCallback((patch: Partial<ReadingContext>) => {
     const next = { ...readingRef.current, ...patch };
@@ -26,6 +28,9 @@ export function useWorkspaceContext() {
   }, [save]);
   const setJapaneseFont = useCallback((value: JapaneseFont) => {
     japaneseFontRef.current = value; setJapaneseFontState(value); save();
+  }, [save]);
+  const setFuriganaEnabled = useCallback((value: boolean) => {
+    furiganaRef.current = value; setFuriganaEnabledState(value); save();
   }, [save]);
   const captureReadingScroll = useCallback(() => {
     if (tabRef.current !== 'library') return;
@@ -49,6 +54,7 @@ export function useWorkspaceContext() {
         const next = sanitizeReadingContext(saved.reading);
         const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'writing' ? saved.tab : 'home';
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
+        furiganaRef.current = saved.furiganaEnabled === true; setFuriganaEnabledState(furiganaRef.current);
         japaneseFontRef.current = nextFont; setJapaneseFontState(nextFont);
         readingRef.current = next; tabRef.current = nextTab; setReadingState(next); setTabState(nextTab);
       }
@@ -63,5 +69,5 @@ export function useWorkspaceContext() {
     return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); window.removeEventListener('pagehide', captureReadingScroll); document.removeEventListener('visibilitychange', onHide); };
   }, [captureReadingScroll]);
 
-  return { tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, hydrated, captureReadingScroll, restoreReadingScroll };
+  return { tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };
 }

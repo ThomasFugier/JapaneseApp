@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { migrateSampleLanguage } from './sample-content';
 
 const id = z.string().min(1).max(160);
 const date = z.iso.datetime({ offset: true });
@@ -82,6 +83,7 @@ export function validateSnapshot(input: unknown): Snapshot {
   for (const undo of data.reviewUndos) {
     if (!reviewIds.has(undo.reviewId)) throw new Error('An undo references a missing review.');
   }
+  migrateSampleLanguage(data);
   restoreReviewDirections(data);
   return data;
 }

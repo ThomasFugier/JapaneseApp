@@ -6,3 +6,4 @@ node_modules/
 *.tsbuildinfo
 coverage/
 
+public/furigana/kuromoji-0.1.2/

@@ -1,0 +1,20 @@
+.modal.compact-note-modal { max-width:520px; padding:24px; }
+.compact-note-modal .modal-heading { margin-bottom:20px; }
+.compact-note-modal .modal-heading h2 { font-size:21px; }
+.editor-form.quick-note-form { gap:14px; min-width:0; }
+.quick-note-form .form-columns { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+.quick-note-form label,.quick-note-form .form-columns>* { min-width:0; }
+.quick-note-form input:not([type=checkbox]),.quick-note-form textarea { margin-top:6px; padding:8px 10px; }
+.quick-note-form textarea { min-height:68px; }
+.quick-note-more { min-width:0; border-top:1px solid var(--line); padding-top:12px; }
+.quick-note-more>summary { width:fit-content; cursor:pointer; color:var(--red); font-size:12px; font-weight:500; }
+.quick-note-extra { display:grid; gap:14px; min-width:0; padding-top:14px; }
+.quick-note-extra>label { display:block; font-size:12px; font-weight:500; color:#5f5f6a; }
+.quick-note-form .reading-fields { min-width:0; padding:10px; }
+.quick-note-form .reading-fields[open] summary { margin-bottom:10px; }
+.quick-note-form .tag-entry-row { min-width:0; }
+.quick-note-form .modal-actions { margin-top:0; padding-top:14px; }
+@media (max-width:440px) {
+  .modal.compact-note-modal { padding:20px 16px; }
+  .quick-note-form .form-columns { grid-template-columns:minmax(0,1fr); gap:12px; }
+}

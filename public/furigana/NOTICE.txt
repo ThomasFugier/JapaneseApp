@@ -1,0 +1,24 @@
+Japanese dictionary credits
+
+Kanji/reading alignment data is derived from JmdictFurigana by Doublevil
+and its contributors, using JMdict from the Electronic Dictionary Research
+and Development Group (EDRDG).
+
+Source: https://github.com/Doublevil/JmdictFurigana
+Release: 2.3.1+2026-03-25
+Original ZIP SHA-256: c4016e14be5adad5d9f28e941411c814c2f9234084ccdaf8caa095a7b27ae076
+Release URL: https://github.com/Doublevil/JmdictFurigana/releases/download/2.3.1%2B2026-03-25/JmdictFurigana.json.zip
+JMdict copyright: Electronic Dictionary Research and Development Group
+License: Creative Commons Attribution-ShareAlike 4.0 International
+https://creativecommons.org/licenses/by-sa/4.0/
+https://www.edrdg.org/edrdg/licence.html
+
+Changes: filtered to compound words with independently aligned kanji groups;
+converted to compact tuples, deduplicated, sorted and compressed. This derived
+alignment dataset is distributed under the same CC BY-SA 4.0 license.
+
+The tokenizer is Kuromoji.js, copyright Takuya Asano, Atilika Inc. and
+contributors, under Apache License 2.0. Its bundled IPADIC data has additional
+NAIST/ICOT notices. Full notices:
+/furigana/kuromoji-0.1.2/LICENSE-2.0.txt
+/furigana/kuromoji-0.1.2/NOTICE.md

@@ -5,10 +5,10 @@ import { defaultReadingContext, deckAncestors, libraryNotes, noteDecks, sanitize
 
 test('dictionary search follows the selected deck without duplicate notes', () => {
   const data = seedSnapshot();
-  assert.equal(libraryNotes(data, { ...defaultReadingContext, search: 'ECRIRE' })[0]?.japanese, '書く');
+  assert.equal(libraryNotes(data, { ...defaultReadingContext, search: 'WRITE' })[0]?.japanese, '書く');
   assert.equal(libraryNotes(data, { ...defaultReadingContext, search: 'たべる' })[0]?.japanese, '食べる');
-  assert.equal(libraryNotes(data, { ...defaultReadingContext, deckId: 'kanjis', search: 'Manger' }).length, 0);
-  const found = libraryNotes(data, { ...defaultReadingContext, deckId: null, search: 'Manger' });
+  assert.equal(libraryNotes(data, { ...defaultReadingContext, deckId: 'kanjis', search: 'to eat' }).length, 0);
+  const found = libraryNotes(data, { ...defaultReadingContext, deckId: null, search: 'to eat' });
   assert.equal(found.length, 1);
   assert.equal(found[0].id, 'note-taberu');
   assert.equal(noteDecks(data, found[0].id).length, 3);
@@ -58,7 +58,7 @@ test('reading context restores valid preferences and rejects malformed browser s
 
 test('legacy global scope cannot override the deck restored from browser storage', () => {
   const data = seedSnapshot();
-  const context = sanitizeReadingContext({ ...defaultReadingContext, deckId: 'kanjis', search: 'Manger', scope: 'all' });
+  const context = sanitizeReadingContext({ ...defaultReadingContext, deckId: 'kanjis', search: 'to eat', scope: 'all' });
   assert.equal(context.deckId, 'kanjis');
   assert.equal(libraryNotes(data, context).length, 0);
 });

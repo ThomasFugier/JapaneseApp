@@ -6,8 +6,7 @@ import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, Eye, EyeOff, Fo
 import { cardsForDeck } from '@/lib/engine';
 import { deckAncestors, libraryNotes, noteDecks, type ReadingContext } from '@/lib/library-view';
 import type { Deck, Note, Snapshot } from '@/lib/model';
-import { JapaneseFontToggle } from './japanese-font-toggle';
-import type { JapaneseFont } from './use-workspace-context';
+import { JapaneseText, useFuriganaEnabled } from './furigana';
 import './library-view.css';
 
 type Props = {
@@ -15,8 +14,6 @@ type Props = {
   searchActions: HTMLElement | null;
   context: ReadingContext;
   onContextChange: (patch: Partial<ReadingContext>) => void;
-  japaneseFont: JapaneseFont;
-  onJapaneseFontChange: (value: JapaneseFont) => void;
   editing: boolean;
   onEditingChange: (value: boolean) => void;
   onNewDeck: () => void;
@@ -31,8 +28,9 @@ type Props = {
 const TREE_PREFERENCE = 'kotoba-library-tree-v1';
 const ALL_BRANCH = '__all__';
 
-export function LibraryView({ data, searchActions, context, onContextChange, japaneseFont, onJapaneseFontChange, editing, onEditingChange, onNewDeck, onEditDeck, onDeleteDeck, onAddNote, onEditNote, onDeleteNote, onReview }: Props) {
+export function LibraryView({ data, searchActions, context, onContextChange, editing, onEditingChange, onNewDeck, onEditDeck, onDeleteDeck, onAddNote, onEditNote, onDeleteNote, onReview }: Props) {
   const { deckId, search, hideTranslations, expanded } = context;
+  const furiganaEnabled = useFuriganaEnabled();
   const decks = data.decks.filter(deck => !deck.deletedAt);
   const roots = decks.filter(deck => !deck.parentId || !decks.some(parent => parent.id === deck.parentId));
   const libraryRoot = roots.length === 1 && ['japonais', 'japanese'].includes(roots[0].name.trim().toLocaleLowerCase('en')) ? roots[0] : undefined;
@@ -82,7 +80,7 @@ export function LibraryView({ data, searchActions, context, onContextChange, jap
   function toggleBranch(id: string) {
     setCollapsed(previous => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   }
-  return <section className="library-page">
+  return <section className={`library-page ${editing ? 'is-editing' : ''}`}>
     {/* Keep tree controls beside the shared search without moving their state. */}
     {searchActions && createPortal(<>
       <button className={`button secondary library-deck-toggle ${sidebarHidden ? '' : 'enabled'}`} aria-expanded={!sidebarHidden} aria-controls={treeId} onClick={() => setSidebarHidden(!sidebarHidden)}>{sidebarHidden ? <PanelRightOpen size={17} /> : <PanelRightClose size={17} />}Decks</button>
@@ -92,13 +90,13 @@ export function LibraryView({ data, searchActions, context, onContextChange, jap
       <section className="dictionary library-dictionary" aria-label="Deck notes">
         <div className="dictionary-top">
           <div>
-            <h2>{selectedDeck?.name || 'All notes'} <span className="count-bubble">{notes.length}</span></h2>
+            <h2><JapaneseText text={selectedDeck?.name || 'All cards'} /> <span className="count-bubble">{notes.length}</span></h2>
           </div>
           <div className="dictionary-actions"><button className={`icon-button edit-toggle ${editing ? 'active' : ''}`} title={editing ? 'Finish editing' : 'Edit notes'} aria-label={editing ? 'Finish editing' : 'Edit notes'} aria-pressed={editing} onClick={() => onEditingChange(!editing)}>{editing ? <Check size={17} /> : <Pencil size={17} />}</button><button className="button primary library-review" onClick={() => onReview(deckId)}>Review<ArrowRight size={15} /></button></div>
         </div>
         {editing && <div className="edit-toolbar"><span><Pencil size={14} />Editing mode</span><div>{selectedDeck && <><button className="text-button" onClick={() => onEditDeck(selectedDeck)}>Deck settings</button><button className="icon-button danger-text" aria-label="Delete deck" onClick={onDeleteDeck}><Trash2 size={16} /></button></>}<button className="button small primary" onClick={onAddNote}><Plus size={15} />Add note</button></div></div>}
-        {selectedDeck && decks.some(deck => deck.parentId === deckId) && <div className="subdeck-chips">{decks.filter(deck => deck.parentId === deckId).map(deck => <button key={deck.id} onClick={() => selectDeck(deck.id)}><span className={`deck-dot ${deck.color}`} />{deck.name}<ChevronRight size={13} /></button>)}</div>}
-        <div className="dictionary-labels"><span className="japanese-heading">JAPANESE<JapaneseFontToggle value={japaneseFont} onChange={onJapaneseFontChange} /></span><span className="translation-heading">TRANSLATION<button className={`translation-toggle ${hideTranslations ? 'enabled' : ''}`} aria-label={hideTranslations ? 'Show translations' : 'Hide translations'} title={hideTranslations ? 'Show translations' : 'Hide translations'} aria-pressed={hideTranslations} onClick={() => onContextChange({ hideTranslations: !hideTranslations })}>{hideTranslations ? <EyeOff size={15} /> : <Eye size={15} />}</button></span><span /></div>
+        {selectedDeck && decks.some(deck => deck.parentId === deckId) && <div className="subdeck-chips">{decks.filter(deck => deck.parentId === deckId).map(deck => <button key={deck.id} onClick={() => selectDeck(deck.id)}><span className={`deck-dot ${deck.color}`} /><JapaneseText text={deck.name} /><ChevronRight size={13} /></button>)}</div>}
+        <div className="dictionary-labels"><span>JAPANESE</span><span className="translation-heading">TRANSLATION<button className={`translation-toggle ${hideTranslations ? 'enabled' : ''}`} aria-label={hideTranslations ? 'Show translations' : 'Hide translations'} title={hideTranslations ? 'Show translations' : 'Hide translations'} aria-pressed={hideTranslations} onClick={() => onContextChange({ hideTranslations: !hideTranslations })}>{hideTranslations ? <EyeOff size={15} /> : <Eye size={15} />}</button></span><span /></div>
         <div className="entries">{notes.map(note => {
           const showAnswer = !hideTranslations || revealed.has(note.id);
           const memberships = noteDecks(data, note.id);
@@ -106,20 +104,20 @@ export function LibraryView({ data, searchActions, context, onContextChange, jap
           return <article className={`dictionary-entry ${expanded === note.id ? 'is-open' : ''}`} key={note.id}>
             <div className="entry-row">
               <button className="entry-main" onClick={() => onContextChange({ expanded: expanded === note.id ? null : note.id })} aria-expanded={expanded === note.id}>
-                <div className="entry-japanese" lang="ja"><strong className="entry-word">{note.japanese}</strong>{reading && reading !== note.japanese && <span>{reading}</span>}</div>
-                <div className="entry-meaning">{showAnswer ? <strong>{note.meaning}</strong> : <span className="masked-translation" aria-label="Translation hidden">••••••</span>}</div>
+                <div className="entry-japanese" lang="ja"><strong className="entry-word"><JapaneseText text={note.japanese} reading={note.reading} /></strong>{!furiganaEnabled && reading && reading !== note.japanese && <span>{reading}</span>}</div>
+                <div className="entry-meaning">{showAnswer ? <strong><JapaneseText text={note.meaning} /></strong> : <span className="masked-translation" aria-label="Translation hidden">••••••</span>}</div>
                 <ChevronDown size={17} className="entry-chevron" />
               </button>
               {!showAnswer && <button className="icon-button reveal-translation" onClick={() => reveal(note.id)} title="Reveal translation" aria-label={`Reveal translation for ${note.japanese}`}><Eye size={17} /></button>}
-              {editing && <div className="entry-actions"><button className="icon-button" aria-label={`Edit ${note.japanese}`} onClick={() => onEditNote(note)}><Pencil size={15} /></button><button className="icon-button danger-text" aria-label={`Delete ${note.japanese}`} onClick={() => onDeleteNote(note)}><Trash2 size={15} /></button></div>}
+              <div className="entry-actions"><button type="button" className="icon-button" title="Edit note" aria-label={`Edit ${note.japanese}`} onClick={() => onEditNote(note)}><Pencil size={15} /></button>{editing && <button className="icon-button danger-text" aria-label={`Delete ${note.japanese}`} onClick={() => onDeleteNote(note)}><Trash2 size={15} /></button>}</div>
             </div>
-            {search.trim() && <div className="result-decks">{memberships.length ? memberships.map(deck => <button key={deck.id} title={deckAncestors(data, deck.id).map(item => item.name).join(' / ')} onClick={() => selectDeck(deck.id)}><Folder size={11} /><span>{deck.name}</span></button>) : <span>No deck</span>}</div>}
+            {search.trim() && <div className="result-decks">{memberships.length ? memberships.map(deck => <button key={deck.id} title={deckAncestors(data, deck.id).map(item => item.name).join(' / ')} onClick={() => selectDeck(deck.id)}><Folder size={11} /><span><JapaneseText text={deck.name} /></span></button>) : <span>No deck</span>}</div>}
             {expanded === note.id && <div className="entry-detail">
-              {!!note.tags.length && <div className="entry-tags">{note.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div>}
-              {note.example && <blockquote><span lang="ja">{note.example}</span>{showAnswer && note.exampleTranslation && <p>{note.exampleTranslation}</p>}</blockquote>}
-              {(note.onReadings?.length || note.kunReadings?.length) ? <dl className="kanji-readings">{note.onReadings?.length ? <div><dt>ON</dt><dd lang="ja">{note.onReadings.join('・')}</dd></div> : null}{note.kunReadings?.length ? <div><dt>KUN</dt><dd lang="ja">{note.kunReadings.join('・')}</dd></div> : null}</dl> : null}{showAnswer && note.explanation && <p className="explanation">{note.explanation}</p>}
+              {!!note.tags.length && <div className="entry-tags">{note.tags.map(tag => <span className="tag" key={tag}><JapaneseText text={tag} /></span>)}</div>}
+              {note.example && <blockquote><span lang="ja"><JapaneseText text={note.example} /></span>{showAnswer && note.exampleTranslation && <p><JapaneseText text={note.exampleTranslation} /></p>}</blockquote>}
+              {(note.onReadings?.length || note.kunReadings?.length) ? <dl className="kanji-readings">{note.onReadings?.length ? <div><dt>ON</dt><dd lang="ja">{note.onReadings.join('・')}</dd></div> : null}{note.kunReadings?.length ? <div><dt>KUN</dt><dd lang="ja">{note.kunReadings.join('・')}</dd></div> : null}</dl> : null}{showAnswer && note.explanation && <p className="explanation"><JapaneseText text={note.explanation} /></p>}
               {!showAnswer && <button className="text-button reveal-detail" onClick={() => reveal(note.id)}><Eye size={15} />Reveal translation</button>}
-              {!search.trim() && <div className="entry-memberships">{memberships.map(deck => <button key={deck.id} onClick={() => selectDeck(deck.id)}><Folder size={12} />{deck.name}</button>)}</div>}
+              {!search.trim() && <div className="entry-memberships">{memberships.map(deck => <button key={deck.id} onClick={() => selectDeck(deck.id)}><Folder size={12} /><JapaneseText text={deck.name} /></button>)}</div>}
             </div>}
           </article>;
         })}</div>
@@ -130,8 +128,8 @@ export function LibraryView({ data, searchActions, context, onContextChange, jap
         <div className="deck-panel-heading"><h2>Decks</h2><button className="icon-button" aria-label="Create deck" title="Create deck" onClick={onNewDeck}><Plus size={16} /></button></div>
         <nav aria-label="Deck tree"><ul className="deck-tree"><li>
           <div className={`deck-tree-row deck-root ${deckId === null ? 'active' : ''}`}>
-            {treeDecks.length > 0 ? <button className="deck-branch-toggle" aria-label={`${collapsed.has(ALL_BRANCH) ? 'Expand' : 'Collapse'} All notes`} aria-expanded={!collapsed.has(ALL_BRANCH)} aria-controls={`${treeId}-all`} onClick={() => toggleBranch(ALL_BRANCH)}><ChevronRight size={14} className={collapsed.has(ALL_BRANCH) ? '' : 'is-expanded'} /></button> : <span className="deck-branch-spacer" />}
-            <button className="deck-select" aria-current={deckId === null ? 'page' : undefined} onClick={() => selectDeck(null)}><BookOpen size={15} /><span>All notes</span><small>{allCount}</small></button>
+            {treeDecks.length > 0 ? <button className="deck-branch-toggle" aria-label={`${collapsed.has(ALL_BRANCH) ? 'Expand' : 'Collapse'} All cards`} aria-expanded={!collapsed.has(ALL_BRANCH)} aria-controls={`${treeId}-all`} onClick={() => toggleBranch(ALL_BRANCH)}><ChevronRight size={14} className={collapsed.has(ALL_BRANCH) ? '' : 'is-expanded'} /></button> : <span className="deck-branch-spacer" />}
+            <button className="deck-select" aria-current={deckId === null ? 'page' : undefined} onClick={() => selectDeck(null)}><BookOpen size={15} /><span>All cards</span><small>{allCount}</small></button>
           </div>
           <DeckTree decks={treeDecks} selected={deckId} collapsed={collapsed} onToggle={toggleBranch} onSelect={selectDeck} treeId={treeId} id={`${treeId}-all`} hidden={collapsed.has(ALL_BRANCH)} />
         </li></ul></nav>
@@ -149,7 +147,7 @@ function DeckTree({ decks, selected, collapsed, onToggle, onSelect, treeId, pare
     return <li key={deck.id}>
       <div className={`deck-tree-row ${selected === deck.id ? 'active' : ''}`}>
         {hasChildren ? <button className="deck-branch-toggle" aria-label={`${folded ? 'Expand' : 'Collapse'} ${deck.name}`} aria-expanded={!folded} aria-controls={childId} onClick={() => onToggle(deck.id)}><ChevronRight size={14} className={folded ? '' : 'is-expanded'} /></button> : <span className="deck-branch-spacer" />}
-        <button className="deck-select" aria-current={selected === deck.id ? 'page' : undefined} title={deck.name} onClick={() => onSelect(deck.id)}><Folder size={15} /><span>{deck.name}</span></button>
+        <button className="deck-select" aria-current={selected === deck.id ? 'page' : undefined} title={deck.name} onClick={() => onSelect(deck.id)}><Folder size={15} /><span><JapaneseText text={deck.name} /></span></button>
       </div>
       {hasChildren && <DeckTree decks={decks} selected={selected} collapsed={collapsed} onToggle={onToggle} onSelect={onSelect} treeId={treeId} parent={deck.id} visited={[...visited, deck.id]} id={childId} hidden={folded} />}
     </li>;

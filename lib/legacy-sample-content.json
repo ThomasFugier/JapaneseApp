@@ -1,0 +1,394 @@
+{
+  "decks": [
+    {
+      "id": "japonais",
+      "name": "Japonais",
+      "description": "Un petit pas chaque jour, un nouvel horizon."
+    },
+    {
+      "id": "vocabulaire",
+      "name": "Vocabulaire",
+      "description": "Les mots qui donnent vie à vos idées."
+    },
+    {
+      "id": "verbes",
+      "name": "Verbes",
+      "description": "Exprimer ce que vous faites, pensez et ressentez."
+    },
+    {
+      "id": "travail",
+      "name": "Travail",
+      "description": "Les verbes utiles au bureau et dans vos projets."
+    },
+    {
+      "id": "quotidien",
+      "name": "Quotidien",
+      "description": "Les mots des petits moments de tous les jours."
+    },
+    {
+      "id": "cuisine",
+      "name": "Cuisine",
+      "description": "À table, aux fourneaux et au restaurant."
+    },
+    {
+      "id": "grammaire",
+      "name": "Grammaire",
+      "description": "Des structures simples pour construire vos phrases."
+    },
+    {
+      "id": "kanjis",
+      "name": "Kanjis",
+      "description": "Lire les caractères, comprendre leurs nuances."
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-taberu",
+      "japanese": "食べる",
+      "reading": "たべる",
+      "meaning": "Manger",
+      "exampleTranslation": "Tous les matins, je mange du pain.",
+      "explanation": "Verbe ichidan. Forme polie : 食べます（たべます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-ringo",
+      "japanese": "林檎",
+      "reading": "りんご",
+      "meaning": "Pomme",
+      "exampleTranslation": "Je mange une pomme.",
+      "explanation": "林檎 se lit りんご. La graphie en hiragana りんご est aussi très courante.",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-nomu",
+      "japanese": "飲む",
+      "reading": "のむ",
+      "meaning": "Boire",
+      "exampleTranslation": "Je bois de l’eau.",
+      "explanation": "Verbe godan en む. Forme polie : 飲みます（のみます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-tsukuru",
+      "japanese": "作る",
+      "reading": "つくる",
+      "meaning": "Faire, fabriquer, préparer",
+      "exampleTranslation": "Je prépare le dîner.",
+      "explanation": "Verbe godan. S’utilise pour un objet, un plat ou une création.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-hataraku",
+      "japanese": "働く",
+      "reading": "はたらく",
+      "meaning": "Travailler",
+      "exampleTranslation": "Je travaille dans une bibliothèque.",
+      "explanation": "Verbe godan. 働いています décrit ici une activité professionnelle.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-hajimeru",
+      "japanese": "始める",
+      "reading": "はじめる",
+      "meaning": "Commencer quelque chose",
+      "exampleTranslation": "Je commence le travail.",
+      "explanation": "Verbe ichidan transitif : on commence une activité. À distinguer de 始まる, « commencer » sans objet.",
+      "tags": [
+        "verbe",
+        "JLPT N4"
+      ]
+    },
+    {
+      "id": "note-owaru",
+      "japanese": "終わる",
+      "reading": "おわる",
+      "meaning": "Se terminer",
+      "exampleTranslation": "La réunion se termine à trois heures.",
+      "explanation": "Verbe godan. Le sujet est la chose qui se termine.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-hanasu",
+      "japanese": "話す",
+      "reading": "はなす",
+      "meaning": "Parler",
+      "exampleTranslation": "Je parle en japonais.",
+      "explanation": "Verbe godan en す. Forme polie : 話します（はなします）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kaku",
+      "japanese": "書く",
+      "reading": "かく",
+      "meaning": "Écrire",
+      "exampleTranslation": "Écrivez votre nom, s’il vous plaît.",
+      "explanation": "Verbe godan. Forme en て : 書いて（かいて）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-yomu",
+      "japanese": "読む",
+      "reading": "よむ",
+      "meaning": "Lire",
+      "exampleTranslation": "Tous les soirs, je lis un livre.",
+      "explanation": "Verbe godan. Forme polie : 読みます（よみます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-iku",
+      "japanese": "行く",
+      "reading": "いく",
+      "meaning": "Aller",
+      "exampleTranslation": "Demain, je vais à l’école.",
+      "explanation": "Verbe godan. Attention à la forme en て irrégulière : 行って（いって）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kaeru",
+      "japanese": "帰る",
+      "reading": "かえる",
+      "meaning": "Rentrer",
+      "exampleTranslation": "Je rentre chez moi à six heures.",
+      "explanation": "Malgré sa terminaison en える, 帰る est un verbe godan.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-miru",
+      "japanese": "見る",
+      "reading": "みる",
+      "meaning": "Voir, regarder",
+      "exampleTranslation": "Je regarde un film.",
+      "explanation": "Verbe ichidan. Forme polie : 見ます（みます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-neru",
+      "japanese": "寝る",
+      "reading": "ねる",
+      "meaning": "Dormir, se coucher",
+      "exampleTranslation": "Je me couche à onze heures.",
+      "explanation": "Verbe ichidan. Forme polie : 寝ます（ねます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-okiru",
+      "japanese": "起きる",
+      "reading": "おきる",
+      "meaning": "Se lever, se réveiller",
+      "exampleTranslation": "Tous les matins, je me lève à sept heures.",
+      "explanation": "Verbe ichidan. Forme polie : 起きます（おきます）.",
+      "tags": [
+        "verbe",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-mizu",
+      "japanese": "水",
+      "reading": "みず",
+      "meaning": "Eau",
+      "exampleTranslation": "De l’eau, s’il vous plaît.",
+      "explanation": "Nom. Pour l’eau chaude, on dit お湯（おゆ）.",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-gohan",
+      "japanese": "ご飯",
+      "reading": "ごはん",
+      "meaning": "Riz cuit ; repas",
+      "exampleTranslation": "Mangeons.",
+      "explanation": "Selon le contexte, ご飯 désigne le riz cuit ou le repas.",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-ocha",
+      "japanese": "お茶",
+      "reading": "おちゃ",
+      "meaning": "Thé",
+      "exampleTranslation": "Je bois du thé chaud.",
+      "explanation": "お est ici un préfixe courant de politesse.",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-oishii",
+      "japanese": "おいしい",
+      "reading": "おいしい",
+      "meaning": "Délicieux, bon",
+      "exampleTranslation": "Ce pain est délicieux.",
+      "explanation": "Adjectif en い. Négatif : おいしくない.",
+      "tags": [
+        "adjectif",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-hon",
+      "japanese": "本",
+      "reading": "ほん",
+      "meaning": "Livre",
+      "exampleTranslation": "Ce livre est intéressant.",
+      "explanation": "Nom. 本 est aussi un compteur d’objets longs, avec des lectures variables.",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-shigoto",
+      "japanese": "仕事",
+      "reading": "しごと",
+      "meaning": "Travail, emploi",
+      "exampleTranslation": "Aujourd’hui, je travaille.",
+      "explanation": "仕事をする signifie « travailler » ou « faire son travail ».",
+      "tags": [
+        "nom",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kaigi",
+      "japanese": "会議",
+      "reading": "かいぎ",
+      "meaning": "Réunion",
+      "exampleTranslation": "Il y a une réunion cet après-midi.",
+      "explanation": "会議室（かいぎしつ） : salle de réunion.",
+      "tags": [
+        "nom",
+        "JLPT N4"
+      ]
+    },
+    {
+      "id": "note-ashita",
+      "japanese": "明日",
+      "reading": "あした",
+      "meaning": "Demain",
+      "exampleTranslation": "Demain, c’est un jour de repos.",
+      "explanation": "あした est la lecture courante. あす existe aussi.",
+      "tags": [
+        "temps",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-particle-wa",
+      "japanese": "〜は",
+      "reading": "は（prononcé わ）",
+      "meaning": "Particule du thème",
+      "exampleTranslation": "Je suis étudiant.",
+      "explanation": "は présente le thème : « en ce qui concerne… ». La particule s’écrit は mais se prononce わ.",
+      "tags": [
+        "particule",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-particle-o",
+      "japanese": "〜を",
+      "reading": "を（prononcé お）",
+      "meaning": "Particule du complément d’objet direct",
+      "exampleTranslation": "Je lis un livre.",
+      "explanation": "を indique l’objet direct de nombreux verbes d’action.",
+      "tags": [
+        "particule",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-tai",
+      "japanese": "〜たい",
+      "reading": "たい",
+      "meaning": "Vouloir faire quelque chose",
+      "exampleTranslation": "Je veux aller au Japon.",
+      "explanation": "Attacher たい à la base en ます du verbe : 行きます → 行きたい.",
+      "tags": [
+        "structure",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kanji-hi",
+      "japanese": "日",
+      "reading": "ひ・にち・じつ",
+      "meaning": "Jour ; soleil",
+      "exampleTranslation": "Le dimanche, c’est repos.",
+      "explanation": "Lectures selon le mot : 日（ひ）, 日本（にほん）, 休日（きゅうじつ）. 日曜日 se lit にちようび.",
+      "tags": [
+        "kanji",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kanji-yama",
+      "japanese": "山",
+      "reading": "やま・さん",
+      "meaning": "Montagne",
+      "exampleTranslation": "On voit la montagne.",
+      "explanation": "Lecture japonaise : やま. Lecture sino-japonaise fréquente : さん, comme 富士山（ふじさん）.",
+      "tags": [
+        "kanji",
+        "JLPT N5"
+      ]
+    },
+    {
+      "id": "note-kanji-hito",
+      "japanese": "人",
+      "reading": "ひと・じん・にん",
+      "meaning": "Personne",
+      "exampleTranslation": "Cette personne est professeur.",
+      "explanation": "人（ひと）, 日本人（にほんじん）, 三人（さんにん）. Les lectures varient selon le mot.",
+      "tags": [
+        "kanji",
+        "JLPT N5"
+      ]
+    }
+  ]
+}

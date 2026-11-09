@@ -1,0 +1,23 @@
+.furigana-ruby { ruby-position:over; ruby-align:center; white-space:normal; margin-inline:.04em; }
+.furigana-ruby rt { font-family:var(--font-japanese-plain),'Hiragino Sans','Yu Gothic',sans-serif; font-size:max(9px,.45em); font-weight:400; line-height:1.15; letter-spacing:.025em; padding:0 .06em .1em; color:#68616d; text-align:center; user-select:none; }
+.display-toolbar { display:flex; align-items:center; gap:5px; }
+.furigana-toggle { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; width:66px; height:36px; padding:0 5px; margin-left:2px; border-left:1px solid var(--line); color:#92929c; font:10px/1 var(--font); }
+.furigana-toggle:hover { color:var(--ink); }
+.furigana-toggle[aria-checked=true] { color:var(--red); }
+.furigana-switch { display:block; width:25px; height:14px; padding:3px; border-radius:10px; background:#dedee4; transition:background .12s; }
+.furigana-switch i { display:block; width:8px; height:8px; border-radius:50%; background:white; box-shadow:0 1px 2px #00000012; transition:transform .12s; }
+.furigana-toggle[aria-checked=true] .furigana-switch { background:var(--red); }
+.furigana-toggle[aria-checked=true] .furigana-switch i { transform:translateX(11px); }
+.furigana-toggle.is-loading[aria-checked=true] .furigana-switch { opacity:.5; }
+.furigana-toggle.has-error[aria-checked=true] { text-decoration:underline dotted; text-underline-offset:3px; }
+.has-furigana .entry-japanese:has(.furigana-ruby) { padding-top:3px; }
+.has-furigana .flashcard-prompt h2 { line-height:1.9; }
+.has-furigana .answer-example>span,.has-furigana .entry-detail blockquote>span { line-height:2.1; }
+.has-furigana .answer-explanation,.has-furigana .explanation { line-height:2.1; }
+@media (pointer:coarse) { .furigana-toggle { height:44px; } }
+@media (max-width:640px) {
+  .is-studying .toast { bottom:calc(var(--review-nav-height) + var(--review-dock-height) + 78px); }
+}
+@media (prefers-reduced-motion:reduce) { .furigana-switch,.furigana-switch i { transition:none; } }
+.dictionary-credits { margin:12px 0 0; color:var(--muted); font-size:10px; }
+.dictionary-credits a { text-decoration:underline; text-underline-offset:3px; }

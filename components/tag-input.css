@@ -1,0 +1,21 @@
+.tag-editor { min-width:0; }
+.tag-editor>label { display:block; margin-bottom:8px; font-size:12px; font-weight:500; color:#5f5f6a; }
+.tag-input { display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-height:46px; padding:7px 9px; border:1px solid #dedee5; border-radius:8px; background:white; }
+.tag-input:focus-within { outline:2px solid #dba1af; outline-offset:1px; }
+.tag-chip { display:inline-flex; align-items:center; gap:4px; min-width:0; max-width:100%; padding:2px 3px 2px 9px; border-radius:6px; background:var(--soft); color:#686873; font-size:11px; }
+.tag-chip>span { overflow-wrap:anywhere; }
+.tag-chip button { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:26px; height:26px; border-radius:4px; color:#9999a4; }
+.tag-chip button:hover { color:var(--red); background:var(--red-soft); }
+.tag-entry-row { display:flex; align-items:center; flex:1; gap:8px; min-width:140px; }
+.editor-form .tag-input input.tag-query { flex:1; width:100%; min-width:0; min-height:30px; margin:0; padding:3px 2px; border:0; border-radius:0; outline:none; background:transparent; font-size:13px; }
+.tag-add { display:inline-flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0; min-height:30px; padding:4px 8px; border-radius:5px; color:var(--red); font-size:11px; font-weight:500; }
+.tag-add:hover { background:var(--red-soft); }
+.tag-suggestions { display:grid; gap:2px; max-height:210px; margin-top:6px; padding:4px; overflow:auto; border:1px solid var(--line); border-radius:8px; background:white; animation:appear .12s ease-out; }
+.tag-suggestions button { display:block; width:100%; min-height:32px; padding:6px 10px; border-radius:5px; color:#73737e; text-align:left; font-size:12px; overflow-wrap:anywhere; }
+.tag-suggestions button:hover,.tag-suggestions button.active { background:var(--red-soft); color:var(--red); }
+.tag-input-status { display:block; margin-top:6px; color:var(--muted); font-size:11px; }
+@media (max-width:640px) {
+  .editor-form .tag-input input.tag-query { min-height:36px; font-size:16px; }
+  .tag-chip button { width:32px; height:32px; }
+  .tag-add,.tag-suggestions button { min-height:40px; }
+}

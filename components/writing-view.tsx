@@ -1,10 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Download, ListFilter } from 'lucide-react';
 import { applySuggestion, writingMatches } from '@/lib/writing';
 import { convertWritingInput, finishKanaInput, type KanaComposition, type WritingInputMode } from '@/lib/kana-input';
 import type { Note, Snapshot } from '@/lib/model';
+import type { JapaneseFont } from './use-workspace-context';
+import { JapaneseText, useFuriganaEnabled, useFuriganaParts } from './furigana';
 import './writing-view.css';
 
 const DRAFT_KEY = 'kotoba-writing-draft-v1';
@@ -13,8 +15,176 @@ const MAX_LENGTH = 100000;
 type Selection = { start: number; end: number };
 type Edit = { text: string; selection: Selection; composition: KanaComposition | null };
 type Position = { top: number; left: number; width: number; maxHeight: number };
+type ReadingPart = { text: string; reading?: string };
+type ReadingSnapshot = { text: string; parts: readonly ReadingPart[] };
 
-export function WritingView({ data }: { data: Snapshot }) {
+function retainUnchangedReadings(previous: ReadingSnapshot, text: string): ReadingPart[] {
+  let prefix = 0;
+  while (prefix < previous.text.length && prefix < text.length && previous.text[prefix] === text[prefix]) prefix++;
+  let suffix = 0;
+  while (suffix < previous.text.length - prefix && suffix < text.length - prefix && previous.text[previous.text.length - suffix - 1] === text[text.length - suffix - 1]) suffix++;
+  const boundary = /[\s\p{P}]/u;
+  let start = prefix;
+  let oldEnd = previous.text.length - suffix;
+  let newEnd = text.length - suffix;
+  // A pending edit can change the reading of the whole adjacent Japanese word.
+  while (start > 0 && !boundary.test(text[start - 1])) start--;
+  while (oldEnd < previous.text.length && !boundary.test(previous.text[oldEnd])) oldEnd++;
+  while (newEnd < text.length && !boundary.test(text[newEnd])) newEnd++;
+  const result: ReadingPart[] = [];
+  let offset = 0;
+  let cursor = 0;
+  const shift = text.length - previous.text.length;
+  for (const part of previous.parts) {
+    const end = offset + part.text.length;
+    const nextStart = end <= start ? offset : offset >= oldEnd && offset + shift >= newEnd ? offset + shift : -1;
+    if (part.reading && nextStart >= cursor && text.slice(nextStart, nextStart + part.text.length) === part.text) {
+      if (nextStart > cursor) result.push({ text: text.slice(cursor, nextStart) });
+      result.push(part);
+      cursor = nextStart + part.text.length;
+    }
+    offset = end;
+  }
+  if (cursor < text.length) result.push({ text: text.slice(cursor) });
+  return result;
+}
+
+function WritingFurigana({ text, size, japaneseFont, editor, paper }: {
+  text: string;
+  size: string;
+  japaneseFont: JapaneseFont;
+  editor: RefObject<HTMLTextAreaElement | null>;
+  paper: RefObject<HTMLDivElement | null>;
+}) {
+  const { enabled, parts } = useFuriganaParts(text);
+  const previousReadings = useRef<ReadingSnapshot | null>(null);
+  const visibleParts = useMemo(() => {
+    if (!enabled || parts.some(part => part.reading) || !previousReadings.current) return parts;
+    if (previousReadings.current.text === text) return previousReadings.current.parts;
+    return retainUnchangedReadings(previousReadings.current, text);
+  }, [enabled, parts, text]);
+  const overlay = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    previousReadings.current = enabled ? { text, parts: visibleParts } : null;
+    const textarea = editor.current;
+    const container = paper.current;
+    const labels = overlay.current;
+    if (!textarea || !container || !labels) return;
+    if (!enabled || !visibleParts.some(part => part.reading)) { labels.replaceChildren(); return; }
+    const mirror = document.createElement('div');
+    mirror.className = 'writing-furigana-mirror';
+    mirror.lang = 'ja';
+    mirror.setAttribute('aria-hidden', 'true');
+    const source = document.createTextNode(`${text}\u200b`);
+    mirror.appendChild(source);
+    container.appendChild(mirror);
+    const context = document.createElement('canvas').getContext('2d');
+    const range = document.createRange();
+    let frame = 0;
+    let disposed = false;
+
+    const measure = () => {
+      frame = 0;
+      if (disposed) return;
+      const style = getComputedStyle(textarea);
+      const properties = ['box-sizing', 'width', 'font-family', 'font-size', 'font-weight', 'font-style', 'font-stretch', 'font-variant', 'font-feature-settings', 'font-variation-settings', 'font-kerning', 'font-synthesis', 'letter-spacing', 'line-height', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'word-spacing', 'tab-size', 'text-indent', 'text-align', 'text-transform', 'text-rendering', 'direction', 'unicode-bidi', 'writing-mode', 'text-orientation', 'white-space', 'overflow-wrap', 'word-break', 'line-break', 'hyphens', '-webkit-text-size-adjust'];
+      properties.forEach(property => mirror.style.setProperty(property, style.getPropertyValue(property)));
+      mirror.style.top = `${textarea.offsetTop}px`;
+      mirror.style.left = `${textarea.offsetLeft}px`;
+      const bounds = mirror.getBoundingClientRect();
+      const contentLeft = textarea.offsetLeft + parseFloat(style.paddingLeft);
+      const contentRight = textarea.offsetLeft + textarea.clientWidth - parseFloat(style.paddingRight);
+      const baseFontSize = parseFloat(style.fontSize);
+      const fontSize = Math.min(18, Math.max(10, baseFontSize * .45));
+      const gap = 2;
+      if (context) context.font = `400 ${fontSize}px ${getComputedStyle(labels).fontFamily}`;
+      const candidates: { reading: string; left: number; right: number; top: number; width: number; fittedWidth: number }[] = [];
+      let offset = 0;
+      for (const part of visibleParts) {
+        const end = offset + part.text.length;
+        if (part.reading && end > offset) {
+          range.setStart(source, offset); range.setEnd(source, end);
+          // Keep a wrapped word's reading whole above its first visual fragment.
+          const rect = Array.from(range.getClientRects()).find(item => item.width > 0 && item.height > 0);
+          if (rect) candidates.push({
+            reading: part.reading,
+            left: rect.left - bounds.left + textarea.offsetLeft - textarea.scrollLeft,
+            right: rect.right - bounds.left + textarea.offsetLeft - textarea.scrollLeft,
+            top: rect.top - bounds.top + textarea.offsetTop - textarea.scrollTop,
+            width: (context?.measureText(part.reading).width || Array.from(part.reading).length * fontSize) + Array.from(part.reading).length * fontSize * .025,
+            fittedWidth: 0,
+          });
+        }
+        offset = end;
+      }
+      candidates.sort((a, b) => a.top - b.top || a.left - b.left);
+      candidates.forEach((candidate, index) => {
+        const center = (candidate.left + candidate.right) / 2;
+        candidate.fittedWidth = Math.max(0, Math.min(candidate.width, 2 * Math.min(center - contentLeft, contentRight - center)));
+        const previous = candidates[index - 1];
+        if (!previous || Math.abs(previous.top - candidate.top) >= 1) return;
+        const distance = center - (previous.left + previous.right) / 2;
+        const available = Math.max(0, 2 * (distance - gap));
+        const combined = previous.fittedWidth + candidate.fittedWidth;
+        if (combined > available) {
+          const scale = available / combined;
+          previous.fittedWidth *= scale;
+          candidate.fittedWidth *= scale;
+        }
+      });
+      const fragment = document.createDocumentFragment();
+      candidates.forEach(candidate => {
+        if (candidate.fittedWidth <= 0) return;
+        const readingSize = Math.max(10, fontSize * candidate.fittedWidth / candidate.width);
+        const horizontalScale = Math.min(1, candidate.fittedWidth / (candidate.width * readingSize / fontSize));
+        const label = document.createElement('span');
+        label.className = 'writing-furigana-label';
+        label.style.left = `${(candidate.left + candidate.right) / 2}px`;
+        label.style.top = `${candidate.top - fontSize - baseFontSize * .1}px`;
+        label.style.fontSize = `${fontSize}px`;
+        label.style.transform = `translateX(-50%) scaleX(${horizontalScale})`;
+        const reading = document.createElement('span');
+        reading.className = 'writing-furigana-reading';
+        reading.textContent = candidate.reading;
+        reading.style.fontSize = `${readingSize}px`;
+        label.appendChild(reading);
+        fragment.appendChild(label);
+      });
+      labels.replaceChildren(fragment);
+    };
+    const schedule = () => { if (!disposed && !frame) frame = requestAnimationFrame(measure); };
+    measure();
+    const observer = new ResizeObserver(schedule);
+    observer.observe(textarea);
+    observer.observe(container);
+    textarea.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.visualViewport?.addEventListener('resize', schedule);
+    document.fonts.addEventListener('loadingdone', schedule);
+    void document.fonts.ready.then(schedule);
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      textarea.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      window.visualViewport?.removeEventListener('resize', schedule);
+      document.fonts.removeEventListener('loadingdone', schedule);
+      mirror.remove();
+    };
+  }, [enabled, visibleParts, text, size, japaneseFont, editor, paper]);
+
+  return <div className="writing-furigana-overlay" ref={overlay} aria-hidden="true" />;
+}
+
+function WritingSuggestion({ note, id, active, onInsert }: { note: Note; id: string; active: boolean; onInsert: () => void }) {
+  const { enabled, parts } = useFuriganaParts(note.japanese, note.reading);
+  const hasFurigana = enabled && parts.some(part => part.reading);
+  return <button type="button" role="option" id={id} aria-selected={active} tabIndex={-1} className={active ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={onInsert}><span className="writing-suggestion-word" lang="ja"><JapaneseText text={note.japanese} reading={note.reading} />{!hasFurigana && <small>{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small>}</span><span className="writing-suggestion-meaning"><JapaneseText text={note.meaning} /></span></button>;
+}
+
+export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFont: JapaneseFont }) {
   const [text, setText] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [saved, setSaved] = useState(true);
@@ -40,6 +210,7 @@ export function WritingView({ data }: { data: Snapshot }) {
   const undoEdits = useRef<Edit[]>([]);
   const redoEdits = useRef<Edit[]>([]);
   const listId = useId();
+  const furiganaEnabled = useFuriganaEnabled();
   const matching = useMemo(() => suggestionsEnabled && focused && !composing && !dismissed && !suppressReopen.current
     ? writingMatches(data, text, selection.start, selection.end) : null,
   [data, text, selection, suggestionsEnabled, focused, composing, dismissed]);
@@ -112,7 +283,29 @@ export function WritingView({ data }: { data: Snapshot }) {
       pendingSelection.current = null;
     }
     if (open) measureCaret();
-  }, [text, size, loaded, open, selection, measureCaret]);
+  }, [text, size, japaneseFont, furiganaEnabled, loaded, open, selection, measureCaret]);
+
+  useLayoutEffect(() => {
+    const textarea = editor.current;
+    if (!textarea) return;
+    let previousWidth = textarea.clientWidth;
+    let disposed = false;
+    const resizeEditor = () => {
+      if (disposed) return;
+      textarea.style.height = '0px';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+      if (open) measureCaret();
+    };
+    const observer = new ResizeObserver(() => {
+      if (textarea.clientWidth === previousWidth) return;
+      previousWidth = textarea.clientWidth;
+      resizeEditor();
+    });
+    observer.observe(textarea);
+    document.fonts.addEventListener('loadingdone', resizeEditor);
+    void document.fonts.ready.then(resizeEditor);
+    return () => { disposed = true; observer.disconnect(); document.fonts.removeEventListener('loadingdone', resizeEditor); };
+  }, [open, measureCaret]);
 
   useEffect(() => {
     if (!open) return;
@@ -250,9 +443,10 @@ export function WritingView({ data }: { data: Snapshot }) {
       <button type="button" className="icon-button writing-download" aria-label="Download text" title="Download text" onClick={download} disabled={!text}><Download size={17} /></button>
     </div>
     <div className="writing-paper" ref={paper}>
-      <textarea lang="ja" className={`writing-textarea ${size}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+      <textarea lang="ja" className={`writing-textarea ${size}${furiganaEnabled ? ' with-furigana' : ''}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+      <WritingFurigana text={text} size={size} japaneseFont={japaneseFont} editor={editor} paper={paper} />
       {open && <div className="writing-suggestions" ref={suggestionsPanel} style={{ top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}>
-        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <button type="button" role="option" key={note.id} id={`${listId}-${index}`} aria-selected={index === selected} tabIndex={-1} className={index === selected ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={() => insert(note)}><span className="writing-suggestion-word" lang="ja">{note.japanese}<small>{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small></span><span className="writing-suggestion-meaning">{note.meaning}</span></button>)}</div>
+        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <WritingSuggestion key={note.id} note={note} id={`${listId}-${index}`} active={index === selected} onInsert={() => insert(note)} />)}</div>
         <div className="writing-suggestion-help">↑↓ · Space / Enter to insert · Esc to close</div>
       </div>}
     </div>

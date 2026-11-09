@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { emptySnapshot, snapshotsEqual, validateSnapshot, type Snapshot } from '@/lib/model';
-import { seedSnapshot } from '@/lib/seed';
+import { isUnmodifiedSample, seedSnapshot } from '@/lib/seed';
 import { loadLibrary, saveLibrary } from '@/lib/storage';
 import { mergeSnapshots, type Conflict } from '@/lib/merge';
 import { readGitHub, syncGitHub, type GitHubConfig } from '@/lib/github-client';
 
 type Status = { configured: boolean; authenticated: boolean; user?: { login: string }; reason?: string };
 type Library = { snapshot: Snapshot; base: Snapshot; lastSyncedAt: string | null };
+const localSaveFailure = 'Local save failed. Your last action was not saved. Export your data and check the available storage space.';
 
 export function useLibrary() {
   const [data, setData] = useState<Snapshot>(emptySnapshot);
@@ -17,6 +18,8 @@ export function useLibrary() {
   const [syncing, setSyncing] = useState(false);
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState('');
+  const [localSaveError, setLocalSaveError] = useState('');
+  const [syncError, setSyncError] = useState('');
   const [notice, setNotice] = useState('');
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
   const [manualRepository, setManualRepository] = useState<string | null>(null);
@@ -36,12 +39,14 @@ export function useLibrary() {
     setSaving(true);
     const task = queue.current.catch(() => undefined).then(() => saveLibrary(next));
     queue.current = task;
-    task.then(() => { if (mounted.current && queue.current === task) setSaving(false); }).catch(() => {
+    task.then(() => {
+      if (mounted.current) { setLocalSaveError(''); setError(previous => previous === localSaveFailure ? '' : previous); if (queue.current === task) setSaving(false); }
+    }).catch(() => {
       if (mounted.current) {
         if (queue.current === task && record.current === next && previous) {
           record.current = previous; setData(previous.snapshot); setLastSyncedAt(previous.lastSyncedAt);
         }
-        setSaving(false); setError('Local save failed. Your last action was not saved. Export your data and check the available storage space.');
+        setSaving(false); setLocalSaveError(localSaveFailure); setError(localSaveFailure);
       }
     });
     return task;
@@ -52,6 +57,7 @@ export function useLibrary() {
     let disposed = false;
     let release: (() => void) | undefined;
     async function initialize() {
+      let loadingRemote = false;
       try {
         const stored = await loadLibrary();
         let remoteStatus: Status | null = null;
@@ -61,6 +67,7 @@ export function useLibrary() {
         let value: Library = stored ?? { snapshot: remoteStatus?.configured ? emptySnapshot() : seedSnapshot(), base: emptySnapshot(), lastSyncedAt: null };
         // A new connected device starts from GitHub, never from demonstration cards.
         if (!stored && remoteStatus?.authenticated) {
+          loadingRemote = true;
           const response = await fetch('/api/sync', { cache: 'no-store', signal: AbortSignal.timeout(45000) });
           const remote = await response.json();
           if (!response.ok) throw new Error(remote.error || 'Unable to load your GitHub library. Reload the page to try again.');
@@ -68,17 +75,28 @@ export function useLibrary() {
             const snapshot = validateSnapshot(remote.snapshot);
             value = { snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() };
           }
+          loadingRemote = false;
         }
         if (disposed) return;
-        if (!stored) await saveLibrary(value);
+        if (!stored) {
+          try { await saveLibrary(value); if (!disposed) setLocalSaveError(''); }
+          catch (cause) { if (!disposed) setLocalSaveError(localSaveFailure); throw cause; }
+        }
         if (disposed) return;
         record.current = value; setData(value.snapshot); setLastSyncedAt(value.lastSyncedAt); setReady(true);
         const auth = new URLSearchParams(window.location.search).get('auth');
-        if (auth === 'error') setError('GitHub sign-in was denied or interrupted. Check the authorized account and try again.');
+        if (auth === 'error') {
+          const message = 'GitHub sign-in was denied or interrupted. Check the authorized account and try again.';
+          setSyncError(message); setError(message);
+        }
         if (auth === 'success') setNotice('GitHub account connected. Loading your library…');
         if (auth) window.history.replaceState({}, '', '/');
       } catch (cause) {
-        if (!disposed) setError(cause instanceof Error ? cause.message : 'Storage is unavailable. Reload the page. No existing data was replaced.');
+        if (!disposed) {
+          const message = cause instanceof Error ? cause.message : 'Storage is unavailable. Reload the page. No existing data was replaced.';
+          if (loadingRemote) setSyncError(message);
+          setError(message);
+        }
       }
     }
     if (navigator.locks) {
@@ -131,22 +149,28 @@ export function useLibrary() {
   const connectGitHub = useCallback(async (config: GitHubConfig) => {
     if (!record.current || busy.current) throw new Error('An operation is already in progress. Try again.');
     busy.current = true; setSyncing(true);
+    let readingRemote = false;
     try {
       await queue.current;
+      readingRemote = true;
       const remote = await readGitHub(config);
+      readingRemote = false; setSyncError('');
       // Demonstration content must not pollute an existing personal repository.
-      if (remote.revision && snapshotsEqual(record.current.snapshot, seedSnapshot()) && snapshotsEqual(record.current.base, emptySnapshot())) {
+      if (remote.revision && isUnmodifiedSample(record.current.snapshot) && snapshotsEqual(record.current.base, emptySnapshot())) {
         await persist({ snapshot: remote.snapshot, base: remote.snapshot, lastSyncedAt: new Date().toISOString() });
       }
       manualConfig.current = { ...config };
       setManualRepository(`${config.owner}/${config.repo}`);
       setError(''); setNotice('GitHub repository connected.');
+    } catch (cause) {
+      if (readingRemote) setSyncError(cause instanceof Error ? cause.message : 'Unable to connect to GitHub.');
+      throw cause;
     } finally { busy.current = false; setSyncing(false); }
   }, [persist]);
 
   const disconnectGitHub = useCallback(() => {
     if (busy.current) { setNotice('Wait for synchronization to finish.'); return; }
-    manualConfig.current = null; setManualRepository(null);
+    manualConfig.current = null; setManualRepository(null); setSyncError('');
     setNotice('GitHub disconnected. Your local data is preserved.');
   }, []);
 
@@ -154,9 +178,11 @@ export function useLibrary() {
     if (!record.current || busy.current || conflictData.current) return;
     if (!manualConfig.current && !status?.authenticated) { setNotice('Connect your GitHub repository in Settings.'); return; }
     if (!navigator.onLine) { setNotice('Offline. Your changes remain on this device.'); return; }
-    busy.current = true; setSyncing(true); setError('');
+    busy.current = true; setSyncing(true); setError(''); setSyncError('');
+    let savingLocally = true;
     try {
       await queue.current;
+      savingLocally = false;
       const sent = structuredClone(record.current);
       let result: Awaited<ReturnType<typeof syncGitHub>>;
       if (manualConfig.current) result = await syncGitHub(manualConfig.current, sent.base, sent.snapshot);
@@ -182,9 +208,16 @@ export function useLibrary() {
       if (after.conflicts.length) {
         conflictData.current = { snapshot: after.snapshot, remote: result.snapshot, captured: structuredClone(record.current.snapshot) }; setConflicts(after.conflicts); return;
       }
-      await persist({ snapshot: validateSnapshot(after.snapshot), base: validateSnapshot(result.snapshot), lastSyncedAt: result.lastSyncedAt ?? new Date().toISOString() });
+      const next = { snapshot: validateSnapshot(after.snapshot), base: validateSnapshot(result.snapshot), lastSyncedAt: result.lastSyncedAt ?? new Date().toISOString() };
+      savingLocally = true;
+      await persist(next);
+      savingLocally = false;
       setNotice('Your devices are synchronized.');
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Synchronization failed. Your data remains on this device.'); }
+    } catch (cause) {
+      const message = savingLocally ? localSaveFailure : cause instanceof Error ? cause.message : 'Synchronization failed. Your data remains on this device.';
+      if (!savingLocally) setSyncError(message);
+      setError(message);
+    }
     finally { busy.current = false; setSyncing(false); }
   }, [persist, status, manualRepository]);
 
@@ -226,5 +259,5 @@ export function useLibrary() {
 
   const dirty = !!record.current && JSON.stringify(data) !== JSON.stringify(record.current.base);
   const connectionStatus: Status | null = manualRepository ? { configured: true, authenticated: true } : status;
-  return { data, ready, saving, syncing, status: connectionStatus, serverStatus: status, error, setError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, manualRepository, connectGitHub, disconnectGitHub };
+  return { data, ready, saving, syncing, status: connectionStatus, serverStatus: status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, manualRepository, connectGitHub, disconnectGitHub };
 }

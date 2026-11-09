@@ -1,4 +1,4 @@
-import { createEmptyCard, fsrs, type Card, type Grade } from 'ts-fsrs';
+import { createEmptyCard, fsrs, State, type Card, type Grade } from 'ts-fsrs';
 import type { Snapshot, StudyCard, Review } from './model';
 
 export function descendants(data: Snapshot, deckId: string): string[] {
@@ -28,8 +28,11 @@ export function effectiveReviews(data: Snapshot, cardId?: string): Review[] {
 }
 
 export function scheduleForCard(data: Snapshot, cardId: string): Card {
-  const reviews = effectiveReviews(data, cardId);
   const scheduler = fsrs({ request_retention: data.scheduler?.retention ?? 0.9, enable_fuzz: false });
+  return replayReviews(effectiveReviews(data, cardId), scheduler);
+}
+
+function replayReviews(reviews: Review[], scheduler: ReturnType<typeof fsrs>): Card {
   let card = createEmptyCard(new Date(0));
   for (const review of reviews) {
     card = scheduler.next(card, new Date(review.reviewedAt), review.rating as Grade).card;
@@ -44,12 +47,48 @@ function reviewOrder(card: StudyCard): number {
   return (hash ^ (card.direction === 'fr-ja' ? 0x80000000 : 0)) >>> 0;
 }
 
-export function dueCards(data: Snapshot, deckId: string | null, now = new Date()): StudyCard[] {
-  return cardsForDeck(data, deckId)
-    .map((card) => ({ card, due: scheduleForCard(data, card.id).due.getTime(), order: reviewOrder(card) }))
+export function dueCards(data: Snapshot, deckId: string | null, now = new Date(), recentCardIds: string[] = []): StudyCard[] {
+  const scheduler = fsrs({ request_retention: data.scheduler?.retention ?? 0.9, enable_fuzz: false });
+  const histories = new Map<string, Review[]>();
+  for (const review of effectiveReviews(data)) {
+    const history = histories.get(review.cardId) ?? [];
+    history.push(review); histories.set(review.cardId, history);
+  }
+  const ranked = cardsForDeck(data, deckId)
+    .map((card) => {
+      const schedule = replayReviews(histories.get(card.id) ?? [], scheduler);
+      const phase = !schedule.reps ? 0 : schedule.state === State.Learning || schedule.state === State.Relearning ? 1 : 2;
+      return { card, due: schedule.due.getTime(), phase, recall: phase === 2 ? scheduler.get_retrievability(schedule, now, false) : 0, order: reviewOrder(card) };
+    })
     .filter(({ due }) => due <= now.getTime())
-    .sort((a, b) => a.due - b.due || a.order - b.order || a.card.id.localeCompare(b.card.id))
-    .map(({ card }) => card);
+    // Unseen cards always come first, followed by due learning steps and weak due memories.
+    .sort((a, b) => a.phase - b.phase || a.recall - b.recall || a.due - b.due || a.order - b.order || a.card.id.localeCompare(b.card.id));
+  const queue = ranked.map(({ card }) => card);
+  const allowed = new Set(ranked.filter(item => item.phase === ranked[0]?.phase).map(item => item.card.id));
+  return spaceRecentWords(data, queue, recentCardIds, allowed);
+}
+
+export function practiceCards(data: Snapshot, deckId: string | null, recentCardIds: string[] = [], pendingIds: string[] = []): StudyCard[] {
+  const active = cardsForDeck(data, deckId), byId = new Map(active.map(card => [card.id, card]));
+  const pending = [...new Set(pendingIds)].flatMap(id => byId.has(id) ? [byId.get(id)!] : []);
+  const queue = pending.length ? pending : active.sort((a, b) => reviewOrder(a) - reviewOrder(b) || a.id.localeCompare(b.id));
+  return spaceRecentWords(data, queue, recentCardIds);
+}
+
+function spaceRecentWords(data: Snapshot, queue: StudyCard[], recentCardIds: string[], allowed?: Set<string>): StudyCard[] {
+  // Space recent words without promoting a lower-priority graded review.
+  if (recentCardIds.length && queue.length > 1) {
+    const noteIds = new Map(data.cards.map(card => [card.id, card.noteId]));
+    for (let gap = Math.min(3, recentCardIds.length); gap > 0; gap--) {
+      const recent = new Set(recentCardIds.slice(-gap).map(id => noteIds.get(id)));
+      const index = queue.findIndex(card => (!allowed || allowed.has(card.id)) && !recent.has(card.noteId));
+      if (index >= 0) {
+        if (index > 0) queue.unshift(queue.splice(index, 1)[0]);
+        break;
+      }
+    }
+  }
+  return queue;
 }
 
 export function reviewCounts(data: Snapshot, deckId: string | null, now = new Date()): { newCount: number; dueCount: number; total: number } {
