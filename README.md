@@ -1,4 +1,4 @@
-# Kotoba — japonais personnel
+# Japonais
 
 Application Next.js responsive : accueil, révisions FSRS et bibliothèque consultable comme un dictionnaire. L’édition est séparée de la lecture. Une carte peut être classée dans plusieurs decks avec une seule progression.
 
@@ -23,7 +23,7 @@ npm run build
 
 Aucun fichier de configuration n’est nécessaire pour le mode personnel.
 
-1. Créer un dépôt GitHub **privé**, initialisé avec un README, réservé aux données Kotoba.
+1. Créer un dépôt GitHub **privé**, initialisé avec un README, réservé aux données Japonais.
 2. Créer une clé fine-grained GitHub limitée à ce dépôt avec **Contents: Read and write**.
 3. Dans **Paramètres → GitHub**, renseigner le dépôt (URL ou propriétaire/nom), la branche et la clé, puis cliquer **Connecter**.
 4. La synchronisation démarre automatiquement, puis reprend après les modifications et au retour de connexion. Un bouton permet aussi de la lancer manuellement.
@@ -34,7 +34,7 @@ La connexion vérifie le caractère privé du dépôt et l’existence de la bra
 
 ## Vercel
 
-Importer le dépôt de code dans Vercel, choisir Next.js et définir **Root Directory : kotoba** si le dépôt contient le dossier parent. Si kotoba est la racine du dépôt, garder la racine par défaut. Le mode GitHub personnel fonctionne sans variable d’environnement ; connecter chaque appareil depuis les paramètres. Le dépôt de données reste séparé du dépôt de code.
+Importer le dépôt de code dans Vercel, choisir Next.js, laisser **Root Directory** vide et définir **prod** comme branche de production. Le mode GitHub personnel fonctionne sans variable d’environnement ; connecter chaque appareil depuis les paramètres. Le dépôt de données reste séparé du dépôt de code.
 
 Aucun dépôt ou déploiement n’a été créé automatiquement. Les offres gratuites et leurs quotas peuvent évoluer.
 
@@ -67,7 +67,7 @@ Le brouillon est enregistré sur cet appareil, indépendamment des decks et de l
 - Ouvrir une première fois l’application en ligne pour préparer les ressources hors connexion. Une application fermée ne garantit aucun envoi ; la synchronisation reprend à l’ouverture ou au retour de connexion.
 - L’indicateur de synchronisation permet de distinguer sauvegarde locale et copie distante. Synchroniser avant de changer d’appareil ; un appareil hors connexion ignore les nouvelles données des autres.
 - L’export ZIP contient le JSON versionné, le contenu et l’historique. L’export CSV sert à réutiliser les fiches ; il ne remplace pas une sauvegarde complète. Médias non inclus dans cette V1 textuelle.
-- Télécharger régulièrement un export séparé. Effacer les données du navigateur supprime la copie locale et les modifications non synchronisées. Les sessions d’un même navigateur et d’un même profil partagent cette copie. Les navigateurs compatibles Web Locks limitent Kotoba à un onglet actif pour éviter les écritures concurrentes locales.
+- Télécharger régulièrement un export séparé. Effacer les données du navigateur supprime la copie locale et les modifications non synchronisées. Les sessions d’un même navigateur et d’un même profil partagent cette copie. Les navigateurs compatibles Web Locks limitent Japonais à un onglet actif pour éviter les écritures concurrentes locales.
 - Les suppressions restent sous forme de marqueurs pour éviter la résurrection des cartes lors des fusions. L’historique Git conserve aussi les versions précédentes ; supprimer une carte dans l’interface n’efface donc pas ses anciennes versions du dépôt.
 
 ## Format et synchronisation

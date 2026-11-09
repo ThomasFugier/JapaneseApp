@@ -87,7 +87,7 @@ export function useLibrary() {
         if (!lock) {
           // React development remounts can briefly retain the previous lock.
           if (retry) { window.setTimeout(() => { if (!disposed) acquire(false); }, 100); return; }
-          setError('Kotoba est déjà ouvert dans un autre onglet. Fermez l’autre onglet puis rechargez cette page pour protéger vos modifications.'); return;
+          setError('Japonais est déjà ouvert dans un autre onglet. Fermez l’autre onglet puis rechargez cette page pour protéger vos modifications.'); return;
         }
         await initialize();
         if (!disposed) await new Promise<void>(resolve => { release = resolve; });

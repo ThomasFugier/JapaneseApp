@@ -66,3 +66,11 @@ La connexion OAuth et l’écriture sur un dépôt GitHub réel ne sont pas conf
 - Ctrl+Z restaure 私はりんごを食べる。 ; Ctrl+Maj+Z rétablit le kanji.
 - Vue mobile à 390 px : barre d’outils sur deux lignes, sans débordement horizontal.
 - Les tests du convertisseur couvrent le texte collé, les événements de composition native, la suppression et les changements de curseur. Aucun test d’IME système sur appareil physique effectué.
+
+## Interface Japonais et navigation stable
+
+- Nom Japonais dans l’interface, le titre du navigateur, le manifeste mobile et les noms d’exports. Identifiants de stockage et format des sauvegardes conservés.
+- Icône simplifiée : cercle rouge sur fond blanc ; onglets soulignés, en-tête et titres sur les mêmes marges.
+- Cause reproduite à 1440 × 1000 : le logo passait de x=136 à x=128,4 avec l’apparition de la barre de défilement. Après correction, x=164,4 et même hauteur dans les quatre onglets ; titres également alignés.
+- Mesures à 641 px et 390 px : logo fixe, aucun débordement ou chevauchement. Titres mobiles à la même hauteur ; outils d’écriture répartis sur deux lignes.
+- 61 tests passent ; build de production et TypeScript validés.

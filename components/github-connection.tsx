@@ -40,11 +40,11 @@ export function GitHubConnection({ connected, repository, onConnect, onDisconnec
 
   if (connected) return <div className="github-connected"><div><Github size={19} /><span><strong>GitHub connecté</strong><span>{repository}</span></span></div><button type="button" className="text-button" onClick={() => { setToken(''); onDisconnect(); }}>Déconnecter</button><p>Clé conservée pour cette session uniquement.</p></div>;
   return <form className="github-connection-form" onSubmit={connect}>
-    <label>Dépôt privé<input required maxLength={300} placeholder="ThomasFugier/kotoba-data" value={repo} onChange={event => setRepo(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
+    <label>Dépôt privé<input required maxLength={300} placeholder="ThomasFugier/japonais-data" value={repo} onChange={event => setRepo(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
     <label>Branche<input required maxLength={255} value={branch} onChange={event => setBranch(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} /></label>
     <label>Clé GitHub<input required type="password" name="kotoba-github-token" maxLength={1024} value={token} onChange={event => setToken(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="github_pat_…" /></label>
     <p>Dépôt privé, initialisé avec un README. Clé conservée pour cette session uniquement, avec Contents en lecture/écriture pour ce seul dépôt.</p>
-    <div className="github-setup-links"><a className="github-token-link" href="https://github.com/new" target="_blank" rel="noopener noreferrer">Créer un dépôt<ExternalLink size={12} /></a><a className="github-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Kotoba&contents=write" target="_blank" rel="noopener noreferrer">Créer une clé limitée à ce dépôt<ExternalLink size={12} /></a></div>
+    <div className="github-setup-links"><a className="github-token-link" href="https://github.com/new" target="_blank" rel="noopener noreferrer">Créer un dépôt<ExternalLink size={12} /></a><a className="github-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Japonais&contents=write" target="_blank" rel="noopener noreferrer">Créer une clé limitée à ce dépôt<ExternalLink size={12} /></a></div>
     {error && <p className="form-error" role="alert">{error}</p>}
     <button className="button primary" type="submit" disabled={busy || !repo.trim() || !token.trim()}>{busy ? <LoaderCircle size={16} className="spin" /> : <Github size={16} />}{busy ? 'Connexion…' : 'Connecter'}</button>
   </form>;

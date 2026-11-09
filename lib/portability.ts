@@ -9,7 +9,7 @@ export function backupBytes(snapshot: Snapshot): Uint8Array {
   if (json.byteLength > MAX_BYTES) throw new Error('La sauvegarde dépasse la limite de 20 Mo de cette version.');
   const bytes = zipSync({
     'kotoba.json': json,
-    'README.txt': strToU8('Kotoba — sauvegarde complète, format 3\nLe fichier kotoba.json contient les fiches, cartes, decks, classements, révisions et annulations.\nLes identifiants sont stables. Les dates sont ISO 8601.\nAucun média n’est géré par cette version.\n'),
+    'README.txt': strToU8('Japonais — sauvegarde complète, format 3\nLe fichier kotoba.json contient les fiches, cartes, decks, classements, révisions et annulations.\nLes identifiants sont stables. Les dates sont ISO 8601.\nAucun média n’est géré par cette version.\n'),
   });
   if (bytes.byteLength > MAX_BYTES) throw new Error('La sauvegarde dépasse la limite de 20 Mo de cette version.');
   return bytes;
@@ -55,11 +55,11 @@ function download(bytes: Uint8Array, name: string, type: string) {
 }
 
 export function downloadBackup(snapshot: Snapshot): void {
-  download(backupBytes(snapshot), `kotoba-${new Date().toISOString().slice(0, 10)}.zip`, 'application/zip');
+  download(backupBytes(snapshot), `japonais-${new Date().toISOString().slice(0, 10)}.zip`, 'application/zip');
 }
 
 export function downloadCsv(snapshot: Snapshot): void {
-  download(strToU8(csvText(snapshot)), `kotoba-cartes-${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8');
+  download(strToU8(csvText(snapshot)), `japonais-cartes-${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8');
 }
 
 export async function parseImport(file: File): Promise<Snapshot> {
