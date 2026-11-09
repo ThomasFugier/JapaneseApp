@@ -1,0 +1,17 @@
+.github-connection-form { display:grid; gap:15px; }
+.github-connection-form>label { display:block; color:#686873; font-size:12px; font-weight:500; }
+.github-connection-form input { display:block; margin-top:7px; width:100%; padding:10px 12px; border:1px solid #dedee5; border-radius:7px; color:#45454e; background:white; font-size:13px; line-height:1.7; }
+.github-connection-form input::placeholder { color:#b1b1bb; }
+.github-connection-form>p { color:#898994; font-size:11px; line-height:1.8; }
+.github-connection-form .form-error { color:var(--red); }
+.github-connection-form>.button { justify-self:start; }
+.github-token-link { display:inline-flex; align-items:center; gap:6px; color:#74747f; font-size:11px; justify-self:start; }
+.github-token-link:hover { color:var(--red); }
+.github-setup-links { display:flex; flex-wrap:wrap; gap:10px 18px; }
+.github-connected>div { display:flex; align-items:center; gap:11px; color:#666671; }
+.github-connected>div>span { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.github-connected strong { font-size:12px; font-weight:500; }
+.github-connected span>span { font-size:11px; color:#92929c; overflow-wrap:anywhere; }
+.github-connected>.text-button { margin:12px 0 5px; }
+.github-connected>p { font-size:11px; color:#9999a3; }
+@media(max-width:640px) { .github-connection-form input { font-size:16px; } }

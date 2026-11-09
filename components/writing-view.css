@@ -1,0 +1,43 @@
+.writing-view { max-width:900px; margin:0 auto; }
+.writing-save-status { color:#a0a0aa; font-size:11px; }
+.writing-save-status.unsaved { color:var(--red); }
+.writing-toolbar { display:flex; align-items:center; justify-content:center; width:max-content; max-width:100%; gap:12px; padding:5px 8px; border:1px solid var(--line); border-radius:30px; margin:0 auto 26px; background:white; }
+.writing-font-sizes { display:flex; align-items:center; gap:3px; padding-right:12px; border-right:1px solid var(--line); }
+.writing-font-sizes button { min-width:32px; min-height:32px; border-radius:20px; font-size:12px; color:#8b8b94; }
+.writing-font-sizes button[aria-pressed=true] { background:#202023; color:white; }
+.writing-suggestion-toggle { display:flex; align-items:center; justify-content:center; gap:7px; min-height:34px; padding:6px 10px; border-radius:20px; font-size:12px; color:#9a9aa3; }
+.writing-suggestion-toggle.enabled { color:var(--red); background:var(--red-soft); }
+.writing-download { width:32px; height:32px; margin-left:-5px; }
+.writing-paper { position:relative; max-width:800px; min-height:1050px; margin:0 auto; background:white; border:1px solid #e5e5e9; border-radius:3px; box-shadow:0 3px 16px #00000004; }
+.writing-textarea { display:block; width:100%; min-height:1050px; padding:65px 64px 100px; border:0; resize:none; overflow:hidden; background:transparent; color:#242428; line-height:1.9; font-family:var(--jp); font-weight:400; letter-spacing:.3px; outline:none; }
+.writing-textarea:focus { outline:none; }
+.writing-textarea::placeholder { color:#d1d1d8; }
+.writing-textarea.small { font-size:22px; }
+.writing-textarea.medium { font-size:29px; }
+.writing-textarea.large { font-size:38px; }
+.writing-suggestions { position:absolute; z-index:12; border:1px solid #e2e2e8; border-radius:10px; background:white; box-shadow:0 6px 25px #00000012; overflow:auto; overscroll-behavior:contain; }
+.writing-suggestions [role=listbox] { padding:4px; }
+.writing-suggestions [role=option] { width:100%; min-height:56px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:9px 11px; border-radius:6px; text-align:left; }
+.writing-suggestions [role=option]:hover,.writing-suggestions [role=option].active { background:#f7f7f9; }
+.writing-suggestion-word { font-family:var(--jp); font-size:22px; color:#303035; min-width:0; overflow-wrap:anywhere; }
+.writing-suggestion-word small { display:block; font:11px/1.7 var(--font); color:#9696a1; }
+.writing-suggestion-meaning { color:#8e8e99; font-size:11px; max-width:50%; overflow-wrap:anywhere; }
+.writing-suggestion-help { border-top:1px solid #f1f1f4; padding:7px 11px; font-size:9px; color:#b0b0ba; text-align:center; }
+@media (max-width:640px) {
+  .writing-save-status { font-size:10px; }
+  .writing-toolbar { gap:6px; padding:4px 7px; margin-bottom:20px; }
+  .writing-font-sizes { gap:1px; padding-right:7px; }
+  .writing-font-sizes button { min-width:32px; min-height:40px; }
+  .writing-suggestion-toggle { min-height:40px; font-size:11px; gap:5px; padding:6px 8px; }
+  .writing-download { min-width:36px; min-height:40px; margin-left:0; }
+  .writing-paper { min-height:610px; }
+  .writing-textarea { min-height:610px; padding:30px 23px 95px; line-height:1.9; }
+  .writing-textarea.small { font-size:20px; }
+  .writing-textarea.medium { font-size:25px; }
+  .writing-textarea.large { font-size:32px; }
+  .writing-suggestions [role=option] { min-height:58px; gap:10px; }
+  .writing-suggestion-word { font-size:22px; }
+  .writing-suggestion-word small { font-size:12px; }
+  .writing-suggestion-meaning { font-size:11px; }
+  .writing-suggestion-help { display:none; }
+}

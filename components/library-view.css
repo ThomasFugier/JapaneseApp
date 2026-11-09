@@ -1,0 +1,41 @@
+.reading-breadcrumb { display:flex; align-items:center; flex-wrap:wrap; gap:3px; margin-bottom:7px; }
+.reading-breadcrumb>span { display:inline-flex; align-items:center; gap:3px; }
+.reading-breadcrumb button { color:#8a8a94; font-size:11px; padding:4px 0; text-align:left; }
+.reading-breadcrumb button:hover { color:var(--red); }
+.reading-breadcrumb button[aria-current=page] { color:#50505a; }
+.reading-breadcrumb svg { color:#b6b6bf; }
+.mobile-parent-link { display:none; }
+.reading-tools { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:-5px 0 22px; }
+.reading-select { display:flex; align-items:center; gap:7px; min-width:0; }
+.reading-select>span { font-size:11px; color:#9696a0; }
+.reading-select select { border:1px solid var(--line); border-radius:7px; min-height:36px; padding:7px 28px 7px 10px; font-size:11px; color:#666670; background:white; max-width:175px; }
+.reading-tools .hide-translations { margin-left:auto; min-height:36px; font-size:11px; }
+.reading-tools .hide-translations.enabled { color:var(--red); border-color:#eed3db; background:#fff7f9; }
+.entry-japanese>span { font-size:13px; line-height:1.7; color:#777782; }
+.masked-translation { color:#b2b2bd; letter-spacing:3px; font-size:13px; }
+.entry-row>.reveal-translation { margin-right:9px; min-height:44px; min-width:40px; color:#9c7080; }
+.result-decks { display:flex; align-items:center; flex-wrap:wrap; gap:5px 12px; padding:0 16px 15px; }
+.result-decks button { display:inline-flex; align-items:center; gap:5px; color:#93939e; font-size:10px; text-align:left; padding:4px 0; }
+.result-decks button>span { overflow-wrap:anywhere; }
+.result-decks button:hover { color:var(--red); }
+.result-decks>span { color:#a4a4ad; font-size:10px; }
+.entry-detail>.reveal-detail { margin-bottom:4px; min-height:40px; }
+@media (max-width:960px) {
+  .reading-tools { gap:8px; }
+  .reading-tools .hide-translations { margin-left:0; }
+  .reading-select>span { display:none; }
+}
+@media (max-width:640px) {
+  .mobile-parent-link { display:inline-flex; min-height:44px; margin:-10px 0 5px; font-size:11px; }
+  .reading-breadcrumb { gap:3px; margin-bottom:5px; }
+  .reading-breadcrumb button { font-size:10px; min-height:44px; }
+  .reading-select { flex:1; }
+  .reading-select select { width:100%; max-width:none; font-size:16px; min-height:44px; padding:8px; }
+  .reading-tools { gap:8px; margin:0 0 19px; }
+  .reading-tools .hide-translations { width:100%; min-height:44px; font-size:11px; }
+  .entry-japanese>span { font-size:13px; letter-spacing:0; }
+  .entry-row>.reveal-translation { min-width:44px; width:44px; margin-right:2px; }
+  .result-decks { padding:0 10px 15px; gap:3px 10px; }
+  .result-decks button { min-height:44px; font-size:9px; }
+  .entry-detail>.reveal-detail { min-height:44px; }
+}
