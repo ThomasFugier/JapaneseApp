@@ -1,4 +1,4 @@
-const CACHE = 'kotoba-shell-v8';
+const CACHE = 'kotoba-shell-v10';
 const DICTIONARIES = 'japanese-dictionaries-v1';
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['/', '/icon.svg', '/manifest.webmanifest'])));

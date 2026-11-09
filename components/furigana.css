@@ -10,6 +10,7 @@
 .furigana-toggle[aria-checked=true] .furigana-switch i { transform:translateX(11px); }
 .furigana-toggle.is-loading[aria-checked=true] .furigana-switch { opacity:.5; }
 .furigana-toggle.has-error[aria-checked=true] { text-decoration:underline dotted; text-underline-offset:3px; }
+.has-furigana .deck-symbol { line-height:1.2; }
 .has-furigana .entry-japanese:has(.furigana-ruby) { padding-top:3px; }
 .has-furigana .flashcard-prompt h2 { line-height:1.9; }
 .has-furigana .answer-example>span,.has-furigana .entry-detail blockquote>span { line-height:2.1; }

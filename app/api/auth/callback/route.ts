@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { requireConfig } from '@/lib/server/config';
-import { OAUTH_COOKIE, SESSION_COOKIE, cookieOptions, equalTokens, signPayload, verifyPayload } from '@/lib/server/session';
+import { OAUTH_COOKIE, SESSION_COOKIE, SESSION_MAX_AGE, cookieOptions, equalTokens, signPayload, verifyPayload } from '@/lib/server/session';
 
 export const runtime = 'nodejs';
 export async function GET(request: Request) {
@@ -16,17 +16,16 @@ export async function GET(request: Request) {
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ client_id: config.clientId, client_secret: config.clientSecret, code, redirect_uri: `${config.appUrl}/api/auth/callback`, code_verifier: attempt.verifier }),
-      cache: 'no-store', signal: AbortSignal.timeout(15000),
+      cache: 'no-store', credentials: 'omit', redirect: 'error', signal: AbortSignal.timeout(15000),
     });
     if (!tokenResponse.ok) throw new Error('Authorization failed');
     const tokens = await tokenResponse.json();
     if (typeof tokens.access_token !== 'string') throw new Error('No token');
-    const userResponse = await fetch('https://api.github.com/user', { headers: { Authorization: `Bearer ${tokens.access_token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    const userResponse = await fetch('https://api.github.com/user', { headers: { Authorization: `Bearer ${tokens.access_token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, cache: 'no-store', credentials: 'omit', redirect: 'error', signal: AbortSignal.timeout(15000) });
     if (!userResponse.ok) throw new Error('Identity failed');
     const user = await userResponse.json();
-    if (typeof user.login !== 'string' || user.login.toLowerCase() !== config.allowedUser.toLowerCase() || !Number.isSafeInteger(user.id)) throw new Error('Owner mismatch');
-    const maxAge = 60 * 60 * 24 * 7;
-    jar.set(SESSION_COOKIE, signPayload({ login: user.login, userId: user.id, exp: Date.now() + maxAge * 1000 }, config.secret), cookieOptions(config, maxAge));
+    if (typeof user.login !== 'string' || user.login.toLowerCase() !== config.allowedUser.toLowerCase() || !Number.isSafeInteger(user.id) || user.id <= 0) throw new Error('Owner mismatch');
+    jar.set(SESSION_COOKIE, signPayload({ login: user.login, userId: user.id, exp: Date.now() + SESSION_MAX_AGE * 1000 }, config.secret), cookieOptions(config, SESSION_MAX_AGE));
     return Response.redirect(`${config.appUrl}/?auth=success`, 302);
   } catch {
     // Never reflect OAuth provider errors, authorization codes, or tokens.

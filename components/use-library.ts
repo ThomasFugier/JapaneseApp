@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { emptySnapshot, snapshotsEqual, validateSnapshot, type Snapshot } from '@/lib/model';
-import { isUnmodifiedSample, seedSnapshot } from '@/lib/seed';
 import { loadLibrary, saveLibrary } from '@/lib/storage';
 import { mergeSnapshots, type Conflict } from '@/lib/merge';
-import { readGitHub, syncGitHub, type GitHubConfig } from '@/lib/github-client';
+import { forgetGitHubConnection } from '@/lib/github-connection-store';
+import { needsCloudBootstrap, type CloudConnectionStatus as Status, type CloudSyncResult } from '@/lib/cloud-connection';
 
-type Status = { configured: boolean; authenticated: boolean; user?: { login: string }; reason?: string };
 type Library = { snapshot: Snapshot; base: Snapshot; lastSyncedAt: string | null };
 const localSaveFailure = 'Local save failed. Your last action was not saved. Export your data and check the available storage space.';
 
@@ -22,8 +21,6 @@ export function useLibrary() {
   const [syncError, setSyncError] = useState('');
   const [notice, setNotice] = useState('');
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
-  const [manualRepository, setManualRepository] = useState<string | null>(null);
-  const manualConfig = useRef<GitHubConfig | null>(null);
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const record = useRef<Library | null>(null);
   const queue = useRef<Promise<void>>(Promise.resolve());
@@ -64,21 +61,29 @@ export function useLibrary() {
         try { remoteStatus = await fetch('/api/status', { cache: 'no-store', signal: AbortSignal.timeout(5000) }).then(response => response.json()); } catch { /* Offline mode. */ }
         if (disposed) return;
         setStatus(remoteStatus);
-        let value: Library = stored ?? { snapshot: remoteStatus?.configured ? emptySnapshot() : seedSnapshot(), base: emptySnapshot(), lastSyncedAt: null };
-        // A new connected device starts from GitHub, never from demonstration cards.
-        if (!stored && remoteStatus?.authenticated) {
+        if (remoteStatus?.authenticated) {
+          try { forgetGitHubConnection(); } catch { /* Legacy browser credentials are never used for cloud access. */ }
+        }
+        let value: Library = stored ?? { snapshot: emptySnapshot(), base: emptySnapshot(), lastSyncedAt: null };
+        let loadedCloud = false;
+        if (needsCloudBootstrap(remoteStatus, stored)) {
           loadingRemote = true;
-          const response = await fetch('/api/sync', { cache: 'no-store', signal: AbortSignal.timeout(45000) });
-          const remote = await response.json();
-          if (!response.ok) throw new Error(remote.error || 'Unable to load your GitHub library. Reload the page to try again.');
-          if (remote.revision) {
+          try {
+            const response = await fetch('/api/sync', { cache: 'no-store', signal: AbortSignal.timeout(45000) });
+            const remote = await response.json();
+            if (!response.ok) throw new Error(remote.error || 'Unable to load your cloud library.');
             const snapshot = validateSnapshot(remote.snapshot);
             value = { snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() };
+            loadedCloud = true;
+          } catch (cause) {
+            const message = cause instanceof Error ? cause.message : 'Cloud synchronization is unavailable. Your local data is preserved.';
+            setSyncError(message); setError(message);
+            if (stored) value = stored;
           }
           loadingRemote = false;
         }
         if (disposed) return;
-        if (!stored) {
+        if (!stored || loadedCloud) {
           try { await saveLibrary(value); if (!disposed) setLocalSaveError(''); }
           catch (cause) { if (!disposed) setLocalSaveError(localSaveFailure); throw cause; }
         }
@@ -89,7 +94,7 @@ export function useLibrary() {
           const message = 'GitHub sign-in was denied or interrupted. Check the authorized account and try again.';
           setSyncError(message); setError(message);
         }
-        if (auth === 'success') setNotice('GitHub account connected. Loading your library…');
+        if (auth === 'success') setNotice('Account connected.');
         if (auth) window.history.replaceState({}, '', '/');
       } catch (cause) {
         if (!disposed) {
@@ -146,37 +151,23 @@ export function useLibrary() {
     return persist({ ...record.current, snapshot: fn(structuredClone(record.current.snapshot)) });
   }, [persist]);
 
-  const connectGitHub = useCallback(async (config: GitHubConfig) => {
-    if (!record.current || busy.current) throw new Error('An operation is already in progress. Try again.');
-    busy.current = true; setSyncing(true);
-    let readingRemote = false;
+  const disconnectGitHub = useCallback(async () => {
+    if (busy.current) throw new Error('Wait for synchronization to finish.');
+    busy.current = true;
     try {
       await queue.current;
-      readingRemote = true;
-      const remote = await readGitHub(config);
-      readingRemote = false; setSyncError('');
-      // Demonstration content must not pollute an existing personal repository.
-      if (remote.revision && isUnmodifiedSample(record.current.snapshot) && snapshotsEqual(record.current.base, emptySnapshot())) {
-        await persist({ snapshot: remote.snapshot, base: remote.snapshot, lastSyncedAt: new Date().toISOString() });
-      }
-      manualConfig.current = { ...config };
-      setManualRepository(`${config.owner}/${config.repo}`);
-      setError(''); setNotice('GitHub repository connected.');
-    } catch (cause) {
-      if (readingRemote) setSyncError(cause instanceof Error ? cause.message : 'Unable to connect to GitHub.');
-      throw cause;
-    } finally { busy.current = false; setSyncing(false); }
-  }, [persist]);
-
-  const disconnectGitHub = useCallback(() => {
-    if (busy.current) { setNotice('Wait for synchronization to finish.'); return; }
-    manualConfig.current = null; setManualRepository(null); setSyncError('');
-    setNotice('GitHub disconnected. Your local data is preserved.');
+      const response = await fetch('/api/auth/logout', { method: 'POST', signal: AbortSignal.timeout(15000) });
+      if (!response.ok) throw new Error('Unable to sign out. Try again.');
+      setStatus(previous => previous ? { ...previous, authenticated: false, user: undefined } : null);
+      try { forgetGitHubConnection(); } catch { /* Cloud access does not depend on browser credentials. */ }
+      setSyncError(''); setError('');
+      setNotice('Signed out. Your local cards are preserved.');
+    } finally { busy.current = false; }
   }, []);
 
   const sync = useCallback(async () => {
     if (!record.current || busy.current || conflictData.current) return;
-    if (!manualConfig.current && !status?.authenticated) { setNotice('Connect your GitHub repository in Settings.'); return; }
+    if (!status?.authenticated) { setNotice('Connect your account to synchronize.'); return; }
     if (!navigator.onLine) { setNotice('Offline. Your changes remain on this device.'); return; }
     busy.current = true; setSyncing(true); setError(''); setSyncError('');
     let savingLocally = true;
@@ -184,15 +175,25 @@ export function useLibrary() {
       await queue.current;
       savingLocally = false;
       const sent = structuredClone(record.current);
-      let result: Awaited<ReturnType<typeof syncGitHub>>;
-      if (manualConfig.current) result = await syncGitHub(manualConfig.current, sent.base, sent.snapshot);
-      else {
-        const response = await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: sent.base, snapshot: sent.snapshot }), signal: AbortSignal.timeout(60000) });
-        const payload = await response.json();
-        if (response.status === 401) setStatus(previous => ({ configured: previous?.configured ?? true, authenticated: false }));
-        if (!response.ok && !(response.status === 409 && Array.isArray(payload.conflicts))) throw new Error(payload.error || 'Synchronization is unavailable.');
-        result = { ...payload, conflict: response.status === 409 };
+      // Retrying a failed first load must never upload untouched demo cards.
+      if (needsCloudBootstrap(status, sent)) {
+        const response = await fetch('/api/sync', { cache: 'no-store', signal: AbortSignal.timeout(45000) });
+        const remote = await response.json();
+        if (response.status === 401) setStatus(previous => previous ? { ...previous, authenticated: false, user: undefined } : null);
+        if (!response.ok) throw new Error(remote.error || 'Unable to load your cloud library.');
+        if (!needsCloudBootstrap(status, record.current)) return;
+        const snapshot = validateSnapshot(remote.snapshot);
+        savingLocally = true;
+        await persist({ snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() });
+        savingLocally = false;
+        setNotice('Your cloud library is ready.');
+        return;
       }
+      const response = await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: sent.base, snapshot: sent.snapshot }), signal: AbortSignal.timeout(60000) });
+      const payload = await response.json();
+      if (response.status === 401) setStatus(previous => previous ? { ...previous, authenticated: false, user: undefined } : null);
+      if (!response.ok && !(response.status === 409 && Array.isArray(payload.conflicts))) throw new Error(payload.error || 'Synchronization is unavailable.');
+      const result: CloudSyncResult = { ...payload, conflict: response.status === 409 };
       if (result.conflict) {
         const captured = structuredClone(record.current.snapshot);
         const rebased = mergeSnapshots(sent.snapshot, captured, result.snapshot);
@@ -219,21 +220,21 @@ export function useLibrary() {
       setError(message);
     }
     finally { busy.current = false; setSyncing(false); }
-  }, [persist, status, manualRepository]);
+  }, [persist, status]);
 
   useEffect(() => {
-    if (!ready || !(manualRepository || status?.authenticated) || !record.current || JSON.stringify(record.current.snapshot) === JSON.stringify(record.current.base)) return;
+    if (!ready || !status?.authenticated || !record.current || JSON.stringify(record.current.snapshot) === JSON.stringify(record.current.base)) return;
     const timer = setTimeout(() => { void sync(); }, 15000);
     return () => clearTimeout(timer);
-  }, [data, ready, status, manualRepository, sync]);
+  }, [data, ready, status, sync]);
 
   useEffect(() => {
-    if (!ready || !(manualRepository || status?.authenticated)) return;
+    if (!ready || !status?.authenticated) return;
     void sync();
     const onFocus = () => { void sync(); };
     window.addEventListener('online', onFocus); window.addEventListener('focus', onFocus);
     return () => { window.removeEventListener('online', onFocus); window.removeEventListener('focus', onFocus); };
-  }, [ready, status, manualRepository, sync]);
+  }, [ready, status, sync]);
 
   const resolve = useCallback(async (choices: Record<string, 'local' | 'remote'>) => {
     const pending = conflictData.current;
@@ -258,6 +259,5 @@ export function useLibrary() {
   }, [conflicts, persist]);
 
   const dirty = !!record.current && JSON.stringify(data) !== JSON.stringify(record.current.base);
-  const connectionStatus: Status | null = manualRepository ? { configured: true, authenticated: true } : status;
-  return { data, ready, saving, syncing, status: connectionStatus, serverStatus: status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, manualRepository, connectGitHub, disconnectGitHub };
+  return { data, ready, saving, syncing, status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, disconnectGitHub };
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GitHubClient, parseRepository, type GitHubConfig } from '../lib/github-client';
+import { GitHubAuthenticationError, GitHubClient, parseRepository, type GitHubConfig } from '../lib/github-client';
 import { seedSnapshot } from '../lib/seed';
 import { effectiveReviews } from '../lib/engine';
 import { emptySnapshot, type Snapshot } from '../lib/model';
@@ -126,4 +126,17 @@ test('large Contents responses use the bounded Git blob endpoint and preserve Ja
 test('network error messages never reflect runtime credentials', async () => {
   const fetcher: typeof fetch = async () => { throw new Error(`request failed ${config.token}`); };
   await assert.rejects(new GitHubClient(config, fetcher).read(), error => error instanceof Error && !error.message.includes(config.token) && /unreachable/.test(error.message));
+});
+
+
+test('rejected credentials produce a typed reconnect error without revealing the token', async () => {
+  const fetcher: typeof fetch = async () => Response.json({}, { status: 401 });
+  await assert.rejects(new GitHubClient(config, fetcher).read(), error => error instanceof GitHubAuthenticationError && /Reconnect/.test(error.message) && !error.message.includes(config.token));
+});
+
+test('permission and rate-limit failures do not invalidate stored credentials', async () => {
+  for (const status of [403, 429]) {
+    const fetcher: typeof fetch = async () => Response.json({}, { status });
+    await assert.rejects(new GitHubClient(config, fetcher).read(), error => error instanceof Error && !(error instanceof GitHubAuthenticationError) && !error.message.includes(config.token));
+  }
 });

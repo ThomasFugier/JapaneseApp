@@ -24,7 +24,7 @@ export function parseRepository(input: string): { owner: string; repo: string } 
   return { owner: parts[0], repo: parts[1] };
 }
 
-function checkedConfig(config: GitHubConfig): GitHubConfig {
+export function validateGitHubConfig(config: GitHubConfig): GitHubConfig {
   const repo = parseRepository(`${config.owner}/${config.repo}`);
   const branch = config.branch.trim() || 'main';
   const token = config.token.trim();
@@ -51,19 +51,23 @@ function decodeSnapshot(content: unknown): Snapshot {
   } catch { throw new Error('The library.json file on GitHub is invalid. No data was replaced.'); }
 }
 
+export class GitHubAuthenticationError extends Error {
+  constructor() { super('GitHub token rejected or expired. Reconnect in Settings.'); this.name = 'GitHubAuthenticationError'; }
+}
+
 function fail(status: number): never {
-  if (status === 401) throw new Error('GitHub token rejected or expired.');
+  if (status === 401) throw new GitHubAuthenticationError();
   if (status === 403 || status === 429) throw new Error('GitHub access denied or rate limit reached. Check the Contents read and write permissions.');
   if (status === 404) throw new Error('Repository not found or inaccessible with this token.');
   throw new Error('GitHub is temporarily unavailable. Your local data is preserved.');
 }
 
-/** Personal direct mode: credentials are runtime input, sent only to GitHub.
- * Callers keep the token in memory, never in exports, localStorage or IndexedDB.
+/** Personal direct mode sends credentials only to GitHub.
+ * Browser connection storage is separate from library data and exports.
  */
 export class GitHubClient {
   private config: GitHubConfig;
-  constructor(config: GitHubConfig, private fetcher: Fetcher = (input, init) => globalThis.fetch(input, init)) { this.config = checkedConfig(config); }
+  constructor(config: GitHubConfig, private fetcher: Fetcher = (input, init) => globalThis.fetch(input, init)) { this.config = validateGitHubConfig(config); }
 
   private async request(path: string, init: RequestInit = {}): Promise<Response> {
     const url = `https://api.github.com/repos/${encodeURIComponent(this.config.owner)}/${encodeURIComponent(this.config.repo)}${path}`;

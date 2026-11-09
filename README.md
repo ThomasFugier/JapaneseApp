@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Ouvrir http://localhost:3000. Sans configuration, l’application fonctionne sur cet appareil avec IndexedDB, sans compte ni synchronisation. Un jeu d’exemples permet de l’essayer ; ce ne sont pas des données Anki importées.
+Ouvrir http://localhost:3000. Sans configuration, l’application fonctionne sur cet appareil avec IndexedDB, sans compte ni synchronisation. Un nouvel appareil récupère la bibliothèque privée après connexion ; aucun deck de démonstration n’est ajouté.
 
 ```sh
 npm run typecheck
@@ -19,28 +19,22 @@ npm test
 npm run build
 ```
 
-## GitHub depuis les paramètres
+## Bibliothèque privée intégrée
 
-Aucun fichier de configuration n’est nécessaire pour le mode personnel.
+Le serveur utilise directement **ThomasFugier/NihongoData**, branche **main**, fichier **library.json**. Le dépôt reste privé et séparé du code. L’interface propose seulement **Continue with GitHub** ; aucun dépôt, branche ou token n’est à renseigner dans le navigateur.
 
-1. Créer un dépôt GitHub **privé**, initialisé avec un README, réservé aux données Japonais.
-2. Créer une clé fine-grained GitHub limitée à ce dépôt avec **Contents: Read and write**.
-3. Dans **Paramètres → GitHub**, renseigner le dépôt (URL ou propriétaire/nom), la branche et la clé, puis cliquer **Connecter**.
-4. La synchronisation démarre automatiquement, puis reprend après les modifications et au retour de connexion. Un bouton permet aussi de la lancer manuellement.
+La connexion personnelle est réservée à **ThomasFugier** et mémorisée pendant 90 jours avec un cookie signé HttpOnly, Secure en HTTPS, SameSite=Lax. La lecture et l’écriture du dépôt passent uniquement par le serveur après authentification. Les cartes locales restent utilisables hors ligne et après déconnexion.
 
-La clé est envoyée directement à api.github.com et conservée uniquement en mémoire pendant cette ouverture. Elle n’est stockée ni dans localStorage, ni dans IndexedDB, ni dans un export ou le code. Après rechargement ou fermeture, la ressaisir dans les paramètres. Seuls le nom du dépôt et la branche sont mémorisés. La clé doit être saisie uniquement dans le champ dédié, jamais dans un commit ou une conversation.
+### Configuration unique sur Vercel
 
-La connexion vérifie le caractère privé du dépôt et l’existence de la branche. Les erreurs de droits ou de réseau ne suppriment pas les données locales. Les contenus de démonstration intacts sont remplacés par la bibliothèque distante lors de la première connexion à un dépôt existant.
+1. Créer une clé GitHub fine-grained limitée à NihongoData avec **Contents: Read and write**.
+2. Créer une OAuth App GitHub, homepage **https://japanese-srs-two.vercel.app**, callback **https://japanese-srs-two.vercel.app/api/auth/callback**. Elle sert uniquement à vérifier l’identité du propriétaire avec read:user.
+3. Ajouter les secrets serveur **GITHUB_DATA_TOKEN**, **GITHUB_CLIENT_ID**, **GITHUB_CLIENT_SECRET** et **SESSION_SECRET** dans les variables du projet Vercel. SESSION_SECRET doit être aléatoire, au moins 32 caractères et indépendant des clés GitHub. Ne jamais utiliser de préfixe NEXT_PUBLIC_ pour ces valeurs ni les commiter.
+4. Publier la version après configuration. Une modification des variables Vercel s’applique au prochain déploiement ; aucun déploiement n’est lancé automatiquement par ce projet.
 
-## Vercel
+Les valeurs non secrètes sont déjà prédéfinies. .env.example permet de les remplacer pour un autre environnement, notamment APP_URL pour le développement local. Sur Vercel, garder Next.js, Root Directory vide et **prod** comme branche de production.
 
-Importer le dépôt de code dans Vercel, choisir Next.js, laisser **Root Directory** vide et définir **prod** comme branche de production. Le mode GitHub personnel fonctionne sans variable d’environnement ; connecter chaque appareil depuis les paramètres. Le dépôt de données reste séparé du dépôt de code.
-
-Aucun dépôt ou déploiement n’a été créé automatiquement. Les offres gratuites et leurs quotas peuvent évoluer.
-
-### Connexion serveur facultative
-
-L’ancien mode OAuth reste disponible pour un déploiement personnel configuré par son propriétaire : renseigner les variables de .env.example dans Vercel, utiliser une OAuth App avec callback https://votre-app.vercel.app/api/auth/callback et un token serveur limité au dépôt privé. Ce mode utilise state, PKCE et un cookie signé HttpOnly, SameSite=Lax, Secure en HTTPS. Il n’est pas nécessaire pour configurer le dépôt depuis les paramètres.
+La synchronisation reprend après connexion, modification et retour en ligne. Un nouvel appareil charge toutes les fiches, tous les decks et l’historique du dépôt. Les anciennes démonstrations intactes sont remplacées ; les données personnelles sont fusionnées avec contrôle des conflits. Une indisponibilité GitHub ne supprime aucune donnée locale. Les anciens tokens enregistrés dans le navigateur sont effacés au passage à la connexion serveur.
 
 ## Lecture et révisions
 
@@ -81,11 +75,11 @@ Le client valide les relations et les limites avant l’écriture, puis remplace
 
 ## Sécurité et limites
 
-Le mode personnel utilise une clé saisie à l’exécution, uniquement en mémoire. Les requêtes authentifiées vont directement à GitHub. Le dépôt public est refusé et chaque écriture utilise le SHA du fichier pour détecter une modification concurrente.
+La clé du dépôt et le secret de session restent côté serveur. Les API de synchronisation exigent une session du propriétaire ; les écritures refusent les origines étrangères. Le dépôt public est refusé et chaque écriture utilise le SHA du fichier pour détecter une modification concurrente.
 
-La copie locale n’est pas chiffrée : utiliser un appareil et un profil navigateur personnels. Ne pas y stocker de secrets. En cas de token expiré ou d’indisponibilité GitHub, l’édition et l’export local restent disponibles. Les offres gratuites et leurs quotas peuvent évoluer.
+La copie locale des cartes n’est pas chiffrée par l’application : utiliser un appareil et un profil navigateur personnels. Aucune clé de dépôt n’est enregistrée dans le navigateur, les exports ou les cartes. En cas de token expiré ou d’indisponibilité GitHub, l’édition et l’export local restent disponibles. Les offres gratuites et leurs quotas peuvent évoluer.
 
-La validation automatisée teste le moteur, les fusions, les sessions et les erreurs de concurrence. Les appels GitHub sont testés avec des réponses simulées. L’écriture distante réelle attend la connexion de votre dépôt depuis les paramètres.
+La validation automatisée teste le moteur, les fusions, les sessions et les erreurs de concurrence. Les appels GitHub sont testés avec des réponses simulées. La connexion distante réelle demande la configuration initiale des secrets Vercel et l’autorisation GitHub du propriétaire.
 
 ## Dépendances
 

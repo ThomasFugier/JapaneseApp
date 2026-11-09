@@ -5,6 +5,7 @@ import type { ServerConfig } from './config';
 
 export const SESSION_COOKIE = 'kotoba_session';
 export const OAUTH_COOKIE = 'kotoba_oauth';
+export const SESSION_MAX_AGE = 60 * 60 * 24 * 90;
 export type Session = { login: string; userId: number; exp: number };
 
 export function signPayload(payload: object, secret: string): string {
@@ -39,7 +40,7 @@ export function cookieOptions(config: ServerConfig, maxAge: number) {
 export async function getSession(config: ServerConfig): Promise<Session | null> {
   const jar = await cookies();
   const session = verifyPayload<Session>(jar.get(SESSION_COOKIE)?.value, config.secret);
-  return session && typeof session.login === 'string' && Number.isSafeInteger(session.userId) && session.login.toLowerCase() === config.allowedUser.toLowerCase() ? session : null;
+  return session && typeof session.login === 'string' && Number.isSafeInteger(session.userId) && session.userId > 0 && session.login.toLowerCase() === config.allowedUser.toLowerCase() ? session : null;
 }
 
 export async function requireSession(config: ServerConfig): Promise<Session> {
