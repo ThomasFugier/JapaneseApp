@@ -51,3 +51,14 @@ test('unspaced Japanese completion preserves preceding text and uses saved notes
   assert.deepEqual(applySuggestion('私はりんごを食べる', middle.range, '林檎'), { text: '私は林檎を食べる', caret: 4 });
   assert.equal(writingMatches(emptySnapshot(), 'ringo', 5), null);
 });
+
+test('live kana with a pending consonant still suggests the whole saved word', () => {
+  const data = emptySnapshot();
+  data.notes.push({ id: 'apple', japanese: '林檎', reading: 'りんご', meaning: 'Pomme', example: '', exampleTranslation: '', explanation: '', tags: [], updatedAt: '2026-11-09T00:00:00Z' });
+  data.cards.push({ id: 'apple-card', noteId: 'apple', deckIds: [], direction: 'ja-fr', updatedAt: '2026-11-09T00:00:00Z' });
+  for (const text of ['りn', 'りんg', '私はりんg']) {
+    const match = writingMatches(data, text, text.length)!;
+    assert.equal(match.notes[0].id, 'apple', text);
+    assert.equal(applySuggestion(text, match.range, '林檎').text, text.startsWith('私') ? '私は林檎' : '林檎');
+  }
+});

@@ -1,7 +1,10 @@
 .writing-view { max-width:900px; margin:0 auto; }
 .writing-save-status { color:#a0a0aa; font-size:11px; }
 .writing-save-status.unsaved { color:var(--red); }
-.writing-toolbar { display:flex; align-items:center; justify-content:center; width:max-content; max-width:100%; gap:12px; padding:5px 8px; border:1px solid var(--line); border-radius:30px; margin:0 auto 26px; background:white; }
+.writing-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; width:max-content; max-width:100%; gap:12px; padding:5px 8px; border:1px solid var(--line); border-radius:30px; margin:0 auto 26px; background:white; }
+.writing-input-modes { display:flex; align-items:center; gap:3px; padding-right:12px; border-right:1px solid var(--line); }
+.writing-input-modes button { min-width:32px; min-height:32px; padding:0 5px; border-radius:20px; font-size:13px; color:#8b8b94; }
+.writing-input-modes button[aria-pressed=true] { color:var(--red); background:var(--red-soft); }
 .writing-font-sizes { display:flex; align-items:center; gap:3px; padding-right:12px; border-right:1px solid var(--line); }
 .writing-font-sizes button { min-width:32px; min-height:32px; border-radius:20px; font-size:12px; color:#8b8b94; }
 .writing-font-sizes button[aria-pressed=true] { background:#202023; color:white; }
@@ -27,6 +30,8 @@
   .writing-save-status { font-size:10px; }
   .writing-toolbar { gap:6px; padding:4px 7px; margin-bottom:20px; }
   .writing-font-sizes { gap:1px; padding-right:7px; }
+  .writing-input-modes { gap:1px; padding-right:7px; }
+  .writing-input-modes button { min-width:32px; min-height:40px; }
   .writing-font-sizes button { min-width:32px; min-height:40px; }
   .writing-suggestion-toggle { min-height:40px; font-size:11px; gap:5px; padding:6px 8px; }
   .writing-download { min-width:36px; min-height:40px; margin-left:0; }

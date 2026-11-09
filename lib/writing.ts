@@ -17,7 +17,9 @@ export function writingToken(text: string, start: number, end = start): WritingT
   if (start !== end || !validOffset(text, start) || !validOffset(text, end)) return null;
   const before = text.slice(0, start);
   const roman = before.match(latin)?.[0];
-  const query = roman ?? before.match(japanese)?.[0];
+  const pending = roman && /^[bcdfghjklmnpqrstvwxyz]{1,3}$/i.test(roman)
+    ? before.slice(0, -roman.length).match(japanese)?.[0] : '';
+  const query = pending ? pending + roman : roman ?? before.match(japanese)?.[0];
   if (!query || query.length > 1000 || /^['’\-]+$/.test(query)) return null;
   // Japanese has no explicit word boundary: never infer away text after the caret.
   const tail = roman ? text.slice(start).match(latinAhead)?.[0] ?? '' : '';
@@ -39,7 +41,7 @@ export function writingMatches(data: Snapshot, text: string, start: number, end 
   const notes = writingSuggestions(data, token.query);
   if (notes.length) return { range: token, notes };
   // Unspaced Japanese can include a preceding particle: 私はりんご → りんご.
-  if (/^[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々〆ヶヵ]+$/u.test(token.query)) {
+  if (/^[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々〆ヶヵ]+[a-z]*$/iu.test(token.query)) {
     const characters = Array.from(token.query);
     let offset = 0;
     for (let index = 0; index < Math.min(characters.length - 1, 40); index++) {

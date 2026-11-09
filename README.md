@@ -55,7 +55,9 @@ L’ancien mode OAuth reste disponible pour un déploiement personnel configuré
 
 ## Écriture
 
-Une feuille blanche propose les mots de la bibliothèque pendant la saisie. Les flèches choisissent une proposition ; Entrée ou Tab l’insèrent ; Échap ferme les propositions et permet le retour à la ligne normal. Le clavier japonais et sa composition IME restent utilisables. Aucun texte n’est envoyé à une IA.
+Les modes **あ** (hiragana) et **ア** (katakana) convertissent le romaji pendant la frappe : ringo devient りんご, ko-hi- devient コーヒー. Le point et la virgule deviennent 。 et 、 ; les points d’interrogation et d’exclamation deviennent ？ et ！. Le mode **ABC** conserve la saisie latine. Changer de mode ne réécrit pas le texte existant ; le choix est mémorisé sur cet appareil.
+
+Les propositions viennent des cartes enregistrées. Les flèches choisissent une proposition ; Espace en mode japonais, Entrée ou Tab l’insèrent ; Échap ferme les propositions. Le clavier japonais et sa composition native restent utilisables ; le texte collé est conservé tel quel. Ctrl/Cmd+Z annule et Ctrl/Cmd+Maj+Z rétablit les modifications de la session.
 
 Le brouillon est enregistré sur cet appareil, indépendamment des decks et de la synchronisation GitHub. Le bouton de téléchargement l’exporte en texte UTF-8. Il n’est pas inclus dans les sauvegardes de cartes. Les propositions ne créent ni carte ni révision.
 

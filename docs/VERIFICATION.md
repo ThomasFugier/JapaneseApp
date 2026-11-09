@@ -55,3 +55,14 @@ La connexion OAuth et l’écriture sur un dépôt GitHub réel ne sont pas conf
 - Lectures on/kun, portée du deck, dédoublonnage et exclusions des fiches supprimées testés.
 - Tolérance limitée à une faute dès quatre lettres, deux dès huit lettres, pour limiter les résultats sans rapport.
 - Aperçu : preview-fuzzy-search.jpg.
+
+## Saisie japonaise directe
+
+- 61 tests passent ; build de production et TypeScript validés.
+- Saisie réelle ringo → りんご, puis Espace → 林檎 et point → 。.
+- Modes hiragana, katakana (ko-hi- → コーヒー) et latin vérifiés ; mode restauré après rechargement.
+- Double n testé pendant la frappe : konnichiha → こんにちは, konnyaku → こんにゃく.
+- Insertion réelle au milieu de 私はを食べる。 → 私は林檎を食べる。 sans perdre le texte autour.
+- Ctrl+Z restaure 私はりんごを食べる。 ; Ctrl+Maj+Z rétablit le kanji.
+- Vue mobile à 390 px : barre d’outils sur deux lignes, sans débordement horizontal.
+- Les tests du convertisseur couvrent le texte collé, les événements de composition native, la suppression et les changements de curseur. Aucun test d’IME système sur appareil physique effectué.
