@@ -33,10 +33,9 @@ test('Japanese punctuation and word boundaries commit the final n', () => {
   assert.equal(finishKanaInput(double.text, double.composition)?.text, 'ん');
 });
 
-test('katakana and Latin modes keep their own script', () => {
+test('hiragana and katakana modes convert romaji to their own script', () => {
   assert.equal(type('RINGO').text, 'りんご');
   assert.equal(type('ko-hi-.', 'katakana').text, 'コーヒー。');
-  assert.equal(type('Bonjour, ringo.', 'latin').text, 'Bonjour, ringo.');
 });
 
 test('insertion and selected-text replacement preserve surrounding Japanese and emoji', () => {

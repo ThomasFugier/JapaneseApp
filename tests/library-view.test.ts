@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { seedSnapshot } from '../lib/seed';
 import { defaultReadingContext, deckAncestors, libraryNotes, noteDecks, sanitizeReadingContext } from '../lib/library-view';
 
-test('dictionary search handles accents, Japanese and global scope without duplicate notes', () => {
+test('dictionary search follows the selected deck without duplicate notes', () => {
   const data = seedSnapshot();
   assert.equal(libraryNotes(data, { ...defaultReadingContext, search: 'ECRIRE' })[0]?.japanese, '書く');
   assert.equal(libraryNotes(data, { ...defaultReadingContext, search: 'たべる' })[0]?.japanese, '食べる');
   assert.equal(libraryNotes(data, { ...defaultReadingContext, deckId: 'kanjis', search: 'Manger' }).length, 0);
-  const found = libraryNotes(data, { ...defaultReadingContext, deckId: 'kanjis', search: 'Manger', scope: 'all' });
+  const found = libraryNotes(data, { ...defaultReadingContext, deckId: null, search: 'Manger' });
   assert.equal(found.length, 1);
   assert.equal(found[0].id, 'note-taberu');
   assert.equal(noteDecks(data, found[0].id).length, 3);
@@ -52,6 +52,13 @@ test('Japanese dictionary sorts kanji entries by their kana reading', () => {
 test('reading context restores valid preferences and rejects malformed browser storage', () => {
   assert.deepEqual(sanitizeReadingContext(null), defaultReadingContext);
   assert.deepEqual(sanitizeReadingContext({ deckId: false, sort: 'unknown', hideTranslations: 'true', scrollY: Infinity }), defaultReadingContext);
-  const context = { ...defaultReadingContext, deckId: 'travail', search: 'écrire', sort: 'added' as const, scope: 'all' as const, hideTranslations: true, expanded: 'note-kaku', scrollY: 360 };
+  const context = { ...defaultReadingContext, deckId: 'travail', search: 'écrire', sort: 'added' as const, hideTranslations: true, expanded: 'note-kaku', scrollY: 360 };
   assert.deepEqual(sanitizeReadingContext(context), context);
+});
+
+test('legacy global scope cannot override the deck restored from browser storage', () => {
+  const data = seedSnapshot();
+  const context = sanitizeReadingContext({ ...defaultReadingContext, deckId: 'kanjis', search: 'Manger', scope: 'all' });
+  assert.equal(context.deckId, 'kanjis');
+  assert.equal(libraryNotes(data, context).length, 0);
 });

@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       if (!body || typeof body !== 'object') throw new Error('Invalid envelope');
       const input = body as { base?: unknown; snapshot?: unknown };
       base = validateSnapshot(input.base); snapshot = validateSnapshot(input.snapshot);
-    } catch { throw new HttpError(400, 'Format de bibliothèque invalide. Aucune donnée distante modifiée.'); }
+    } catch { throw new HttpError(400, 'Invalid library format. No remote data was changed.'); }
     const result = await new GitHubStore(config).synchronize(base, snapshot);
     return json(result, result.conflict ? 409 : 200);
   } catch (error) { return errorResponse(error); }

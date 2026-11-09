@@ -37,6 +37,6 @@ export function getConfig(): ServerConfig | null {
 
 export function requireConfig(): ServerConfig {
   const config = getConfig();
-  if (!config) throw new HttpError(503, 'Synchronisation GitHub non configurée. Vos données restent sauvegardées sur cet appareil.');
+  if (!config) throw new HttpError(503, 'GitHub synchronization is not configured. Your data remains saved on this device.');
   return config;
 }

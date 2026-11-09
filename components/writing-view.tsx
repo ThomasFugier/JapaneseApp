@@ -56,7 +56,7 @@ export function WritingView({ data }: { data: Snapshot }) {
     try {
       const draft = localStorage.getItem(DRAFT_KEY);
       const mode = localStorage.getItem(INPUT_MODE_KEY);
-      if (mode === 'katakana' || mode === 'latin') setInputMode(mode);
+      if (mode === 'katakana') setInputMode(mode);
       if (draft !== null) {
         if (draft.length > MAX_LENGTH) { draftReadable.current = false; setSaved(false); }
         else { setText(draft); latestText.current = draft; }
@@ -80,6 +80,7 @@ export function WritingView({ data }: { data: Snapshot }) {
     if (!textarea || !container) return;
     const style = getComputedStyle(textarea);
     const mirror = document.createElement('div');
+    mirror.lang = textarea.lang;
     const properties = ['box-sizing', 'width', 'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'word-spacing', 'tab-size', 'text-indent'];
     properties.forEach(property => mirror.style.setProperty(property, style.getPropertyValue(property)));
     Object.assign(mirror.style, { position: 'absolute', visibility: 'hidden', pointerEvents: 'none', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', top: '0', left: '0', border: '0' });
@@ -175,7 +176,7 @@ export function WritingView({ data }: { data: Snapshot }) {
   function changeInputMode(mode: WritingInputMode) {
     finishInput();
     setInputMode(mode);
-    try { localStorage.setItem(INPUT_MODE_KEY, mode); } catch { /* Saisie utilisable sans stockage. */ }
+    try { localStorage.setItem(INPUT_MODE_KEY, mode); } catch { /* Input remains usable without storage. */ }
   }
 
   function snapshotEdit(): Edit {
@@ -229,30 +230,30 @@ export function WritingView({ data }: { data: Snapshot }) {
     if (!open) return;
     if (event.key === 'ArrowDown') { event.preventDefault(); setSelected(previous => (previous + 1) % notes.length); }
     else if (event.key === 'ArrowUp') { event.preventDefault(); setSelected(previous => (previous - 1 + notes.length) % notes.length); }
-    else if (event.key === 'Enter' || event.key === 'Tab' || (event.key === ' ' && inputMode !== 'latin')) { event.preventDefault(); insert(notes[Math.min(selected, notes.length - 1)]); }
+    else if (event.key === 'Enter' || event.key === 'Tab' || event.key === ' ') { event.preventDefault(); insert(notes[Math.min(selected, notes.length - 1)]); }
     else if (event.key === 'Escape') { event.preventDefault(); suppressReopen.current = true; setDismissed(true); }
   }
 
   function download() {
     const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
     const link = document.createElement('a'); link.href = url;
-    link.download = `japonais-ecriture-${new Date().toISOString().slice(0, 10)}.txt`; link.click();
+    link.download = `japanese-writing-${new Date().toISOString().slice(0, 10)}.txt`; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   return <section className="writing-view">
-    <div className="writing-meta"><span className={`writing-save-status ${saved ? '' : 'unsaved'}`} role="status">{saved ? 'Brouillon local' : 'Brouillon non sauvegardé'}</span></div>
-    <div className="writing-toolbar" aria-label="Outils d’écriture">
-      <div className="writing-input-modes" role="group" aria-label="Mode de saisie">{(['hiragana', 'katakana', 'latin'] as const).map((mode, index) => <button type="button" key={mode} aria-pressed={inputMode === mode} aria-label={`Saisie en ${['hiragana', 'katakana', 'latin'][index]}`} title={['Hiragana', 'Katakana', 'Latin'][index]} onClick={() => changeInputMode(mode)}>{['あ', 'ア', 'ABC'][index]}</button>)}</div>
-      <div className="writing-font-sizes" aria-label="Taille du texte">{(['small', 'medium', 'large'] as const).map((value, index) => <button type="button" key={value} aria-pressed={size === value} aria-label={`Taille ${['petite', 'moyenne', 'grande'][index]}`} onClick={() => setSize(value)}>{['S', 'M', 'L'][index]}</button>)}</div>
+    <div className="writing-meta"><span className={`writing-save-status ${saved ? '' : 'unsaved'}`} role="status">{saved ? 'Local draft' : 'Draft not saved'}</span></div>
+    <div className="writing-toolbar" aria-label="Writing tools">
+      <div className="writing-input-modes" role="group" aria-label="Input mode">{(['hiragana', 'katakana'] as const).map((mode, index) => <button type="button" key={mode} aria-pressed={inputMode === mode} aria-label={`${mode} input`} title={['Hiragana', 'Katakana'][index]} onClick={() => changeInputMode(mode)}><span lang="ja">{['あ', 'ア'][index]}</span></button>)}</div>
+      <div className="writing-font-sizes" aria-label="Text size">{(['small', 'medium', 'large'] as const).map((value, index) => <button type="button" key={value} aria-pressed={size === value} aria-label={`${['Small', 'Medium', 'Large'][index]} text size`} onClick={() => setSize(value)}>{['S', 'M', 'L'][index]}</button>)}</div>
       <button type="button" className={`writing-suggestion-toggle ${suggestionsEnabled ? 'enabled' : ''}`} aria-pressed={suggestionsEnabled} onClick={() => { suppressReopen.current = false; setSuggestionsEnabled(!suggestionsEnabled); setDismissed(false); }}><ListFilter size={16} />Suggestions</button>
-      <button type="button" className="icon-button writing-download" aria-label="Télécharger le texte" title="Télécharger le texte" onClick={download} disabled={!text}><Download size={17} /></button>
+      <button type="button" className="icon-button writing-download" aria-label="Download text" title="Download text" onClick={download} disabled={!text}><Download size={17} /></button>
     </div>
     <div className="writing-paper" ref={paper}>
-      <textarea className={`writing-textarea ${size}`} ref={editor} role="combobox" aria-label="Page d’écriture" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="Écrire…" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+      <textarea lang="ja" className={`writing-textarea ${size}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
       {open && <div className="writing-suggestions" ref={suggestionsPanel} style={{ top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}>
-        <div role="listbox" id={listId} aria-label="Suggestions de la bibliothèque">{notes.map((note, index) => <button type="button" role="option" key={note.id} id={`${listId}-${index}`} aria-selected={index === selected} tabIndex={-1} className={index === selected ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={() => insert(note)}><span className="writing-suggestion-word" lang="ja">{note.japanese}<small>{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small></span><span className="writing-suggestion-meaning">{note.meaning}</span></button>)}</div>
-        <div className="writing-suggestion-help">↑↓ · {inputMode === 'latin' ? 'Entrée' : 'Espace / Entrée'} pour insérer · Échap pour fermer</div>
+        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <button type="button" role="option" key={note.id} id={`${listId}-${index}`} aria-selected={index === selected} tabIndex={-1} className={index === selected ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={() => insert(note)}><span className="writing-suggestion-word" lang="ja">{note.japanese}<small>{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small></span><span className="writing-suggestion-meaning">{note.meaning}</span></button>)}</div>
+        <div className="writing-suggestion-help">↑↓ · Space / Enter to insert · Esc to close</div>
       </div>}
     </div>
   </section>;

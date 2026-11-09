@@ -1,10 +1,4 @@
 .library-page { min-width:0; }
-.library-search-row { display:grid; grid-template-columns:1fr minmax(0,640px) 1fr; gap:16px; align-items:center; margin-bottom:30px; }
-.library-page .library-search { grid-column:2; min-height:50px; border:1px solid #e4e4e9; border-radius:11px; padding:0 16px; background:#fafafb; }
-.library-page .library-search:focus-within { background:white; outline:2px solid #eed4db; outline-offset:0; border-color:#d9a5b3; }
-.library-page .library-search input { min-height:48px; padding:12px 0; font-size:14px; }
-.library-search-actions { grid-column:3; justify-self:end; display:flex; align-items:center; gap:8px; }
-.library-page .library-deck-toggle,.library-page .mobile-deck-toggle { min-height:40px; font-size:11px; padding:9px 12px; }
 .library-deck-toggle.enabled,.mobile-deck-toggle.enabled { color:var(--red); border-color:#eed4db; background:#fff8fa; }
 .mobile-deck-toggle { display:none; }
 .library-workspace { display:grid; grid-template-columns:minmax(0,1fr) 248px; gap:36px; align-items:start; }
@@ -15,10 +9,6 @@
 .deck-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
 .deck-panel-heading h2 { font-size:13px; font-weight:600; letter-spacing:0; }
 .deck-panel-heading .icon-button { width:30px; height:30px; }
-.deck-all { display:flex; align-items:center; gap:9px; width:100%; min-height:36px; padding:8px 10px; margin-bottom:14px; border-radius:7px; text-align:left; font-size:12px; color:#72727c; }
-.deck-all>span { flex:1; }
-.deck-all small { color:#9b9ba4; font-size:10px; font-variant-numeric:tabular-nums; }
-.deck-all.active { color:var(--red); background:var(--red-soft); }
 .deck-tree,.deck-children { list-style:none; padding:0; margin:0; }
 .deck-children { position:relative; margin-left:12px; padding-left:18px; }
 .deck-children[hidden] { display:none; }
@@ -38,34 +28,32 @@
 .deck-branch-toggle .is-expanded { transform:rotate(90deg); }
 .deck-select { display:flex; align-items:center; gap:8px; flex:1; min-width:0; min-height:34px; padding:6px 8px 6px 0; text-align:left; font-size:12px; }
 .deck-select svg { color:#a8a8b1; }
-.deck-select>span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.deck-select>span { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.deck-select small { color:#9b9ba4; font-size:10px; font-variant-numeric:tabular-nums; }
+.deck-root { margin-bottom:6px; }
+.deck-root .deck-select { font-weight:500; }
 .active .deck-select { font-weight:500; }
 .active .deck-select svg { color:var(--red); }
-.library-page .dictionary-top { gap:14px; min-height:38px; margin-bottom:14px; }
+.library-page .dictionary-top { gap:14px; min-height:38px; margin-bottom:12px; }
+.library-page .dictionary-top>div:first-child { min-width:0; }
 .library-page .dictionary-top h2 { font-size:20px; gap:9px; letter-spacing:-.4px; }
 .library-page .count-bubble { min-width:22px; text-align:center; padding:2px 6px; font-size:10px; }
-.dictionary-actions { display:flex; align-items:center; gap:7px; flex-shrink:0; }
-.library-page .dictionary-actions .button { min-height:34px; padding:7px 10px; font-size:11px; }
-.library-page .dictionary-top .edit-toggle { min-height:34px; height:34px; padding:0 9px; font-size:11px; }
-.library-page .reading-breadcrumb { display:flex; align-items:center; flex-wrap:wrap; gap:3px; margin:0 0 5px; }
-.reading-breadcrumb>span { display:inline-flex; align-items:center; gap:3px; }
-.library-page .reading-breadcrumb button { color:#93939d; font-size:10px; padding:3px 0; text-align:left; }
-.reading-breadcrumb button:hover { color:var(--red); }
-.reading-breadcrumb button[aria-current=page] { color:#60606a; }
-.reading-breadcrumb svg { color:#bcbcc4; }
-.library-page .reading-tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
-.reading-select { display:flex; align-items:center; gap:7px; min-width:0; }
-.reading-select>span { font-size:10px; color:#9696a0; }
-.reading-select select { min-height:34px; max-width:170px; border:1px solid var(--line); border-radius:6px; padding:6px 24px 6px 9px; font-size:11px; color:#777781; background:white; }
-.library-page .reading-tools .hide-translations { margin-left:auto; min-height:34px; padding:7px 10px; font-size:11px; }
-.hide-translations.enabled { color:var(--red); border-color:#eed3db; background:#fff7f9; }
+.dictionary-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.library-page .dictionary-actions .library-review { min-height:36px; padding:8px 13px; gap:12px; border-radius:7px; font-size:12px; font-weight:500; }
+.library-page .dictionary-top .edit-toggle { width:36px; height:36px; min-height:36px; padding:0; border:0; border-radius:7px; color:#8a8a94; }
+.library-page .dictionary-top .edit-toggle:hover { color:var(--ink); background:var(--soft); }
+.library-page .dictionary-top .edit-toggle.active { color:var(--red); background:var(--red-soft); }
 .library-page .subdeck-chips { gap:6px; margin-bottom:12px; }
 .library-page .subdeck-chips button { padding:4px 8px; font-size:10px; }
-.library-page .dictionary-labels { grid-template-columns:1fr 1fr 18px; padding:10px 12px; font-size:9px; letter-spacing:.7px; }
+.library-page .dictionary-labels { grid-template-columns:1fr 1fr 18px; align-items:center; gap:10px; padding:5px 12px; min-height:38px; font-size:9px; letter-spacing:.7px; }
+.translation-heading { display:flex; align-items:center; gap:8px; }
+.translation-toggle { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:5px; color:#a3a3ad; }
+.translation-toggle:hover { color:var(--ink); background:var(--soft); }
+.translation-toggle.enabled { color:var(--red); background:var(--red-soft); }
 .library-page .entry-main { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 18px; min-height:56px; padding:8px 12px; gap:10px; }
 .library-page .entry-japanese { display:flex; align-items:baseline; flex-wrap:wrap; gap:1px 10px; min-width:0; padding-right:0; font-size:22px; line-height:1.5; }
 .entry-word { font-weight:400; min-width:0; overflow-wrap:anywhere; }
-.library-page .entry-japanese>span { display:inline; margin:0; font:12px/1.6 var(--font); color:#9b9ba5; letter-spacing:0; overflow-wrap:anywhere; }
+.library-page .entry-japanese>span { display:inline; margin:0; font:13px/1.6 var(--jp); color:#9b9ba5; letter-spacing:0; overflow-wrap:anywhere; }
 .library-page .entry-meaning>strong { font-size:13px; font-weight:400; line-height:1.6; }
 .masked-translation { color:#b2b2bd; letter-spacing:3px; font-size:12px; }
 .library-page .entry-chevron { width:14px; color:#bebec6; }
@@ -84,13 +72,8 @@
 @media (max-width:1100px) and (min-width:901px) {
   .library-workspace { grid-template-columns:minmax(0,1fr) 220px; gap:24px; }
   .library-decks { padding-left:18px; }
-  .library-search-row { grid-template-columns:1fr minmax(0,560px) 1fr; gap:12px; }
 }
 @media (max-width:900px) {
-  .library-search-row { grid-template-columns:minmax(0,1fr) auto; gap:10px; margin-bottom:24px; }
-  .library-page .library-search { grid-column:1; }
-  .library-search-actions { grid-column:2; }
-  .library-new-deck { display:none; }
   .library-deck-toggle { display:none; }
   .mobile-deck-toggle { display:inline-flex; grid-column:2; }
   .library-workspace,.library-workspace.decks-hidden { grid-template-columns:minmax(0,1fr); gap:20px; }
@@ -98,8 +81,6 @@
   .library-workspace .library-decks.mobile-open { display:block; grid-row:1; position:static; max-height:340px; padding:12px; border:1px solid var(--line); border-radius:9px; }
   .library-dictionary { grid-row:1; }
   .mobile-decks-open .library-dictionary { grid-row:2; }
-  .library-page .library-search input { font-size:16px; }
-  .reading-select>span { display:none; }
   .deck-tree-row,.deck-select,.deck-branch-toggle,.deck-branch-spacer { min-height:40px; }
   .deck-branch-toggle,.deck-branch-spacer { width:30px; height:40px; }
   .deck-children { margin-left:15px; }
@@ -108,24 +89,17 @@
   .deck-children>li:last-child:before { height:20px; }
 }
 @media (max-width:640px) {
-  .library-page .library-search { min-height:46px; padding:0 12px; border-radius:8px; }
-  .library-page .library-search input { min-height:44px; padding:10px 0; }
-  .library-page .mobile-deck-toggle { min-height:46px; padding:8px; gap:6px; }
-  .library-page .dictionary-top { align-items:flex-start; gap:10px; margin-bottom:12px; }
+  .library-page .dictionary-top { align-items:center; gap:8px; margin-bottom:8px; }
   .library-page .dictionary-top h2 { font-size:19px; min-height:34px; }
-  .dictionary-actions { gap:5px; }
-  .library-page .dictionary-top .edit-toggle { width:34px; padding:0; }
-  .edit-toggle>span { display:none; }
-  .library-page .reading-breadcrumb button { font-size:10px; min-height:28px; }
-  .library-page .reading-tools { margin-bottom:10px; gap:7px; }
-  .reading-select { flex:1; }
-  .reading-select select { width:100%; min-width:0; max-width:none; min-height:40px; font-size:16px; padding:7px; }
-  .library-page .reading-tools .hide-translations { flex-shrink:0; width:40px; min-height:40px; padding:0; }
-  .hide-translations>span { display:none; }
-  .library-page .dictionary-labels { padding:9px 6px; font-size:8px; }
+  .dictionary-actions { gap:3px; }
+  .library-page .dictionary-actions .library-review { min-height:40px; padding:8px 10px; gap:8px; }
+  .library-page .dictionary-top .edit-toggle { width:40px; height:40px; }
+  .library-page .dictionary-labels { padding:3px 6px; gap:8px; grid-template-columns:1fr 1fr 14px; font-size:8px; }
+  .translation-heading { gap:4px; }
+  .translation-toggle { width:40px; height:40px; }
   .library-page .entry-main { min-height:56px; padding:8px 6px; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 14px; gap:8px; }
   .library-page .entry-japanese { font-size:21px; gap:0 7px; }
-  .library-page .entry-japanese>span { font-size:11px; }
+  .library-page .entry-japanese>span { font-size:12px; }
   .library-page .entry-meaning>strong { font-size:12px; }
   .library-page .entry-detail { padding:0 6px 14px; }
   .library-page .entry-detail blockquote>span { font-size:16px; }

@@ -1,11 +1,11 @@
 import { toHiragana, toKatakana } from 'wanakana';
 
-export type WritingInputMode = 'hiragana' | 'katakana' | 'latin';
+export type WritingInputMode = 'hiragana' | 'katakana';
 export type KanaComposition = {
   start: number;
   end: number;
   romaji: string;
-  mode: Exclude<WritingInputMode, 'latin'>;
+  mode: WritingInputMode;
 };
 type InputResult = { text: string; caret: number; composition: KanaComposition | null };
 
@@ -29,7 +29,7 @@ export function convertWritingInput(
   inputType = 'insertText', composition: KanaComposition | null = null,
 ): InputResult {
   const unchanged: InputResult = { text: value, caret, composition: null };
-  if (mode === 'latin' || !['insertText', 'insertReplacementText', 'insertLineBreak', 'insertParagraph'].includes(inputType)
+  if (!['insertText', 'insertReplacementText', 'insertLineBreak', 'insertParagraph'].includes(inputType)
     || caret < 0 || caret > value.length || value === previous) return unchanged;
   let start = 0;
   while (start < previous.length && start < value.length && previous[start] === value[start]) start++;

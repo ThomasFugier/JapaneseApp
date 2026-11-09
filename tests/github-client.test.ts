@@ -9,6 +9,25 @@ const config: GitHubConfig = { owner: 'owner', repo: 'private-data', branch: 'ma
 const fileResponse = (snapshot: Snapshot, sha = 'a'.repeat(40)) => Response.json({ type: 'file', size: Buffer.byteLength(JSON.stringify(snapshot)), sha, encoding: 'base64', content: Buffer.from(JSON.stringify(snapshot)).toString('base64') });
 const branchResponse = () => Response.json({ ref: 'refs/heads/main', object: { sha: 'a'.repeat(40) } });
 
+test('default transport preserves the browser fetch receiver', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async function (this: typeof globalThis, input) {
+    assert.equal(this, globalThis);
+    calls++;
+    const url = String(input);
+    if (url.includes('/git/ref/')) return branchResponse();
+    if (url.includes('/contents/')) return Response.json({}, { status: 404 });
+    return Response.json({ private: true });
+  };
+  try {
+    const result = await new GitHubClient(config).read();
+    assert.equal(calls, 3);
+    assert.equal(result.revision, null);
+    assert.deepEqual(result.snapshot, emptySnapshot());
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test('repository input accepts owner/name and canonical HTTPS URLs only', () => {
   assert.deepEqual(parseRepository(' owner/private-data '), { owner: 'owner', repo: 'private-data' });
   assert.deepEqual(parseRepository('https://github.com/owner/private-data.git/'), { owner: 'owner', repo: 'private-data' });
@@ -18,7 +37,7 @@ test('repository input accepts owner/name and canonical HTTPS URLs only', () => 
 test('public repositories are refused before any content request', async () => {
   let calls = 0;
   const fetcher: typeof fetch = async () => { calls++; return Response.json({ private: false }); };
-  await assert.rejects(new GitHubClient(config, fetcher).read(), /doit être privé/);
+  await assert.rejects(new GitHubClient(config, fetcher).read(), /must be private/);
   assert.equal(calls, 1);
 });
 
@@ -30,7 +49,7 @@ test('missing branch is not mistaken for an empty library', async () => {
     if (url.includes('/contents/')) contentsRequests++;
     return Response.json({ private: true });
   };
-  await assert.rejects(new GitHubClient(config, fetcher).read(), /Branche introuvable/);
+  await assert.rejects(new GitHubClient(config, fetcher).read(), /Branch not found/);
   assert.equal(contentsRequests, 0);
 });
 
@@ -106,5 +125,5 @@ test('large Contents responses use the bounded Git blob endpoint and preserve Ja
 
 test('network error messages never reflect runtime credentials', async () => {
   const fetcher: typeof fetch = async () => { throw new Error(`request failed ${config.token}`); };
-  await assert.rejects(new GitHubClient(config, fetcher).read(), error => error instanceof Error && !error.message.includes(config.token) && /injoignable/.test(error.message));
+  await assert.rejects(new GitHubClient(config, fetcher).read(), error => error instanceof Error && !error.message.includes(config.token) && /unreachable/.test(error.message));
 });

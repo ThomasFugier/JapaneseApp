@@ -44,6 +44,6 @@ export async function getSession(config: ServerConfig): Promise<Session | null> 
 
 export async function requireSession(config: ServerConfig): Promise<Session> {
   const session = await getSession(config);
-  if (!session) throw new HttpError(401, 'Connectez-vous à GitHub pour synchroniser vos cartes.');
+  if (!session) throw new HttpError(401, 'Sign in to GitHub to synchronize your cards.');
   return session;
 }

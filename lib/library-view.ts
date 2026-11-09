@@ -6,14 +6,13 @@ export type ReadingContext = {
   deckId: string | null;
   search: string;
   sort: 'japanese' | 'meaning' | 'added';
-  scope: 'deck' | 'all';
   hideTranslations: boolean;
   expanded: string | null;
   scrollY: number;
 };
 
 export const defaultReadingContext: ReadingContext = {
-  deckId: null, search: '', sort: 'japanese', scope: 'deck',
+  deckId: null, search: '', sort: 'japanese',
   hideTranslations: false, expanded: null, scrollY: 0,
 };
 
@@ -24,7 +23,6 @@ export function sanitizeReadingContext(input: unknown): ReadingContext {
     deckId: id(value.deckId),
     search: typeof value.search === 'string' ? value.search.slice(0, 1000) : '',
     sort: value.sort === 'meaning' || value.sort === 'added' ? value.sort : 'japanese',
-    scope: value.scope === 'all' ? 'all' : 'deck',
     hideTranslations: value.hideTranslations === true,
     expanded: id(value.expanded),
     scrollY: typeof value.scrollY === 'number' && Number.isFinite(value.scrollY) ? Math.max(0, Math.min(value.scrollY, 10000000)) : 0,
@@ -51,13 +49,13 @@ export function deckAncestors(data: Snapshot, deckId: string): Deck[] {
 export function noteDecks(data: Snapshot, noteId: string): Deck[] {
   const ids = new Set(cardsForDeck(data, null).filter(card => card.noteId === noteId).flatMap(card => card.deckIds));
   return data.decks.filter(deck => !deck.deletedAt && ids.has(deck.id))
-    .sort((a, b) => deckAncestors(data, a.id).map(deck => deck.name).join('/').localeCompare(deckAncestors(data, b.id).map(deck => deck.name).join('/'), 'fr') || a.id.localeCompare(b.id));
+    .sort((a, b) => deckAncestors(data, a.id).map(deck => deck.name).join('/').localeCompare(deckAncestors(data, b.id).map(deck => deck.name).join('/'), 'en') || a.id.localeCompare(b.id));
 }
 
 export function libraryNotes(data: Snapshot, context: ReadingContext): Note[] {
-  const ids = new Set(cardsForDeck(data, context.scope === 'all' ? null : context.deckId).map(card => card.noteId));
+  const ids = new Set(cardsForDeck(data, context.deckId).map(card => card.noteId));
   const japanese = new Intl.Collator('ja', { numeric: true });
-  const french = new Intl.Collator('fr', { sensitivity: 'base', numeric: true });
+  const english = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
   return data.notes.filter(note => !note.deletedAt && ids.has(note.id))
     .map(note => ({ note, rank: noteSearchRank(note, context.search) }))
     .filter(item => Number.isFinite(item.rank))
@@ -65,7 +63,7 @@ export function libraryNotes(data: Snapshot, context: ReadingContext): Note[] {
     if (left.rank !== right.rank) return left.rank - right.rank;
     const a = left.note, b = right.note;
     let order: number;
-    if (context.sort === 'meaning') order = french.compare(a.meaning, b.meaning);
+    if (context.sort === 'meaning') order = english.compare(a.meaning, b.meaning);
     else if (context.sort === 'added') {
       const left = a as Note & { createdAt?: string };
       const right = b as Note & { createdAt?: string };

@@ -20,9 +20,9 @@ La bibliothèque synchronisée est un fichier UTF-8 `library.json`. L’export Z
 - `reviews` : `id`, `cardId`, `rating` (1 à 4), `reviewedAt`.
 - `reviewUndos` : `id`, `reviewId` (révision annulée), `undoneAt`.
 
-Les dates utilisent ISO 8601 avec fuseau horaire ; l’application écrit en UTC. Une note contient le contenu pédagogique. Une carte définit un sens de question et possède son propre historique. Une carte peut appartenir à plusieurs decks. Un tableau `deckIds` vide laisse la fiche accessible dans « Toutes les fiches ».
+Les dates utilisent ISO 8601 avec fuseau horaire ; l’application écrit en UTC. Une note est la fiche unique visible dans la bibliothèque et contient le contenu pédagogique. Chaque note active possède automatiquement deux enregistrements de révision dans `cards`, un par sens, avec des historiques et des échéances FSRS indépendants. Les valeurs historiques `ja-fr` et `fr-ja` désignent japonais → sens et sens → japonais ; elles restent inchangées pour préserver les sauvegardes. Les deux sens partagent les mêmes decks. Un tableau `deckIds` vide laisse la fiche accessible dans « All notes ».
 
-Les identifiants sont permanents. Une carte ne change jamais de `noteId` ni de `direction`. Une note peut avoir au maximum une carte active par direction. Deux cartes supprimées et actives peuvent partager une direction pour conserver un ancien historique, mais une seule peut être active.
+Les identifiants sont permanents. Un enregistrement de révision ne change jamais de `noteId` ni de `direction`. Une note active possède exactement un enregistrement actif par direction. La lecture, l’import et la synchronisation complètent automatiquement les sens manquants, avec des identifiants déterministes. Un sens désactivé est réactivé avec son identifiant et son historique existants. Les notes supprimées restent supprimées. Des enregistrements archivés d’un ancien sens peuvent être conservés, mais un seul est actif par direction.
 
 Une suppression utilise `deletedAt` : les objets et leurs révisions restent présents pour éviter une résurrection depuis un appareil ancien. Les références vers ces objets restent valides. Retirer physiquement un objet d’un fichier ne constitue pas une suppression synchronisable.
 

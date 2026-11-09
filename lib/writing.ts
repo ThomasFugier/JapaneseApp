@@ -30,7 +30,7 @@ export function applySuggestion(text: string, range: WritingToken, word: string)
   if (!validOffset(text, range.start) || !validOffset(text, range.end) || range.start > range.end
     || !range.query || range.start + range.query.length > range.end
     || text.slice(range.start, range.start + range.query.length) !== range.query || !word) {
-    throw new Error('La position de la suggestion a changé.');
+    throw new Error('The suggestion position has changed.');
   }
   return { text: text.slice(0, range.start) + word + text.slice(range.end), caret: range.start + word.length };
 }

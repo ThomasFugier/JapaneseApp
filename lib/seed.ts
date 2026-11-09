@@ -1,4 +1,4 @@
-import { emptySnapshot, type Deck, type Note, type Snapshot, type StudyCard } from './model';
+import { emptySnapshot, validateSnapshot, type Deck, type Note, type Snapshot, type StudyCard } from './model';
 
 const updatedAt = '2026-11-01T00:00:00.000Z';
 
@@ -52,5 +52,5 @@ export function seedSnapshot(): Snapshot {
     notes.push({ id: `note-${id}`, japanese, reading, meaning, example, exampleTranslation, explanation, tags, updatedAt });
     cards.push({ id: `card-${id}`, noteId: `note-${id}`, direction: 'ja-fr', deckIds, updatedAt });
   }
-  return { ...emptySnapshot(), decks, notes, cards };
+  return validateSnapshot({ ...emptySnapshot(), decks, notes, cards });
 }

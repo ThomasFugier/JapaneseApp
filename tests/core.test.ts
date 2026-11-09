@@ -89,35 +89,35 @@ test('ZIP round-trip preserves all data including review history', () => {
 test('invalid references, cycles, duplicate IDs and altered review IDs are rejected', () => {
   let data = seedSnapshot();
   data.decks[0].parentId = 'travail';
-  assert.throws(() => validateSnapshot(data), /boucle/);
+  assert.throws(() => validateSnapshot(data), /cycle/);
   data = seedSnapshot();
   data.cards[0].noteId = 'missing';
-  assert.throws(() => validateSnapshot(data), /introuvable/);
+  assert.throws(() => validateSnapshot(data), /missing/);
   data = seedSnapshot();
   data.notes.push(data.notes[0]);
-  assert.throws(() => validateSnapshot(data), /double/);
+  assert.throws(() => validateSnapshot(data), /duplicate/);
   const base = emptySnapshot();
   const left = seedSnapshot();
   const right = seedSnapshot();
   left.reviews.push({ id: 'same', cardId: 'card-taberu', rating: 1, reviewedAt: '2026-11-09T10:00:00.000Z' });
   right.reviews.push({ ...left.reviews[0], rating: 4 });
-  assert.throws(() => mergeSnapshots(base, left, right), /identifiant/);
+  assert.throws(() => mergeSnapshots(base, left, right), /same ID/);
 });
 
 test('imports reject ambiguous duplicate directions and unsupported scheduler settings', () => {
   const data = seedSnapshot();
   data.cards.push({ ...data.cards[0], id: 'duplicate-direction' });
-  assert.throws(() => validateSnapshot(data), /même sens/);
+  assert.throws(() => validateSnapshot(data), /same review direction/);
   data.cards[data.cards.length - 1].deletedAt = '2026-11-09T10:00:00.000Z';
   assert.doesNotThrow(() => validateSnapshot(data));
-  assert.throws(() => validateSnapshot({ ...data, scheduler: { ...data.scheduler, retention: 0.95 } }), /invalide/);
+  assert.throws(() => validateSnapshot({ ...data, scheduler: { ...data.scheduler, retention: 0.95 } }), /Invalid/);
 });
 
 test('card identity cannot be reassigned while retaining its revision history', () => {
   const base = seedSnapshot();
   const changed = structuredClone(base);
   changed.cards[0].direction = 'fr-ja';
-  assert.throws(() => mergeSnapshots(base, changed, base), /autre sens/);
+  assert.throws(() => mergeSnapshots(base, changed, base), /different note or direction/);
 });
 
 test('deletion versus note edit surfaces the associated card choices', () => {
@@ -141,7 +141,7 @@ test('independent deck moves cannot silently create a cycle when merged', () => 
   remote.decks.find((d) => d.id === 'kanjis')!.parentId = 'grammaire';
   assert.doesNotThrow(() => validateSnapshot(local));
   assert.doesNotThrow(() => validateSnapshot(remote));
-  assert.throws(() => mergeSnapshots(base, local, remote), /boucle/);
+  assert.throws(() => mergeSnapshots(base, local, remote), /cycle/);
 });
 
 test('CSV protects spreadsheet cells against formula execution', () => {
@@ -200,12 +200,12 @@ test('an old device cannot resurrect an undone review and duplicate undo sends a
 test('undo references and immutable undo identities are validated', () => {
   const data = seedSnapshot();
   data.reviewUndos.push({ id: 'bad-undo', reviewId: 'missing', undoneAt: '2026-11-09T10:00:00.000Z' });
-  assert.throws(() => validateSnapshot(data), /révision introuvable/);
-  assert.throws(() => mergeSnapshots(emptySnapshot(), data, seedSnapshot()), /révision introuvable/);
+  assert.throws(() => validateSnapshot(data), /missing review/);
+  assert.throws(() => mergeSnapshots(emptySnapshot(), data, seedSnapshot()), /missing review/);
   data.reviews.push({ id: 'missing', cardId: 'card-taberu', rating: 3, reviewedAt: '2026-11-09T09:59:00.000Z' });
   const changed = structuredClone(data);
   changed.reviewUndos[0].undoneAt = '2026-11-09T11:00:00.000Z';
-  assert.throws(() => mergeSnapshots(data, data, changed), /annulations différentes/);
+  assert.throws(() => mergeSnapshots(data, data, changed), /different undo records/);
 });
 
 test('review counts distinguish new cards from previously reviewed due cards after undo', () => {

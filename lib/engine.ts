@@ -37,11 +37,18 @@ export function scheduleForCard(data: Snapshot, cardId: string): Card {
   return card;
 }
 
+function reviewOrder(card: StudyCard): number {
+  let hash = 2166136261;
+  for (let index = 0; index < card.noteId.length; index++) hash = Math.imul(hash ^ card.noteId.charCodeAt(index), 16777619);
+  // Equal-due directions are mixed; opposite sides of a note stay half a queue apart.
+  return (hash ^ (card.direction === 'fr-ja' ? 0x80000000 : 0)) >>> 0;
+}
+
 export function dueCards(data: Snapshot, deckId: string | null, now = new Date()): StudyCard[] {
   return cardsForDeck(data, deckId)
-    .map((card) => ({ card, due: scheduleForCard(data, card.id).due.getTime() }))
+    .map((card) => ({ card, due: scheduleForCard(data, card.id).due.getTime(), order: reviewOrder(card) }))
     .filter(({ due }) => due <= now.getTime())
-    .sort((a, b) => a.due - b.due || a.card.id.localeCompare(b.card.id))
+    .sort((a, b) => a.due - b.due || a.order - b.order || a.card.id.localeCompare(b.card.id))
     .map(({ card }) => card);
 }
 
@@ -59,7 +66,7 @@ export function ratingIntervals(data: Snapshot, cardId: string, now = new Date()
     const minutes = Math.max(1, Math.round((scheduler.next(card, now, grade).card.due.getTime() - now.getTime()) / 60000));
     if (minutes < 60) return `${minutes} min`;
     if (minutes < 1440) return `${Math.round(minutes / 60)} h`;
-    return `${Math.round(minutes / 1440)} j`;
+    return `${Math.round(minutes / 1440)} d`;
   };
   return { 1: format(1), 2: format(2), 3: format(3), 4: format(4) };
 }

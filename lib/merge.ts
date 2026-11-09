@@ -9,7 +9,7 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
   for (const card of [...base.cards, ...local.cards, ...remote.cards]) {
     const previous = identities.get(card.id);
     if (previous && (previous.noteId !== card.noteId || previous.direction !== card.direction)) {
-      throw new Error('Un identifiant de carte a été réutilisé pour une autre fiche ou un autre sens. Import annulé.');
+      throw new Error('A card ID was reused for a different note or direction. Import canceled.');
     }
     identities.set(card.id, card);
   }
@@ -34,17 +34,17 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
   const reviews = new Map<string, Review>();
   for (const review of [...base.reviews, ...remote.reviews, ...local.reviews]) {
     const previous = reviews.get(review.id);
-    if (previous && canonical(previous) !== canonical(review)) throw new Error('Deux révisions différentes utilisent le même identifiant. Import annulé.');
+    if (previous && canonical(previous) !== canonical(review)) throw new Error('Two different reviews use the same ID. Import canceled.');
     reviews.set(review.id, review);
   }
   const reviewUndos = new Map<string, ReviewUndo>();
   for (const undo of [...(base.reviewUndos ?? []), ...(remote.reviewUndos ?? []), ...(local.reviewUndos ?? [])]) {
     const previous = reviewUndos.get(undo.id);
-    if (previous && canonical(previous) !== canonical(undo)) throw new Error('Deux annulations différentes utilisent le même identifiant. Import annulé.');
+    if (previous && canonical(previous) !== canonical(undo)) throw new Error('Two different undo records use the same ID. Import canceled.');
     reviewUndos.set(undo.id, undo);
   }
   // Scheduler settings are immutable in V1; a future settings migration must resolve them explicitly.
-  if (canonical(local.scheduler) !== canonical(remote.scheduler)) throw new Error('Les paramètres de révision diffèrent. Exportez vos données avant de continuer.');
+  if (canonical(local.scheduler) !== canonical(remote.scheduler)) throw new Error('Review settings differ. Export your data before continuing.');
   const snapshot: Snapshot = {
       schemaVersion: 3, scheduler: local.scheduler,
       decks: merge('decks', base.decks, local.decks, remote.decks),
@@ -55,7 +55,7 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
   };
 
   const reviewIds = new Set(snapshot.reviews.map((review) => review.id));
-  if (snapshot.reviewUndos.some((undo) => !reviewIds.has(undo.reviewId))) throw new Error('Une annulation référence une révision introuvable.');
+  if (snapshot.reviewUndos.some((undo) => !reviewIds.has(undo.reviewId))) throw new Error('An undo references a missing review.');
 
   // A note/deck restored after a deletion conflict must not silently lose its cards.
   for (const conflict of [...conflicts]) {
@@ -72,6 +72,5 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
     }
   }
   // Independent valid edits can still form a hierarchy cycle when combined.
-  if (!conflicts.length) validateSnapshot(snapshot);
-  return { snapshot, conflicts };
+  return { snapshot: conflicts.length ? snapshot : validateSnapshot(snapshot), conflicts };
 }

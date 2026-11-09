@@ -11,7 +11,7 @@ test('ON/KUN readings survive validation, ZIP backup and CSV export', () => {
   const result = readBackup(backupBytes(validateSnapshot(data)));
   assert.deepEqual(result.notes[0].onReadings, ['ショク']);
   assert.deepEqual(result.notes[0].kunReadings, ['た.べる', 'く.う']);
-  assert.ok(csvText(data).includes('lectures_on,lectures_kun'));
+  assert.ok(csvText(data).includes('on_readings,kun_readings'));
   assert.ok(csvText(data).includes('た.べる | く.う'));
 });
 

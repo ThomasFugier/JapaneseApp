@@ -46,10 +46,10 @@ export function validateSnapshot(input: unknown): Snapshot {
   const legacy = input && typeof input === 'object' && [1, 2].includes((input as { schemaVersion?: unknown }).schemaVersion as number);
   const migrated = legacy ? { ...(input as Record<string, unknown>), schemaVersion: 3, reviewUndos: (input as { reviewUndos?: unknown }).reviewUndos ?? [] } : input;
   const result = snapshotSchema.safeParse(migrated);
-  if (!result.success) throw new Error('Sauvegarde invalide ou version non prise en charge.');
+  if (!result.success) throw new Error('Invalid backup or unsupported version.');
   const data = result.data;
   for (const collection of [data.decks, data.notes, data.cards, data.reviews, data.reviewUndos]) {
-    if (new Set(collection.map((item) => item.id)).size !== collection.length) throw new Error('La sauvegarde contient des identifiants en double.');
+    if (new Set(collection.map((item) => item.id)).size !== collection.length) throw new Error('The backup contains duplicate IDs.');
   }
   const decks = new Map(data.decks.map((d) => [d.id, d]));
   const notes = new Map(data.notes.map((n) => [n.id, n]));
@@ -58,31 +58,92 @@ export function validateSnapshot(input: unknown): Snapshot {
     const seen = new Set([deck.id]);
     let parent = deck.parentId;
     while (parent) {
-      if (seen.has(parent)) throw new Error('La hiérarchie des decks contient une boucle.');
+      if (seen.has(parent)) throw new Error('The deck hierarchy contains a cycle.');
       seen.add(parent);
       const ancestor = decks.get(parent);
-      if (!ancestor) throw new Error('Un deck parent est introuvable.');
+      if (!ancestor) throw new Error('A parent deck is missing.');
       parent = ancestor.parentId;
     }
   }
   const activeDirections = new Set<string>();
   for (const card of data.cards) {
-    if (!notes.has(card.noteId) || card.deckIds.some((d) => !decks.has(d))) throw new Error('Une carte référence une fiche ou un deck introuvable.');
-    if (new Set(card.deckIds).size !== card.deckIds.length) throw new Error('Un classement de carte est dupliqué.');
+    if (!notes.has(card.noteId) || card.deckIds.some((d) => !decks.has(d))) throw new Error('A card references a missing note or deck.');
+    if (new Set(card.deckIds).size !== card.deckIds.length) throw new Error('A card has a duplicate deck assignment.');
     if (!card.deletedAt) {
       const key = `${card.noteId}\u0000${card.direction}`;
-      if (activeDirections.has(key)) throw new Error('Une fiche possède plusieurs cartes actives dans le même sens de révision.');
+      if (activeDirections.has(key)) throw new Error('A note has multiple active cards in the same review direction.');
       activeDirections.add(key);
     }
   }
   for (const review of data.reviews) {
-    if (!cards.has(review.cardId)) throw new Error('Une révision référence une carte introuvable.');
+    if (!cards.has(review.cardId)) throw new Error('A review references a missing card.');
   }
   const reviewIds = new Set(data.reviews.map((review) => review.id));
   for (const undo of data.reviewUndos) {
-    if (!reviewIds.has(undo.reviewId)) throw new Error('Une annulation référence une révision introuvable.');
+    if (!reviewIds.has(undo.reviewId)) throw new Error('An undo references a missing review.');
   }
+  restoreReviewDirections(data);
   return data;
+}
+
+function restoreReviewDirections(data: Snapshot): void {
+  const byNote = new Map<string, StudyCard[]>();
+  const ids = new Set(data.cards.map((card) => card.id));
+  for (const card of data.cards) {
+    const records = byNote.get(card.noteId) ?? [];
+    records.push(card);
+    byNote.set(card.noteId, records);
+  }
+  // Stable ordering also makes collision fallback independent of input ordering.
+  for (const note of [...data.notes].sort((a, b) => compareIds(a.id, b.id))) {
+    if (note.deletedAt) continue;
+    const records = byNote.get(note.id) ?? [];
+    const active = records.filter((card) => !card.deletedAt);
+    const available = active.length ? active : records;
+    const newest = Math.max(...available.map((card) => Date.parse(card.updatedAt)));
+    const latest = available.filter((card) => Date.parse(card.updatedAt) === newest)
+      .sort((a, b) => compareIds(a.updatedAt, b.updatedAt) || compareIds(a.id, b.id));
+    const deckIds = [...new Set(latest.flatMap((card) => card.deckIds))].sort(compareIds);
+    if (deckIds.length > 100) throw new Error('A note has too many deck assignments.');
+    const updatedAt = latest[0]?.updatedAt ?? note.updatedAt;
+    for (const direction of ['ja-fr', 'fr-ja'] as const) {
+      const existing = records.filter((card) => card.direction === direction)
+        .sort((a, b) => Number(!!a.deletedAt) - Number(!!b.deletedAt)
+          || Date.parse(b.updatedAt) - Date.parse(a.updatedAt) || compareIds(a.id, b.id))[0];
+      if (existing) {
+        if (existing.deletedAt || existing.deckIds.length !== deckIds.length || existing.deckIds.some((id) => !deckIds.includes(id))) {
+          existing.updatedAt = updatedAt;
+          delete existing.deletedAt;
+        }
+        existing.deckIds = [...deckIds];
+      } else {
+        const card: StudyCard = { id: directionCardId(note.id, direction, ids), noteId: note.id, direction, deckIds: [...deckIds], updatedAt };
+        ids.add(card.id);
+        data.cards.push(card);
+      }
+    }
+  }
+  if (data.cards.length > 40000) throw new Error('The backup contains too many cards.');
+}
+
+function compareIds(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function directionCardId(noteId: string, direction: StudyCard['direction'], ids: Set<string>): string {
+  let base = `card-${noteId}-${direction}`;
+  if (base.length > 160) {
+    // FNV-1a keeps long note IDs bounded without relying on time or device state.
+    let hash = 14695981039346656037n;
+    for (let i = 0; i < noteId.length; i++) hash = BigInt.asUintN(64, (hash ^ BigInt(noteId.charCodeAt(i))) * 1099511628211n);
+    base = `card-${hash.toString(16).padStart(16, '0')}-${direction}`;
+  }
+  let candidate = base;
+  for (let index = 2; ids.has(candidate); index++) {
+    const suffix = `-${index}`;
+    candidate = `${base.slice(0, 160 - suffix.length)}${suffix}`;
+  }
+  return candidate;
 }
 
 export function canonical(value: unknown): string {

@@ -41,7 +41,7 @@ export function useLibrary() {
         if (queue.current === task && record.current === next && previous) {
           record.current = previous; setData(previous.snapshot); setLastSyncedAt(previous.lastSyncedAt);
         }
-        setSaving(false); setError('Sauvegarde locale impossible. La dernière action n’a pas été enregistrée. Exportez vos données et vérifiez l’espace disponible.');
+        setSaving(false); setError('Local save failed. Your last action was not saved. Export your data and check the available storage space.');
       }
     });
     return task;
@@ -63,7 +63,7 @@ export function useLibrary() {
         if (!stored && remoteStatus?.authenticated) {
           const response = await fetch('/api/sync', { cache: 'no-store', signal: AbortSignal.timeout(45000) });
           const remote = await response.json();
-          if (!response.ok) throw new Error(remote.error || 'Impossible de charger votre bibliothèque GitHub. Réessayez en rechargeant la page.');
+          if (!response.ok) throw new Error(remote.error || 'Unable to load your GitHub library. Reload the page to try again.');
           if (remote.revision) {
             const snapshot = validateSnapshot(remote.snapshot);
             value = { snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() };
@@ -74,11 +74,11 @@ export function useLibrary() {
         if (disposed) return;
         record.current = value; setData(value.snapshot); setLastSyncedAt(value.lastSyncedAt); setReady(true);
         const auth = new URLSearchParams(window.location.search).get('auth');
-        if (auth === 'error') setError('Connexion GitHub refusée ou interrompue. Vérifiez le compte autorisé et réessayez.');
-        if (auth === 'success') setNotice('Compte GitHub connecté. Chargement de votre bibliothèque…');
+        if (auth === 'error') setError('GitHub sign-in was denied or interrupted. Check the authorized account and try again.');
+        if (auth === 'success') setNotice('GitHub account connected. Loading your library…');
         if (auth) window.history.replaceState({}, '', '/');
       } catch (cause) {
-        if (!disposed) setError(cause instanceof Error ? cause.message : 'Stockage inaccessible. Rechargez la page. Aucune donnée existante n’a été remplacée.');
+        if (!disposed) setError(cause instanceof Error ? cause.message : 'Storage is unavailable. Reload the page. No existing data was replaced.');
       }
     }
     if (navigator.locks) {
@@ -87,17 +87,18 @@ export function useLibrary() {
         if (!lock) {
           // React development remounts can briefly retain the previous lock.
           if (retry) { window.setTimeout(() => { if (!disposed) acquire(false); }, 100); return; }
-          setError('Japonais est déjà ouvert dans un autre onglet. Fermez l’autre onglet puis rechargez cette page pour protéger vos modifications.'); return;
+          setError('Japanese is already open in another tab. Close the other tab, then reload this page to protect your changes.'); return;
         }
         await initialize();
         if (!disposed) await new Promise<void>(resolve => { release = resolve; });
-      }).catch(() => { if (!disposed) setError('Impossible de verrouiller le stockage local. Rechargez la page.'); }); };
+      }).catch(() => { if (!disposed) setError('Unable to lock local storage. Reload the page.'); }); };
       acquire(true);
     } else void initialize();
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
       navigator.serviceWorker.register('/sw.js').then(() => navigator.serviceWorker.ready).then(registration => {
         const cache = () => registration.active?.postMessage({ type: 'CACHE_ASSETS', urls: performance.getEntriesByType('resource').map(entry => entry.name) });
         cache(); navigator.serviceWorker.addEventListener('controllerchange', cache, { once: true });
+        void document.fonts.ready.then(cache);
       }).catch(() => { /* Local data remains available without offline shell. */ });
     }
     navigator.storage?.persist?.().catch(() => undefined);
@@ -128,7 +129,7 @@ export function useLibrary() {
   }, [persist]);
 
   const connectGitHub = useCallback(async (config: GitHubConfig) => {
-    if (!record.current || busy.current) throw new Error('Une opération est déjà en cours. Réessayez.');
+    if (!record.current || busy.current) throw new Error('An operation is already in progress. Try again.');
     busy.current = true; setSyncing(true);
     try {
       await queue.current;
@@ -139,20 +140,20 @@ export function useLibrary() {
       }
       manualConfig.current = { ...config };
       setManualRepository(`${config.owner}/${config.repo}`);
-      setError(''); setNotice('Dépôt GitHub connecté.');
+      setError(''); setNotice('GitHub repository connected.');
     } finally { busy.current = false; setSyncing(false); }
   }, [persist]);
 
   const disconnectGitHub = useCallback(() => {
-    if (busy.current) { setNotice('Attendez la fin de la synchronisation.'); return; }
+    if (busy.current) { setNotice('Wait for synchronization to finish.'); return; }
     manualConfig.current = null; setManualRepository(null);
-    setNotice('Connexion GitHub fermée. Vos données locales sont conservées.');
+    setNotice('GitHub disconnected. Your local data is preserved.');
   }, []);
 
   const sync = useCallback(async () => {
     if (!record.current || busy.current || conflictData.current) return;
-    if (!manualConfig.current && !status?.authenticated) { setNotice('Connectez votre dépôt GitHub dans les paramètres.'); return; }
-    if (!navigator.onLine) { setNotice('Hors connexion. Vos modifications restent sur cet appareil.'); return; }
+    if (!manualConfig.current && !status?.authenticated) { setNotice('Connect your GitHub repository in Settings.'); return; }
+    if (!navigator.onLine) { setNotice('Offline. Your changes remain on this device.'); return; }
     busy.current = true; setSyncing(true); setError('');
     try {
       await queue.current;
@@ -163,7 +164,7 @@ export function useLibrary() {
         const response = await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: sent.base, snapshot: sent.snapshot }), signal: AbortSignal.timeout(60000) });
         const payload = await response.json();
         if (response.status === 401) setStatus(previous => ({ configured: previous?.configured ?? true, authenticated: false }));
-        if (!response.ok && !(response.status === 409 && Array.isArray(payload.conflicts))) throw new Error(payload.error || 'Synchronisation indisponible.');
+        if (!response.ok && !(response.status === 409 && Array.isArray(payload.conflicts))) throw new Error(payload.error || 'Synchronization is unavailable.');
         result = { ...payload, conflict: response.status === 409 };
       }
       if (result.conflict) {
@@ -182,8 +183,8 @@ export function useLibrary() {
         conflictData.current = { snapshot: after.snapshot, remote: result.snapshot, captured: structuredClone(record.current.snapshot) }; setConflicts(after.conflicts); return;
       }
       await persist({ snapshot: validateSnapshot(after.snapshot), base: validateSnapshot(result.snapshot), lastSyncedAt: result.lastSyncedAt ?? new Date().toISOString() });
-      setNotice('Vos appareils sont synchronisés.');
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Synchronisation impossible. Vos données restent sur cet appareil.'); }
+      setNotice('Your devices are synchronized.');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Synchronization failed. Your data remains on this device.'); }
     finally { busy.current = false; setSyncing(false); }
   }, [persist, status, manualRepository]);
 
@@ -210,7 +211,7 @@ export function useLibrary() {
     if (unexpected.length) {
       conflictData.current = { ...pending, snapshot: current, captured: structuredClone(record.current.snapshot) };
       setConflicts([...conflicts, ...unexpected]);
-      setNotice('Une modification supplémentaire nécessite votre choix.'); return;
+      setNotice('Another change needs your decision.'); return;
     }
     for (const conflict of conflicts) {
       const collection = current[conflict.collection] as Array<{ id: string }>;
@@ -220,7 +221,7 @@ export function useLibrary() {
       if (chosen) collection.push(chosen);
     }
     await persist({ ...record.current, snapshot: validateSnapshot(current), base: validateSnapshot(pending.remote) });
-    conflictData.current = null; setConflicts([]); setNotice('Versions choisies enregistrées. Synchronisez pour les envoyer sur GitHub.');
+    conflictData.current = null; setConflicts([]); setNotice('Selected versions saved. Synchronize to send them to GitHub.');
   }, [conflicts, persist]);
 
   const dirty = !!record.current && JSON.stringify(data) !== JSON.stringify(record.current.base);
