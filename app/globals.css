@@ -202,9 +202,9 @@ h3 { font-weight:600; }
 .reveal-button { min-width:215px; justify-content:space-between; }
 .flashcard-answer { overflow-wrap:anywhere; padding:27px 35px; text-align:center; background:#fafafa; border-top:1px solid var(--line); animation:appear .15s; }
 .eyebrow { font-size:9px; letter-spacing:1.5px; color:#a1a1aa; }
-.flashcard-answer>h3 { font-size:27px; font-weight:500; margin-top:14px; overflow-wrap:anywhere; }
-.flashcard-answer>h3[lang=ja] { font-family:var(--jp); font-size:36px; }
-.flashcard-answer>p { color:#90909a; font-size:13px; margin-top:8px; }
+.flashcard-answer h3 { font-size:27px; font-weight:500; margin-top:14px; overflow-wrap:anywhere; }
+.flashcard-answer h3[lang=ja] { font-family:var(--jp); font-size:36px; }
+.flashcard-answer .review-page-content>p { color:#90909a; font-size:13px; margin-top:8px; }
 .answer-example { margin-top:22px; padding-top:20px; border-top:1px solid var(--line); }
 .answer-example>span { font-family:var(--jp); font-size:19px; line-height:1.8; }
 .answer-example>p { font-size:12px; color:#83838d; margin-top:8px; }
@@ -426,7 +426,7 @@ h3 { font-weight:600; }
   .flashcard-prompt h2 { font-size:53px; }
   .flashcard-prompt h2.french-prompt { font-size:31px; }
   .flashcard-answer { padding:23px 20px; }
-  .flashcard-answer>h3 { font-size:24px; }
+  .flashcard-answer h3 { font-size:24px; }
   .answer-example>span { font-size:17px; }
   .answer-example>p { font-size:11px; }
   .rating-buttons { gap:7px; }
@@ -469,14 +469,97 @@ h3 { font-weight:600; }
   .form-columns { gap:10px; }
 }
 .session-main .workspace-view { animation:none; }
+.mobile-study-control,.mobile-display-settings,.review-pagination,.mobile-study-notice { display:none; }
 @media (max-width:640px) {
-  .is-studying { --review-dock-height:92px; --review-nav-height:calc(57px + max(8px,env(safe-area-inset-bottom))); }
-  .is-studying .main-content { padding-bottom:calc(170px + env(safe-area-inset-bottom)); }
-  .is-studying .study-space .reveal-zone,.is-studying .study-space .rating-zone { position:fixed; left:0; right:0; bottom:var(--review-nav-height); z-index:24; display:flex; align-items:center; justify-content:center; height:var(--review-dock-height); margin:0; padding:12px 20px; border-top:1px solid var(--line); background:#fffffff5; backdrop-filter:blur(12px); }
+  html:has(.app-shell.is-studying),body:has(.app-shell.is-studying) { overflow:hidden; overscroll-behavior:none; }
+  .app-shell .display-toolbar { display:none; }
+  .has-display-tools .main-content { padding-bottom:24px; }
+  .mobile-display-settings { display:grid; gap:12px; padding-bottom:20px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+  .mobile-display-settings h3 { margin:0; }
+  .mobile-display-row { display:flex; align-items:center; justify-content:space-between; gap:16px; color:#686870; font-size:12px; }
+  .mobile-display-settings .japanese-font-toggle button { width:44px; height:44px; }
+  .mobile-display-settings .furigana-toggle { width:52px; height:44px; margin:0; padding:0; border:0; }
+  .mobile-display-settings .furigana-toggle>span:first-child { display:none; }
+  .mobile-display-settings .furigana-switch { width:32px; height:18px; padding:3px; }
+  .mobile-display-settings .furigana-switch i { width:12px; height:12px; }
+  .mobile-display-settings .furigana-toggle[aria-checked=true] .furigana-switch i { transform:translateX(14px); }
+  .app-shell .toast { z-index:40; left:50%; bottom:calc(76px + env(safe-area-inset-bottom)); width:max-content; max-width:calc(100vw - 32px); padding:6px 10px; gap:6px; border-radius:7px; font-size:11px; line-height:1.4; transform:translateX(-50%); box-shadow:0 2px 8px #1717190a; }
+  .app-shell .toast svg { width:14px; height:14px; }
+  .app-shell .toast>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .app-shell .toast.is-sync-notice { display:none; }
+  .app-shell.is-studying { --review-dock-height:84px; --review-nav-height:0px; height:100vh; height:100dvh; min-height:0; overflow:hidden; }
+  .is-studying .workspace { height:100%; min-height:0; display:flex; flex-direction:column; padding:0; overflow:hidden; }
+  .is-studying .topbar,.is-studying .mobile-nav { display:none; }
+  .is-studying.has-display-tools .main-content { flex:1; min-height:0; width:100%; display:flex; flex-direction:column; padding:12px 16px calc(var(--review-dock-height) + env(safe-area-inset-bottom) + 12px); }
+  .is-studying .workspace-view { flex:1; min-height:0; display:flex; }
+  .is-studying .study-space { flex:1; width:100%; min-height:0; display:flex; flex-direction:column; gap:10px; }
+  .is-studying .study-top { flex-shrink:0; gap:8px; min-height:45px; padding-bottom:8px; margin:0; }
+  .is-studying .study-top>.text-button { min-height:44px; }
+  .is-studying .study-controls { gap:2px; }
+  .is-studying .study-controls .icon-button { width:40px; height:44px; }
+  .is-studying .mobile-study-control { display:inline-flex; }
+  .is-studying .study-reviewed { margin-right:4px; color:#92929b; }
+  .is-studying .study-reviewed>span,.is-studying .study-undo { display:none; }
+  .is-studying .study-context { flex:1; }
+  .is-studying .flashcard { flex:1; min-height:0; display:flex; flex-direction:column; }
+  .is-studying .flashcard-label { flex-shrink:0; padding:10px 14px; min-height:32px; }
+  .is-studying .review-pages { min-height:0; display:flex; flex-direction:column; padding:10px 14px; }
+  .is-studying .flashcard-prompt { flex:1; }
+  .is-studying .flashcard.is-revealed .flashcard-prompt { flex:0 1 34%; min-height:clamp(130px,22dvh,164px); }
+  .is-studying .flashcard-answer { flex:1 1 66%; margin:0; }
+  .is-studying .review-pages-viewport { flex:1; min-height:0; overflow:hidden; }
+  .is-studying .review-page-flow { height:100%; width:100%; column-count:1; column-gap:0; column-fill:auto; }
+  .is-studying .review-page-content { overflow-wrap:anywhere; }
+  .is-studying .review-page-content p { orphans:2; widows:2; }
+  .is-studying .flashcard-prompt h2 { font-size:clamp(28px,6.5dvh,46px); line-height:1.5; }
+  .is-studying .flashcard-prompt h2.french-prompt { font-size:clamp(20px,4.4dvh,30px); line-height:1.35; }
+  .is-studying.has-furigana .flashcard-prompt h2[lang=ja] { line-height:1.85; }
+  .is-studying .prompt-reading { font-size:12px; margin-top:4px; }
+  .is-studying .flashcard-answer .eyebrow { display:none; }
+  .is-studying .flashcard-answer h3 { margin-top:0; font-size:clamp(19px,3.8dvh,25px); line-height:1.4; }
+  .is-studying .flashcard-answer h3[lang=ja] { font-size:clamp(25px,4.8dvh,34px); line-height:1.7; }
+  .is-studying .flashcard-answer .review-page-content>p { margin-top:5px; font-size:12px; }
+  .is-studying .answer-example { margin-top:12px; padding-top:10px; }
+  .is-studying .answer-example>span { font-size:15px; }
+  .is-studying .answer-example>p { margin-top:4px; font-size:11px; }
+  .is-studying .flashcard-answer .answer-explanation { margin-top:10px; font-size:12px; line-height:1.65; }
+  .is-studying .review-pagination { flex-shrink:0; min-height:32px; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:12px; color:#9999a3; font-size:10px; font-variant-numeric:tabular-nums; }
+  .review-pagination button { width:40px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:5px; color:#74747e; }
+  .review-pagination button:hover:not(:disabled) { background:#f0f0f3; }
+  .is-studying .study-space .reveal-zone,.is-studying .study-space .rating-zone { position:fixed; left:0; right:0; bottom:0; z-index:24; display:flex; align-items:center; justify-content:center; height:calc(var(--review-dock-height) + env(safe-area-inset-bottom)); margin:0; padding:10px 16px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:#fffffff5; backdrop-filter:blur(12px); }
   .study-space .rating-buttons { width:100%; max-width:700px; }
   .study-space .reveal-button,.study-space .rating-zone>.button { width:100%; max-width:700px; min-height:54px; justify-content:center; }
-  .is-studying .display-toolbar { bottom:calc(var(--review-nav-height) + var(--review-dock-height) + 12px); }
-  .is-studying .toast { left:16px; max-width:calc(100vw - 32px); bottom:calc(var(--review-nav-height) + var(--review-dock-height) + var(--display-tools-height) + 24px); transform:none; }
+  .is-studying .rating-button { min-height:62px; }
+  .app-shell.is-studying .toast { display:none; }
+  .is-studying .keyboard-hint { display:flex; flex-shrink:0; align-items:center; justify-content:center; min-height:22px; margin:0; font-size:10px; color:#92929b; }
+  .is-studying .desktop-keyboard-hint { display:none; }
+  .is-studying .mobile-study-notice { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .is-studying .error-banner { flex-shrink:0; }
+}
+
+@media (min-width:371px) and (max-width:640px) {
+  .is-studying .study-reviewed>span { display:inline; }
+}
+@media (max-width:640px) and (max-height:500px) {
+  .app-shell.is-studying { --review-dock-height:72px; }
+  .is-studying.has-display-tools .main-content { padding:8px 12px calc(var(--review-dock-height) + env(safe-area-inset-bottom) + 8px); }
+  .is-studying .study-space { gap:6px; }
+  .is-studying .study-top { min-height:41px; padding-bottom:4px; }
+  .is-studying .study-top>.text-button,.is-studying .study-controls .icon-button { min-height:40px; height:40px; }
+  .is-studying .flashcard-label { padding:6px 12px; }
+  .is-studying .review-pages { padding:8px 12px; }
+  .is-studying .flashcard.is-revealed .flashcard-prompt { min-height:104px; }
+  .is-studying .flashcard-prompt h2 { font-size:28px; }
+  .is-studying.has-furigana .flashcard-prompt h2[lang=ja] { line-height:1.75; }
+  .is-studying .flashcard-prompt h2.french-prompt { font-size:18px; }
+  .is-studying .flashcard-answer h3[lang=ja] { font-size:26px; line-height:1.5; }
+  .is-studying .rating-button { min-height:52px; }
+}
+@media (max-width:640px) and (max-height:420px) {
+  .is-studying .flashcard.is-revealed { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
+  .is-studying .flashcard.is-revealed .flashcard-label { grid-column:1 / -1; }
+  .is-studying .flashcard.is-revealed .flashcard-prompt { min-height:0; }
+  .is-studying .flashcard.is-revealed .flashcard-answer { border-top:0; border-left:1px solid var(--line); }
 }
 @media (prefers-reduced-motion:reduce) {
   *,*:before,*:after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
