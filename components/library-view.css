@@ -1,5 +1,5 @@
-.library-page { min-width:0; --entry-actions-width:38px; }
-.library-page.is-editing { --entry-actions-width:68px; }
+.library-page { min-width:0; --entry-actions-width:38px; --entry-leading-width:24px; }
+.library-page.is-editing { --entry-actions-width:68px; --entry-leading-width:56px; }
 .library-deck-toggle.enabled,.mobile-deck-toggle.enabled { color:var(--red); border-color:#eed4db; background:#fff8fa; }
 .mobile-deck-toggle { display:none; }
 .library-workspace { display:grid; grid-template-columns:minmax(0,1fr) 248px; gap:36px; align-items:start; }
@@ -47,7 +47,7 @@
 .library-page .dictionary-top .edit-toggle.active { color:var(--red); background:var(--red-soft); }
 .library-page .subdeck-chips { gap:6px; margin-bottom:12px; }
 .library-page .subdeck-chips button { padding:4px 8px; font-size:10px; }
-.library-page .dictionary-labels { grid-template-columns:1fr 1fr 18px; align-items:center; gap:10px; padding:5px calc(12px + var(--entry-actions-width)) 5px 12px; min-height:38px; font-size:9px; letter-spacing:.7px; }
+.library-page .dictionary-labels { grid-template-columns:1fr 1fr 18px; align-items:center; gap:10px; padding:5px calc(12px + var(--entry-actions-width)) 5px calc(12px + var(--entry-leading-width)); min-height:38px; font-size:9px; letter-spacing:.7px; }
 .translation-heading { display:flex; align-items:center; gap:8px; }
 .translation-toggle { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:5px; color:#a3a3ad; }
 .translation-toggle:hover { color:var(--ink); background:var(--soft); }
@@ -71,9 +71,38 @@
 .result-decks button:hover { color:var(--red); }
 .result-decks>span { color:#a4a4ad; font-size:10px; }
 .library-page .dictionary-footer { margin-top:14px; font-size:10px; }
+.library-pagination { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:44px; padding-top:12px; border-top:1px solid var(--line); overflow-anchor:none; }
+.library-pagination .library-load-more { min-height:40px; font-size:12px; padding:8px 18px; }
+.library-dictionary.is-searching .entries { opacity:.5; }
+.library-drag-handle { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:24px; min-height:34px; color:#b5b5bd; cursor:grab; border-radius:5px; opacity:0; }
+.library-drag-handle:active { cursor:grabbing; }
+.entry-row:hover .library-drag-handle,.deck-tree-row:hover .library-drag-handle,.library-drag-handle:focus-visible { opacity:1; }
+.library-drag-handle:hover { color:var(--ink); background:var(--soft); }
+.deck-drag-handle { width:22px; }
+.deck-tree-row.is-drop-target { background:var(--red-soft); color:var(--red); box-shadow:inset 0 0 0 1.5px var(--red); }
+.deck-tree-row.is-dragging { opacity:.45; }
+.entry-select { flex:0 0 32px; min-height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.entry-select input,.bulk-select-all input { accent-color:var(--red); width:16px; height:16px; margin:0; flex-shrink:0; }
+.dictionary-entry.is-selected { background:#fff8fa; }
+.dictionary-entry.is-being-edited { box-shadow:inset 2px 0 var(--red); background:#fff8fa; }
+.library-bulk-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 12px; position:sticky; top:84px; z-index:10; margin:0 0 12px; padding:7px 9px; min-height:48px; background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:0 3px 10px #00000004; }
+.bulk-select-all { display:flex; align-items:center; gap:9px; min-height:32px; color:var(--muted); font-size:11px; cursor:pointer; }
+.bulk-select-all span { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.bulk-actions,.bulk-idle-actions { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:5px; }
+.bulk-idle-actions .text-button { font-size:11px; }
+.bulk-actions .button { min-height:32px; padding:5px 8px; font-size:11px; gap:5px; }
+.bulk-actions .icon-button,.bulk-idle-actions .icon-button { width:30px; height:32px; }
+.bulk-delete-description { font-size:13px; color:var(--muted); line-height:1.7; }
+.library-action-status,.library-action-error { position:fixed; bottom:24px; left:36px; z-index:40; max-width:360px; font-size:11px; line-height:1.6; margin:0; padding:10px 14px; background:white; border:1px solid var(--line); border-radius:8px; box-shadow:0 4px 20px #0000000a; pointer-events:none; }
+.library-action-status { color:var(--muted); }
+.library-action-error { color:var(--red); }
+.library-workspace.with-editor,.library-workspace.with-editor.decks-hidden { grid-template-columns:minmax(0,1fr) 390px; gap:24px; }
+.library-workspace.with-editor .library-decks { display:none; }
+.library-editor { min-width:0; position:sticky; top:108px; max-height:calc(100dvh - 250px); }
 @media (max-width:1100px) and (min-width:901px) {
   .library-workspace { grid-template-columns:minmax(0,1fr) 220px; gap:24px; }
   .library-decks { padding-left:18px; }
+  .library-workspace.with-editor,.library-workspace.with-editor.decks-hidden { grid-template-columns:minmax(0,1fr) 350px; gap:20px; }
 }
 @media (max-width:900px) {
   .library-deck-toggle { display:none; }
@@ -89,6 +118,11 @@
   .deck-children:before { top:-20px; height:20px; }
   .deck-children>li:after { top:20px; }
   .deck-children>li:last-child:before { height:20px; }
+  .library-workspace.with-editor,.library-workspace.with-editor.decks-hidden { grid-template-columns:minmax(0,1fr); }
+  .library-editor { position:static; max-height:none; }
+  .library-drag-handle { display:none; }
+  .library-page { --entry-leading-width:0px; }
+  .library-page.is-editing { --entry-leading-width:32px; }
 }
 @media (max-width:640px) {
   .library-page,.library-page.is-editing { --entry-actions-width:46px; }
@@ -97,7 +131,7 @@
   .dictionary-actions { gap:3px; }
   .library-page .dictionary-actions .library-review { min-height:40px; padding:8px 10px; gap:8px; }
   .library-page .dictionary-top .edit-toggle { width:40px; height:40px; }
-  .library-page .dictionary-labels { padding:3px calc(6px + var(--entry-actions-width)) 3px 6px; gap:8px; grid-template-columns:1fr 1fr 14px; font-size:8px; }
+  .library-page .dictionary-labels { padding:3px calc(6px + var(--entry-actions-width)) 3px calc(6px + var(--entry-leading-width)); gap:8px; grid-template-columns:1fr 1fr 14px; font-size:8px; }
   .translation-heading { gap:4px; }
   .translation-toggle { width:40px; height:40px; }
   .library-page .entry-main { min-height:56px; padding:8px 6px; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 14px; gap:8px; }
@@ -111,4 +145,8 @@
   .library-page .entry-row>.reveal-translation { width:44px; min-height:44px; margin-right:0; }
   .library-page .result-decks { padding:0 6px 7px; }
   .library-page .subdeck-chips button { min-height:32px; }
+  .library-bulk-toolbar { top:70px; padding:5px 7px; gap:3px 6px; }
+  .bulk-select-all,.bulk-actions .button,.bulk-actions .icon-button,.bulk-idle-actions .icon-button { min-height:40px; }
+  .bulk-actions .icon-button { width:36px; }
+  .library-action-status,.library-action-error { left:16px; right:16px; bottom:calc(90px + env(safe-area-inset-bottom)); max-width:none; }
 }

@@ -18,3 +18,42 @@
   .modal.compact-note-modal { padding:20px 16px; }
   .quick-note-form .form-columns { grid-template-columns:minmax(0,1fr); gap:12px; }
 }
+
+.note-form-fields { display:grid; gap:inherit; min-width:0; border:0; padding:0; margin:0; }
+.note-form-fields>label { display:block; min-width:0; font-size:12px; font-weight:500; color:#5f5f6a; }
+.note-side-panel { display:flex; flex-direction:column; min-width:0; max-height:calc(100dvh - 250px); border:1px solid var(--line); border-radius:12px; overflow:hidden; background:white; animation:note-panel-enter .16s ease-out; }
+.note-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px 8px; flex-shrink:0; }
+.note-panel-heading h2 { min-width:0; font-size:16px; font-weight:600; }
+.note-panel-heading .icon-button { width:32px; height:32px; }
+.note-panel-navigation { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 12px 10px 16px; border-bottom:1px solid var(--line); flex-shrink:0; }
+.note-panel-navigation>span { font-size:11px; color:var(--muted); }
+.note-panel-navigation>div { display:flex; gap:4px; }
+.note-panel-navigation .icon-button { width:32px; height:32px; }
+.editor-form.panel-note-form { display:flex; flex-direction:column; gap:14px; min-height:0; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+.panel-note-form .note-form-fields { gap:14px; padding:16px; }
+.panel-note-form .form-columns { gap:10px; }
+.panel-note-form input:not([type=checkbox]),.panel-note-form textarea,.panel-note-form select { margin-top:6px; padding:8px 10px; }
+.panel-note-form .reading-fields { padding:10px; }
+.panel-note-form .deck-checkboxes { max-height:180px; overflow:auto; }
+.panel-note-form .deck-checkboxes>label { padding:6px 0; }
+.panel-note-form>.form-error { margin:0 16px; }
+.panel-note-form .modal-actions { position:sticky; bottom:0; z-index:2; flex-shrink:0; align-items:center; flex-wrap:wrap; gap:8px; padding:12px 16px; margin:0; background:white; box-shadow:0 -5px 12px #ffffffcc; }
+.panel-note-form .modal-actions .button { min-height:36px; padding:8px 11px; font-size:12px; }
+.panel-note-form .modal-actions .text-button { min-height:36px; font-size:11px; }
+.note-panel-save-status { flex:1; min-width:0; font-size:10px; color:var(--muted); }
+@keyframes note-panel-enter { from { opacity:0; transform:translateX(8px); } to { opacity:1; transform:translateX(0); } }
+@media (max-width:900px) {
+  .note-sheet-backdrop { align-items:flex-end; padding:0; }
+  .modal.note-editor-sheet { width:100%; max-width:600px; max-height:calc(100dvh - 16px); border-radius:16px 16px 0 0; padding:18px 16px calc(16px + env(safe-area-inset-bottom)); }
+  .note-editor-sheet .modal-heading { margin-bottom:12px; }
+  .note-editor-sheet .modal-heading h2 { font-size:19px; }
+  .note-editor-sheet .note-panel-navigation { padding:0 0 10px; margin-bottom:14px; }
+  .note-editor-sheet .note-panel-navigation .icon-button { width:40px; height:40px; }
+  .note-editor-sheet .panel-note-form { overflow:visible; }
+  .note-editor-sheet .note-form-fields { padding:0; }
+  .note-editor-sheet .panel-note-form .modal-actions { bottom:calc(-16px - env(safe-area-inset-bottom)); margin:0 -16px calc(-16px - env(safe-area-inset-bottom)); padding:12px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .note-editor-sheet .panel-note-form .modal-actions .button { min-height:42px; font-size:12px; }
+  .note-editor-sheet .panel-note-form .form-columns { grid-template-columns:minmax(0,1fr); }
+  .note-editor-sheet .panel-note-form input:not([type=checkbox]),.note-editor-sheet .panel-note-form textarea { font-size:16px; }
+}
+@media (prefers-reduced-motion:reduce) { .note-side-panel { animation:none; } }

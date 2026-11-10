@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { defaultReadingContext, sanitizeReadingContext, type ReadingContext } from '@/lib/library-view';
+import { defaultReadingContext, sanitizeReadingContext, updateReadingContext, type ReadingContext } from '@/lib/library-view';
 
-export type WorkspaceTab = 'home' | 'review' | 'library' | 'writing';
+export type WorkspaceTab = 'home' | 'review' | 'library' | 'writing' | 'stats';
 export type JapaneseFont = 'brush' | 'plain';
 const KEY = 'kotoba-workspace-v1';
 
@@ -23,7 +23,7 @@ export function useWorkspaceContext() {
     try { localStorage.setItem(KEY, JSON.stringify({ tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
   }, []);
   const setReading = useCallback((patch: Partial<ReadingContext>) => {
-    const next = { ...readingRef.current, ...patch };
+    const next = updateReadingContext(readingRef.current, patch);
     readingRef.current = next; setReadingState(next); save();
   }, [save]);
   const setJapaneseFont = useCallback((value: JapaneseFont) => {
@@ -52,7 +52,7 @@ export function useWorkspaceContext() {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         const next = sanitizeReadingContext(saved.reading);
-        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'writing' ? saved.tab : 'home';
+        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'writing' || saved.tab === 'stats' ? saved.tab : 'home';
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
         furiganaRef.current = saved.furiganaEnabled === true; setFuriganaEnabledState(furiganaRef.current);
         japaneseFontRef.current = nextFont; setJapaneseFontState(nextFont);

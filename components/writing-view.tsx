@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Download, ListFilter } from 'lucide-react';
-import { applySuggestion, writingMatches } from '@/lib/writing';
+import { applySuggestion, writingMatches, writingToken } from '@/lib/writing';
 import { convertWritingInput, finishKanaInput, type KanaComposition, type WritingInputMode } from '@/lib/kana-input';
 import type { Note, Snapshot } from '@/lib/model';
 import type { JapaneseFont } from './use-workspace-context';
@@ -178,10 +178,10 @@ function WritingFurigana({ text, size, japaneseFont, editor, paper }: {
   return <div className="writing-furigana-overlay" ref={overlay} aria-hidden="true" />;
 }
 
-function WritingSuggestion({ note, id, active, onInsert }: { note: Note; id: string; active: boolean; onInsert: () => void }) {
+function WritingSuggestion({ note, prefix, id, active, onInsert }: { note: Note; prefix: string; id: string; active: boolean; onInsert: () => void }) {
   const { enabled, parts } = useFuriganaParts(note.japanese, note.reading);
   const hasFurigana = enabled && parts.some(part => part.reading);
-  return <button type="button" role="option" id={id} aria-selected={active} tabIndex={-1} className={active ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={onInsert}><span className="writing-suggestion-word" lang="ja"><JapaneseText text={note.japanese} reading={note.reading} />{!hasFurigana && <small>{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small>}</span><span className="writing-suggestion-meaning"><JapaneseText text={note.meaning} /></span></button>;
+  return <button type="button" role="option" id={id} aria-selected={active} tabIndex={-1} className={active ? 'active' : ''} onPointerDown={event => event.preventDefault()} onClick={onInsert}><span className="writing-suggestion-word" lang="ja"><JapaneseText text={prefix} /><JapaneseText text={note.japanese} reading={note.reading} />{!hasFurigana && <small><JapaneseText text={prefix} />{note.reading || [...(note.onReadings ?? []), ...(note.kunReadings ?? [])].join('・')}</small>}</span><span className="writing-suggestion-meaning"><JapaneseText text={note.meaning} /></span></button>;
 }
 
 export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFont: JapaneseFont }) {
@@ -216,6 +216,7 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
   [data, text, selection, suggestionsEnabled, focused, composing, dismissed]);
   const notes = matching?.notes ?? [];
   const open = notes.length > 0;
+  const previewStart = open ? writingToken(text, selection.start, selection.end)!.start : 0;
 
   const saveDraft = useCallback((value: string) => {
     if (!draftReadable.current) { setSaved(false); return; }
@@ -400,7 +401,7 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
   function insert(note: Note) {
     if (!matching || composingRef.current) return;
     try {
-      const next = applySuggestion(latestText.current, matching.range, note.japanese);
+      const next = applySuggestion(latestText.current, matching.ranges.get(note.id) ?? matching.range, note.japanese);
       if (next.text.length > MAX_LENGTH) return;
       rememberEdit();
       suppressReopen.current = true;
@@ -446,7 +447,7 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
       <textarea lang="ja" className={`writing-textarea ${size}${furiganaEnabled ? ' with-furigana' : ''}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
       <WritingFurigana text={text} size={size} japaneseFont={japaneseFont} editor={editor} paper={paper} />
       {open && <div className="writing-suggestions" ref={suggestionsPanel} style={{ top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}>
-        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <WritingSuggestion key={note.id} note={note} id={`${listId}-${index}`} active={index === selected} onInsert={() => insert(note)} />)}</div>
+        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <WritingSuggestion key={note.id} note={note} prefix={text.slice(previewStart, matching!.ranges.get(note.id)!.start)} id={`${listId}-${index}`} active={index === selected} onInsert={() => insert(note)} />)}</div>
         <div className="writing-suggestion-help">↑↓ · Space / Enter to insert · Esc to close</div>
       </div>}
     </div>

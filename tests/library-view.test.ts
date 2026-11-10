@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { seedSnapshot } from '../lib/seed';
-import { defaultReadingContext, deckAncestors, libraryNotes, noteDecks, sanitizeReadingContext } from '../lib/library-view';
+import { defaultReadingContext, deckAncestors, LIBRARY_BATCH_SIZE, libraryDisplayCount, libraryNotes, noteDecks, sanitizeReadingContext, updateReadingContext } from '../lib/library-view';
 
 test('dictionary search follows the selected deck without duplicate notes', () => {
   const data = seedSnapshot();
@@ -61,4 +61,65 @@ test('legacy global scope cannot override the deck restored from browser storage
   const context = sanitizeReadingContext({ ...defaultReadingContext, deckId: 'kanjis', search: 'to eat', scope: 'all' });
   assert.equal(context.deckId, 'kanjis');
   assert.equal(libraryNotes(data, context).length, 0);
+});
+
+function largeLibrary() {
+  const data = seedSnapshot();
+  const note = data.notes[0], card = data.cards[0];
+  data.notes = Array.from({ length: 235 }, (_, i) => ({ ...note, id: `page-note-${i}`, japanese: `語${i}`, reading: `ご${i}`, meaning: i === 234 ? 'target beyond page' : `fixture item ${i}` }));
+  data.cards = data.notes.map(note => ({ ...card, id: `${note.id}:ja-fr`, noteId: note.id }));
+  data.reviews = []; data.reviewUndos = [];
+  return data;
+}
+
+test('successive library batches retain stable order without duplicates or missing tail cards', () => {
+  const notes = libraryNotes(largeLibrary(), defaultReadingContext);
+  let context = { ...defaultReadingContext };
+  const seen = new Set<string>();
+  let previous = 0;
+  for (const expected of [100, 200, 235]) {
+    const count = libraryDisplayCount(notes, context.visibleCount);
+    assert.equal(count, expected);
+    for (const note of notes.slice(previous, count)) { assert.ok(!seen.has(note.id)); seen.add(note.id); }
+    previous = count;
+    context = updateReadingContext(context, { visibleCount: context.visibleCount + LIBRARY_BATCH_SIZE });
+  }
+  assert.deepEqual([...seen], notes.map(note => note.id));
+});
+
+test('search still finds a card beyond the displayed prefix and starts a fresh batch', () => {
+  const data = largeLibrary();
+  const context = updateReadingContext({ ...defaultReadingContext, visibleCount: 300, scrollY: 8000 }, { search: 'target beyond page' });
+  const results = libraryNotes(data, context);
+  assert.deepEqual(results.map(note => note.id), ['page-note-234']);
+  assert.equal(context.visibleCount, 100);
+  assert.equal(context.scrollY, 0);
+  assert.equal(libraryDisplayCount(results, context.visibleCount), 1);
+});
+
+test('loaded batches survive preference storage and reset only when the library scope changes', () => {
+  const context = { ...defaultReadingContext, visibleCount: 300, scrollY: 7800 };
+  assert.deepEqual(sanitizeReadingContext(JSON.parse(JSON.stringify(context))), context);
+  assert.equal(updateReadingContext(context, { hideTranslations: true, expanded: 'page-note-150' }).visibleCount, 300);
+  for (const patch of [{ search: 'go' }, { deckId: 'travail' }, { sort: 'meaning' as const }]) {
+    const next = updateReadingContext(context, patch);
+    assert.equal(next.visibleCount, 100);
+    assert.equal(next.scrollY, 0);
+  }
+  assert.equal(updateReadingContext(context, { sort: context.sort }).visibleCount, 300);
+});
+
+test('editor and expanded-card anchors remain reachable across batch boundaries', () => {
+  const notes = libraryNotes(largeLibrary(), defaultReadingContext);
+  assert.equal(libraryDisplayCount(notes, 100, [notes[99].id]), 100);
+  assert.equal(libraryDisplayCount(notes, 100, [notes[100].id]), 200);
+  assert.equal(libraryDisplayCount(notes, 100, [notes[100].id, notes[234].id]), 235);
+  assert.equal(libraryDisplayCount(notes, 100, ['outside-current-results']), 100);
+});
+
+test('legacy and malformed batch preferences cannot hide cards or create unbounded page sizes', () => {
+  for (const visibleCount of [undefined, null, '', '300', -100, 0, Infinity, NaN]) assert.equal(sanitizeReadingContext({ visibleCount }).visibleCount, 100);
+  assert.equal(sanitizeReadingContext({ visibleCount: 101 }).visibleCount, 200);
+  assert.equal(sanitizeReadingContext({ visibleCount: 10000000 }).visibleCount, 20000);
+  assert.equal(libraryDisplayCount([], 300), 0);
 });

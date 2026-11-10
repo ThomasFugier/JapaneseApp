@@ -29,7 +29,7 @@ function savedReadings(note: SearchableNote): string[] {
 export function noteSearchRank(note: SearchableNote, query: string): number {
   const key = textKey(query);
   if (!key) return 0;
-  const rank = suggestionRank(note, key);
+  const rank = writingSuggestionRank(note, key);
   if (rank < 100) return rank;
   const text = textKey([
     note.japanese, note.reading, note.meaning, note.example, note.exampleTranslation,
@@ -79,7 +79,8 @@ function fuzzyRank(fields: string[], queries: string[]): number {
   return best;
 }
 
-function suggestionRank(note: SearchableNote, query: string): number {
+/** Lower ranks win: exact/prefix <20, substring <100, fuzzy >=100. */
+export function writingSuggestionRank(note: SearchableNote, query: string): number {
   const queries = phoneticAliases(query);
   const japanese = phoneticAliases(note.japanese);
   const readings = [...new Set(savedReadings(note).flatMap(phoneticAliases))];
@@ -105,7 +106,7 @@ export function writingSuggestions(data: Snapshot, query: string, limit = 8): No
   const ids = new Set(cardsForDeck(data, null).map(card => card.noteId));
   const collator = new Intl.Collator('ja');
   return data.notes.filter(note => !note.deletedAt && ids.has(note.id))
-    .map(note => ({ note, rank: suggestionRank(note, key) }))
+    .map(note => ({ note, rank: writingSuggestionRank(note, key) }))
     .filter(item => Number.isFinite(item.rank))
     .sort((a, b) => a.rank - b.rank
       || collator.compare(a.note.reading || a.note.japanese, b.note.reading || b.note.japanese)

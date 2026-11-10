@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { emptySnapshot, snapshotsEqual, validateSnapshot, type Snapshot } from '@/lib/model';
 import { loadLibrary, saveLibrary } from '@/lib/storage';
 import { mergeSnapshots, type Conflict } from '@/lib/merge';
@@ -10,11 +10,18 @@ import { needsCloudBootstrap, type CloudConnectionStatus as Status, type CloudSy
 type Library = { snapshot: Snapshot; base: Snapshot; lastSyncedAt: string | null };
 const localSaveFailure = 'Local save failed. Your last action was not saved. Export your data and check the available storage space.';
 
+async function fetchCloudStatus(): Promise<Status> {
+  const response = await fetch('/api/status', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+  if (!response.ok) throw new Error('Connection status is temporarily unavailable.');
+  return response.json();
+}
+
 export function useLibrary() {
   const [data, setData] = useState<Snapshot>(emptySnapshot);
   const [ready, setReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [online, setOnline] = useState(true);
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState('');
   const [localSaveError, setLocalSaveError] = useState('');
@@ -58,7 +65,7 @@ export function useLibrary() {
       try {
         const stored = await loadLibrary();
         let remoteStatus: Status | null = null;
-        try { remoteStatus = await fetch('/api/status', { cache: 'no-store', signal: AbortSignal.timeout(5000) }).then(response => response.json()); } catch { /* Offline mode. */ }
+        try { remoteStatus = await fetchCloudStatus(); } catch { /* Offline mode. */ }
         if (disposed) return;
         setStatus(remoteStatus);
         if (remoteStatus?.authenticated) {
@@ -131,14 +138,25 @@ export function useLibrary() {
   useEffect(() => {
     if (!ready) return;
     const refreshStatus = () => {
+      setOnline(navigator.onLine);
       if (!navigator.onLine) return;
-      void fetch('/api/status', { cache: 'no-store', signal: AbortSignal.timeout(5000) }).then(response => response.json()).then((next: Status) => {
+      void fetchCloudStatus().then(next => {
         setStatus(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next);
       }).catch(() => undefined);
     };
+    const onOffline = () => setOnline(false);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshStatus(); };
+    refreshStatus();
     window.addEventListener('online', refreshStatus); window.addEventListener('focus', refreshStatus);
-    return () => { window.removeEventListener('online', refreshStatus); window.removeEventListener('focus', refreshStatus); };
-  }, [ready]);
+    window.addEventListener('offline', onOffline); document.addEventListener('visibilitychange', onVisible);
+    // A page opened offline may regain Internet access without an online event.
+    const retry = status === null ? window.setInterval(() => { if (!document.hidden) refreshStatus(); }, 30000) : undefined;
+    return () => {
+      window.removeEventListener('online', refreshStatus); window.removeEventListener('focus', refreshStatus);
+      window.removeEventListener('offline', onOffline); document.removeEventListener('visibilitychange', onVisible);
+      window.clearInterval(retry);
+    };
+  }, [ready, status]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => { if (saving) event.preventDefault(); };
@@ -167,8 +185,8 @@ export function useLibrary() {
 
   const sync = useCallback(async () => {
     if (!record.current || busy.current || conflictData.current) return;
+    if (!navigator.onLine) return;
     if (!status?.authenticated) { setNotice('Connect your account to synchronize.'); return; }
-    if (!navigator.onLine) { setNotice('Offline. Your changes remain on this device.'); return; }
     busy.current = true; setSyncing(true); setError(''); setSyncError('');
     let savingLocally = true;
     try {
@@ -186,7 +204,6 @@ export function useLibrary() {
         savingLocally = true;
         await persist({ snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() });
         savingLocally = false;
-        setNotice('Your cloud library is ready.');
         return;
       }
       const response = await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: sent.base, snapshot: sent.snapshot }), signal: AbortSignal.timeout(60000) });
@@ -213,14 +230,17 @@ export function useLibrary() {
       savingLocally = true;
       await persist(next);
       savingLocally = false;
-      setNotice('Your devices are synchronized.');
     } catch (cause) {
+      if (!savingLocally && !navigator.onLine) return;
       const message = savingLocally ? localSaveFailure : cause instanceof Error ? cause.message : 'Synchronization failed. Your data remains on this device.';
       if (!savingLocally) setSyncError(message);
       setError(message);
     }
     finally { busy.current = false; setSyncing(false); }
   }, [persist, status]);
+
+  const base = record.current?.base;
+  const dirty = useMemo(() => !!base && JSON.stringify(data) !== JSON.stringify(base), [data, base]);
 
   useEffect(() => {
     if (!ready || !status?.authenticated || !record.current || JSON.stringify(record.current.snapshot) === JSON.stringify(record.current.base)) return;
@@ -232,9 +252,21 @@ export function useLibrary() {
     if (!ready || !status?.authenticated) return;
     void sync();
     const onFocus = () => { void sync(); };
+    const onVisible = () => { if (!document.hidden) void sync(); };
     window.addEventListener('online', onFocus); window.addEventListener('focus', onFocus);
-    return () => { window.removeEventListener('online', onFocus); window.removeEventListener('focus', onFocus); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('online', onFocus); window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [ready, status, sync]);
+
+  useEffect(() => {
+    if (!ready || !status?.authenticated || (!dirty && !syncError) || conflicts.length) return;
+    // Retry pending changes even when a failed request did not trigger an online event.
+    const retry = window.setInterval(() => { if (navigator.onLine && !document.hidden) void sync(); }, 30000);
+    return () => window.clearInterval(retry);
+  }, [ready, status, dirty, syncError, conflicts.length, sync]);
 
   const resolve = useCallback(async (choices: Record<string, 'local' | 'remote'>) => {
     const pending = conflictData.current;
@@ -258,6 +290,5 @@ export function useLibrary() {
     conflictData.current = null; setConflicts([]); setNotice('Selected versions saved. Synchronize to send them to GitHub.');
   }, [conflicts, persist]);
 
-  const dirty = !!record.current && JSON.stringify(data) !== JSON.stringify(record.current.base);
-  return { data, ready, saving, syncing, status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, disconnectGitHub };
+  return { data, ready, saving, syncing, online, status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, disconnectGitHub };
 }

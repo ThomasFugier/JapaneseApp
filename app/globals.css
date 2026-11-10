@@ -39,7 +39,7 @@ hr { border:0; border-top:1px solid var(--line); margin:26px 0; }
 .topbar-inner { max-width:1168px; height:100%; margin:auto; padding:0 36px; display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:24px; }
 .brand { display:inline-flex; align-items:center; gap:10px; font-size:20px; font-weight:650; letter-spacing:-.6px; justify-self:start; padding:10px 0; white-space:nowrap; }
 .brand-dot { display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--red); flex-shrink:0; }
-.desktop-tabs { display:grid; grid-template-columns:repeat(4,112px); align-self:stretch; }
+.desktop-tabs { display:grid; grid-template-columns:80px 112px 80px 80px 80px; align-self:stretch; }
 .desktop-tabs button { position:relative; min-width:0; padding:0 10px; color:#85858d; font-size:13px; font-weight:500; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; }
 .desktop-tabs button:after { content:''; position:absolute; height:2px; left:16px; right:16px; bottom:-1px; border-radius:2px; background:transparent; transition:background .15s; }
 .desktop-tabs button:hover { color:var(--ink); }
@@ -294,7 +294,7 @@ h3 { font-weight:600; }
 @keyframes appear { from { opacity:0; translate:0 4px; } to { opacity:1; translate:0 0; } }
 @media (max-width:960px) {
   .topbar-inner { gap:16px; padding:0 28px; }
-  .desktop-tabs { grid-template-columns:repeat(4,96px); }
+  .desktop-tabs { grid-template-columns:68px 104px 68px 68px 68px; }
   .desktop-tabs button { padding:0 6px; font-size:12px; gap:6px; }
   .main-content { padding:35px 28px 50px; }
   .library-layout { grid-template-columns:188px minmax(0,1fr); gap:25px; }
@@ -307,7 +307,7 @@ h3 { font-weight:600; }
 @media (min-width:641px) and (max-width:760px) {
   .topbar-inner { gap:12px; padding:0 20px; }
   .brand { font-size:17px; gap:8px; }
-  .desktop-tabs { grid-template-columns:repeat(4,80px); }
+  .desktop-tabs { grid-template-columns:52px 84px 60px 60px 48px; }
   .desktop-tabs button { font-size:11px; padding:0 4px; gap:4px; }
   .desktop-tabs button:after { left:10px; right:10px; }
   .nav-count { min-width:21px; padding:0 3px; }
@@ -315,7 +315,7 @@ h3 { font-weight:600; }
   .main-content { padding-left:20px; padding-right:20px; }
 }
 @media (min-width:641px) and (max-width:700px) {
-  .desktop-tabs { grid-template-columns:68px 84px 68px 68px; }
+  .desktop-tabs { grid-template-columns:44px 80px 50px 50px 42px; }
 }
 @media (max-width:640px) {
   .workspace { padding-bottom:78px; }
@@ -436,7 +436,7 @@ h3 { font-weight:600; }
   .rating-button>kbd,.keyboard-hint { display:none; }
   .session-complete { padding:50px 0; }
   .session-complete h1 { font-size:27px; }
-  .mobile-nav { display:grid; grid-template-columns:repeat(4,1fr); position:fixed; bottom:0; left:0; right:0; border-top:1px solid var(--line); background:#fffffff5; backdrop-filter:blur(12px); padding:8px 12px max(8px,env(safe-area-inset-bottom)); z-index:30; }
+  .mobile-nav { display:grid; grid-template-columns:repeat(5,1fr); position:fixed; bottom:0; left:0; right:0; border-top:1px solid var(--line); background:#fffffff5; backdrop-filter:blur(12px); padding:8px 12px max(8px,env(safe-area-inset-bottom)); z-index:30; }
   .mobile-nav button { display:flex; align-items:center; justify-content:center; flex-direction:column; gap:5px; font-size:10px; color:#a0a0aa; padding:4px; min-height:48px; }
   .mobile-nav button.selected { color:var(--red); font-weight:600; }
   .mobile-nav button svg { width:20px; height:20px; stroke-width:1.6; }
@@ -486,7 +486,6 @@ h3 { font-weight:600; }
   .app-shell .toast { z-index:40; left:50%; bottom:calc(76px + env(safe-area-inset-bottom)); width:max-content; max-width:calc(100vw - 32px); padding:6px 10px; gap:6px; border-radius:7px; font-size:11px; line-height:1.4; transform:translateX(-50%); box-shadow:0 2px 8px #1717190a; }
   .app-shell .toast svg { width:14px; height:14px; }
   .app-shell .toast>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .app-shell .toast.is-sync-notice { display:none; }
   .app-shell.is-studying { --review-dock-height:84px; --review-nav-height:0px; height:100vh; height:100dvh; min-height:0; overflow:hidden; }
   .is-studying .workspace { height:100%; min-height:0; display:flex; flex-direction:column; padding:0; overflow:hidden; }
   .is-studying .topbar,.is-studying .mobile-nav { display:none; }

@@ -79,3 +79,19 @@ test('disconnected changes are local, even with a stale remote error', () => {
   assert.equal(status.shortLabel, 'Local');
   assert.equal(status.github.label, 'GitHub not connected');
 });
+
+test('offline progress never claims to be synced or disconnected, including after reload', () => {
+  for (const progress of [{}, { dirty: true }, { connected: false }, { syncError: 'Network lost.' }, { syncing: true }]) {
+    const status = deriveBackupStatus({ ...saved, ...progress, online: false });
+    assert.equal(status.shortLabel, 'Offline');
+    assert.equal(status.local.label, 'Saved on this device');
+    assert.match(status.github.description, /Synchronization resumes/);
+    assert.equal(status.github.problem, false);
+  }
+});
+
+test('offline mode still surfaces local write failures and returns to pending on reconnection', () => {
+  assert.equal(deriveBackupStatus({ ...saved, online: false, localSaveError: 'Disk full.' }).shortLabel, 'Error');
+  assert.equal(deriveBackupStatus({ ...saved, online: false, saving: true }).shortLabel, 'Saving');
+  assert.equal(deriveBackupStatus({ ...saved, online: true, dirty: true }).shortLabel, 'Pending');
+});

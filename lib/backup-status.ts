@@ -4,6 +4,7 @@ export type BackupState = {
   localSaveError: string;
   syncError: string;
   connected: boolean;
+  online?: boolean;
   dirty: boolean;
   lastSyncedAt: string | null;
   conflicts: number;
@@ -11,9 +12,9 @@ export type BackupState = {
 
 type Detail = { label: string; description: string; problem: boolean };
 export type BackupStatus = {
-  kind: 'local' | 'saving' | 'synced' | 'pending' | 'error';
+  kind: 'local' | 'saving' | 'synced' | 'pending' | 'offline' | 'error';
   label: string;
-  shortLabel: 'Local' | 'Saving' | 'Synced' | 'Pending' | 'Error';
+  shortLabel: 'Local' | 'Saving' | 'Synced' | 'Pending' | 'Offline' | 'Error';
   description: string;
   local: Detail;
   github: Detail;
@@ -28,7 +29,8 @@ export function deriveBackupStatus(state: BackupState): BackupStatus {
       ? { label: 'Saving on this device', description: 'Saving your latest changes.', problem: false }
       : { label: 'Saved on this device', description: 'Your library and review progress are saved in this browser.', problem: false };
   let github: Detail;
-  if (!state.connected) github = { label: 'GitHub not connected', description: 'Connect GitHub to sync across devices.', problem: false };
+  if (state.online === false) github = { label: 'Offline', description: 'Changes stay on this device. Synchronization resumes when you are back online with the site open.', problem: false };
+  else if (!state.connected) github = { label: 'GitHub not connected', description: 'Connect GitHub to sync across devices.', problem: false };
   else if (state.conflicts > 0) github = { label: 'GitHub needs attention', description: 'Choose which versions to keep before synchronization can continue.', problem: true };
   else if (state.syncError) github = { label: 'GitHub sync failed', description: state.syncError, problem: true };
   else if (state.localSaveError) github = { label: 'GitHub sync pending', description: 'Resolve the local save failure before syncing.', problem: false };
@@ -42,6 +44,7 @@ export function deriveBackupStatus(state: BackupState): BackupStatus {
   let shortLabel: BackupStatus['shortLabel'];
   if (local.problem) { kind = 'error'; label = local.label; shortLabel = 'Error'; }
   else if (state.saving) { kind = 'saving'; label = local.label; shortLabel = 'Saving'; }
+  else if (state.online === false) { kind = 'offline'; label = github.label; shortLabel = 'Offline'; }
   else if (!state.connected) { kind = 'local'; label = local.label; shortLabel = 'Local'; }
   else if (github.problem) { kind = 'error'; label = github.label; shortLabel = 'Error'; }
   else if (state.syncing || state.dirty || !lastSyncedAt) { kind = 'pending'; label = github.label; shortLabel = 'Pending'; }
