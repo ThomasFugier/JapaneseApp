@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createEmptyCard, fsrs, type Grade } from 'ts-fsrs';
 import { emptySnapshot, type Review, type Snapshot } from '../lib/model';
 import { buildStatistics } from '../lib/statistics';
+import { createReview, scheduleForCard } from '../lib/engine';
 
 const stamp = '2026-01-01T00:00:00.000Z';
 
@@ -26,6 +27,23 @@ function fixture(): Snapshot {
 function review(data: Snapshot, id: string, cardId: string, rating: Review['rating'], reviewedAt: string | Date): void {
   data.reviews.push({ id, cardId, rating, reviewedAt: typeof reviewedAt === 'string' ? reviewedAt : reviewedAt.toISOString() });
 }
+
+test('statistics share saved custom deadlines with review, including preference changes and undo', () => {
+  const data = fixture(), now = new Date('2026-11-13T12:00:00.000Z');
+  data.reviewSettings = { ...data.reviewSettings, mode: 'custom' };
+  const first = createReview(data, 'n1-ja-fr', 3, now, 'first');
+  data.reviews.push(first);
+  const later = new Date(first.dueAt!);
+  const second = createReview(data, 'n1-ja-fr', 4, later, 'second');
+  data.reviews.push(second);
+  data.reviewSettings = { ...data.reviewSettings, mode: 'automatic' };
+  const direction = () => buildStatistics(data, later).cards[0].directions.find(item => item.cardId === 'n1-ja-fr')!;
+  assert.equal(direction().nextDueAt, second.dueAt);
+  assert.equal(direction().nextDueAt, scheduleForCard(data, 'n1-ja-fr').due.toISOString());
+  data.reviewUndos.push({ id: 'undo-second', reviewId: second.id, undoneAt: later.toISOString() });
+  assert.equal(direction().nextDueAt, first.dueAt);
+  assert.equal(direction().nextDueAt, scheduleForCard(data, 'n1-ja-fr').due.toISOString());
+});
 
 test('empty and unknown scopes have null recall and zero-filled activity', () => {
   const now = new Date('2026-11-10T12:00:00.000Z');

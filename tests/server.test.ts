@@ -5,6 +5,9 @@ import { assertOrigin, boundedJson, HttpError } from '../lib/server/http';
 import { GitHubStore } from '../lib/server/github';
 import { emptySnapshot } from '../lib/model';
 import type { ServerConfig } from '../lib/server/config';
+import { parseSyncInput } from '../lib/server/sync-input';
+import { seedSnapshot } from '../lib/seed';
+import { createReview } from '../lib/engine';
 
 const secret = 'this-is-a-test-secret-with-at-least-32-characters';
 const config: ServerConfig = {
@@ -12,6 +15,45 @@ const config: ServerConfig = {
   repo: 'private-data', branch: 'main', token: 'never-send-to-browser', secret, appUrl: 'https://kotoba.example',
 };
 const branchResponse = () => Response.json({ ref: `refs/heads/${config.branch}`, object: { sha: 'a'.repeat(40) } });
+
+test('old app tabs must reload before sync; current clients can migrate an old baseline', () => {
+  const current = emptySnapshot();
+  for (const schemaVersion of [1, 2, 3]) {
+    const legacy = { ...current, schemaVersion };
+    const body = { base: legacy, snapshot: legacy }, before = structuredClone(body);
+    assert.throws(() => parseSyncInput(body), (error: unknown) => error instanceof HttpError && error.status === 426 && /Reload/.test(error.message));
+    assert.deepEqual(body, before);
+    assert.deepEqual(parseSyncInput({ base: legacy, snapshot: current }), { base: current, snapshot: current });
+  }
+  for (const body of [null, {}, { base: current, snapshot: { ...current, schemaVersion: 99 } }]) {
+    assert.throws(() => parseSyncInput(body), (error: unknown) => error instanceof HttpError && error.status === 400);
+  }
+});
+
+test('GitHub sync preserves custom deadlines while merging a newer spacing preference', async () => {
+  const base = seedSnapshot(), local = structuredClone(base), remote = structuredClone(base);
+  local.reviewSettings = { ...local.reviewSettings, mode: 'custom', updatedAt: '2026-11-13T10:00:00.000Z' };
+  local.reviews.push(createReview(local, 'card-taberu', 4, new Date('2026-11-13T10:01:00.000Z'), 'desktop-easy'));
+  remote.reviewSettings = { ...remote.reviewSettings, mode: 'custom', easyMinutes: 90 * 1440, updatedAt: '2026-11-13T10:02:00.000Z' };
+  let written: unknown;
+  const fetcher: typeof fetch = async (input, init) => {
+    if (init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body));
+      written = JSON.parse(Buffer.from(body.content, 'base64').toString('utf8'));
+      return Response.json({ content: { sha: 'b'.repeat(40) } });
+    }
+    if (String(input).includes('/git/ref/')) return branchResponse();
+    if (String(input).includes('/contents/')) return Response.json({ type: 'file', size: 100, sha: 'a'.repeat(40), encoding: 'base64', content: Buffer.from(JSON.stringify(remote)).toString('base64') });
+    return Response.json({ private: true });
+  };
+  const result = await new GitHubStore(config, fetcher).synchronize(base, local);
+  assert.equal(result.conflict, false);
+  if (!result.conflict) {
+    assert.deepEqual(result.snapshot.reviewSettings, remote.reviewSettings);
+    assert.deepEqual(result.snapshot.reviews, local.reviews);
+    assert.deepEqual(written, result.snapshot);
+  }
+});
 
 test('session rejects tampering, expiry and a different signing secret', () => {
   const signed = signPayload({ login: 'owner', exp: 2000 }, secret);

@@ -80,11 +80,12 @@ export function StatisticsView({ data, now, onReview, onOpenLibrary, onOpenCard,
       <label><span className="sr-only">Statistics deck</span><select aria-label="Statistics deck" value={scope ?? ''} onChange={event => { setDeckId(event.target.value || null); resetRows(); }}><option value="">All cards</option>{decks.map(deck => <option key={deck.id} value={deck.id}>{deck.path}</option>)}</select></label>
       <button className="button primary" disabled={!stats.totalCards} onClick={() => onReview(scope)}>Review<ArrowRight size={15} /></button>
     </div>
+    <p className="statistics-unit-note">Each card is counted once; studying either direction marks it as studied.</p>
     <div className="statistics-summary">
-      <div><span>Studied cards</span><strong>{stats.studiedCards}<small> / {stats.totalCards}</small></strong><span>{stats.newCards} new</span></div>
+      <div><span title="Cards studied in at least one direction">Cards studied</span><strong>{stats.studiedCards}<small> / {stats.totalCards}</small></strong><span>{stats.newCards} unseen {stats.newCards === 1 ? 'card' : 'cards'}</span></div>
       <div><span>Estimated recall</span><strong title="Estimated chance of remembering now, based on reviewed directions. Unseen directions have no estimate.">{percentage(stats.estimatedRecall)}</strong><span>Across studied directions</span></div>
-      <div><span>Due now</span><strong>{stats.dueCards}</strong><span>Cards with a review due</span></div>
-      <div><span>Reviews · {period}d</span><strong>{stats.periodReviews}</strong><span>{stats.periodActiveDays} active {stats.periodActiveDays === 1 ? 'day' : 'days'}</span></div>
+      <div><span>Cards due</span><strong>{stats.dueCards}</strong><span>With a scheduled review due</span></div>
+      <div><span>Review answers · {period}d</span><strong>{stats.periodReviews}</strong><span>{stats.periodActiveDays} active {stats.periodActiveDays === 1 ? 'day' : 'days'}</span></div>
     </div>
 
     <div className="statistics-analytics">
@@ -101,9 +102,9 @@ export function StatisticsView({ data, now, onReview, onOpenLibrary, onOpenCard,
       </section>
     </div>
 
-    <div className="statistics-coverage" aria-label="Review direction coverage">
+    <div className="statistics-coverage" aria-label="Cards by directions studied">
       <div className="statistics-coverage-bar" aria-hidden="true"><i data-coverage="both" style={{ flexGrow: stats.bothDirectionCards }} /><i data-coverage="one" style={{ flexGrow: stats.oneDirectionCards }} /><i data-coverage="new" style={{ flexGrow: stats.newCards || (!stats.totalCards ? 1 : 0) }} /></div>
-      <div><span><i data-coverage="both" />Both directions <b>{stats.bothDirectionCards}</b></span><span><i data-coverage="one" />One direction <b>{stats.oneDirectionCards}</b></span><span><i data-coverage="new" />Unseen <b>{stats.newCards}</b></span></div>
+      <div><span><i data-coverage="both" />Both directions <b>{stats.bothDirectionCards} {stats.bothDirectionCards === 1 ? 'card' : 'cards'}</b></span><span><i data-coverage="one" />One direction <b>{stats.oneDirectionCards} {stats.oneDirectionCards === 1 ? 'card' : 'cards'}</b></span><span><i data-coverage="new" />Unseen <b>{stats.newCards} {stats.newCards === 1 ? 'card' : 'cards'}</b></span></div>
     </div>
 
     <section className="statistics-cards" aria-label="Card statistics">
@@ -111,7 +112,7 @@ export function StatisticsView({ data, now, onReview, onOpenLibrary, onOpenCard,
         <label className="search-field"><Search size={18} /><input type="search" aria-label="Search card statistics" placeholder="Word, reading or romaji…" value={search} onChange={event => { setSearch(event.target.value); resetRows(); }} autoComplete="off" autoCapitalize="none" spellCheck={false} /></label>
         <select aria-label="Sort card statistics" value={sort} onChange={event => { setSort(event.target.value as Sort); resetRows(); }}><option value="attention">Needs attention</option><option value="recall">Lowest recall</option><option value="recent">Last reviewed</option><option value="again">Most Again answers</option><option value="japanese">Japanese</option></select>
       </div>
-      <div className="statistics-filters" role="group" aria-label="Filter card statistics">{(['all', 'due', 'new', 'weak'] as const).map(value => <button key={value} aria-pressed={filter === value} title={value === 'weak' ? 'Low estimated recall, a recent Again answer, or relearning.' : undefined} onClick={() => { setFilter(value); resetRows(); }}>{({ all: 'All cards', due: 'Due', new: 'New', weak: 'Needs work' })[value]}<span>{filterCounts[value]}</span></button>)}</div>
+      <div className="statistics-filters" role="group" aria-label="Filter card statistics">{(['all', 'due', 'new', 'weak'] as const).map(value => <button key={value} aria-pressed={filter === value} title={value === 'weak' ? 'Low estimated recall, a recent Again answer, or relearning.' : undefined} onClick={() => { setFilter(value); resetRows(); }}>{({ all: 'All cards', due: 'Due cards', new: 'Unseen cards', weak: 'Needs work' })[value]}<span>{filterCounts[value]}</span></button>)}</div>
       <table className="statistics-table"><colgroup><col style={{ width: '34%' }} /><col style={{ width: '14%' }} /><col style={{ width: '14%' }} /><col style={{ width: '14%' }} /><col style={{ width: '16%' }} /><col style={{ width: '8%' }} /></colgroup><thead><tr><th>Card</th><th title="Japanese → English">JP → EN</th><th title="English → Japanese">EN → JP</th><th>Last reviewed</th><th>Next review</th><th><span className="sr-only">Actions</span></th></tr></thead><tbody>{visible.map(card => <Fragment key={card.note.id}>
         <tr className={`statistics-note-row ${expanded === card.note.id ? 'is-expanded' : ''}`}>
           <td className="statistics-note-cell"><button className="statistics-note-toggle" aria-expanded={expanded === card.note.id} aria-controls={`statistics-${encodeURIComponent(card.note.id)}`} onClick={() => setExpanded(expanded === card.note.id ? null : card.note.id)}><span><strong lang="ja"><JapaneseText text={card.note.japanese} reading={card.note.reading} /></strong><small><JapaneseText text={card.note.meaning} /></small></span><ChevronDown size={14} /></button></td>
@@ -139,5 +140,5 @@ function CardDetails({ card, now }: { card: CardStatistics; now: Date }) {
 }
 
 function DirectionDetails({ direction, now }: { direction: DirectionStatistics; now: Date }) {
-  return <section><h3>{direction.direction === 'ja-fr' ? 'Japanese → English' : 'English → Japanese'}<span>{({ new: 'New', learning: 'Learning', review: 'Scheduled', relearning: 'Relearning' })[direction.state]}</span></h3><dl><div><dt>Estimated recall</dt><dd>{percentage(direction.recall)}</dd></div><div><dt>Last reviewed</dt><dd>{direction.lastReviewedAt ? <time dateTime={direction.lastReviewedAt} title={fullDate(direction.lastReviewedAt)}>{fullDate(direction.lastReviewedAt)}</time> : 'Never'}</dd></div><div><dt>Next review</dt><dd title={direction.nextDueAt ? fullDate(direction.nextDueAt) : undefined}>{nextReview(direction.nextDueAt, now)}</dd></div><div><dt>Answers</dt><dd>{direction.reviewCount}</dd></div><div><dt>Again</dt><dd>{direction.againCount}</dd></div></dl></section>;
+  return <section><h3>{direction.direction === 'ja-fr' ? 'Japanese → English' : 'English → Japanese'}<span>{({ new: 'Unseen', learning: 'Learning', review: 'Scheduled', relearning: 'Relearning' })[direction.state]}</span></h3><dl><div><dt>Estimated recall</dt><dd>{percentage(direction.recall)}</dd></div><div><dt>Last reviewed</dt><dd>{direction.lastReviewedAt ? <time dateTime={direction.lastReviewedAt} title={fullDate(direction.lastReviewedAt)}>{fullDate(direction.lastReviewedAt)}</time> : 'Never'}</dd></div><div><dt>Next review</dt><dd title={direction.nextDueAt ? fullDate(direction.nextDueAt) : undefined}>{nextReview(direction.nextDueAt, now)}</dd></div><div><dt>Answers</dt><dd>{direction.reviewCount}</dd></div><div><dt>Again</dt><dd>{direction.againCount}</dd></div></dl></section>;
 }

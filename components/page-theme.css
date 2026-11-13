@@ -1,0 +1,26 @@
+.app-shell { isolation:isolate; }
+.page-background { position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.page-background-side { position:absolute; top:0; bottom:0; width:max(0px,calc((100vw - 1128px)/2)); color:#c7ccd3; opacity:.45; mask-image:linear-gradient(to right,#000 15%,#000a 55%,transparent); }
+.page-background-side:first-child { left:0; }
+.page-background-side:last-child { right:0; transform:scaleX(-1); }
+.page-background[data-theme=sakura] .page-background-side,.page-background[data-theme=maple] .page-background-side { opacity:.75; }
+.page-background:not([data-theme=waves]) .page-background-side:last-child svg { transform:translateY(-180px); height:calc(100% + 180px); }
+.appearance-settings { padding-bottom:22px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+.appearance-settings h3 { margin-bottom:12px; }
+.page-theme-options { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.page-theme-option { padding:0; overflow:hidden; text-align:left; border:1px solid var(--line); border-radius:8px; background:white; transition:border-color .15s,box-shadow .15s; }
+.page-theme-option:hover { border-color:#c7c7cf; }
+.page-theme-option[aria-pressed=true] { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
+.page-theme-preview { display:block; height:62px; overflow:hidden; color:#c3c7cf; border-bottom:1px solid #f0f0f3; }
+.page-theme-preview svg { width:320px; height:820px; transform:scale(.65); transform-origin:top left; }
+.page-theme-preview[data-theme=sakura] svg { transform:translate(-12px,-30px) scale(.65); }
+.page-theme-preview[data-theme=maple] svg { transform:translate(-30px,-65px) scale(.65); }
+.page-theme-label { display:flex; align-items:center; justify-content:space-between; gap:4px; padding:9px 10px; font-size:11px; color:#72727b; }
+.page-theme-option[aria-pressed=true] .page-theme-label { color:var(--red); }
+@media (max-width:1168px) {
+  .page-background { display:none; }
+}
+@media (max-width:400px) {
+  .page-theme-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .page-theme-preview { height:48px; }
+}

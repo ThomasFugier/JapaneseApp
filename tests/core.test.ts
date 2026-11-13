@@ -160,7 +160,7 @@ test('legacy version 1 snapshots and JSON backups migrate without losing content
   const { reviewUndos: ignored, ...content } = current;
   const legacy = { ...content, schemaVersion: 1 };
   const migrated = validateSnapshot(legacy);
-  assert.equal(migrated.schemaVersion, 3);
+  assert.equal(migrated.schemaVersion, 4);
   assert.deepEqual(migrated.reviewUndos, []);
   assert.deepEqual(migrated.notes, current.notes);
   assert.deepEqual(readBackup(new TextEncoder().encode(JSON.stringify(legacy))), migrated);

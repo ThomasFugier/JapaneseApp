@@ -43,10 +43,15 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
     if (previous && canonical(previous) !== canonical(undo)) throw new Error('Two different undo records use the same ID. Import canceled.');
     reviewUndos.set(undo.id, undo);
   }
-  // Scheduler settings are immutable in V1; a future settings migration must resolve them explicitly.
-  if (canonical(local.scheduler) !== canonical(remote.scheduler)) throw new Error('Review settings differ. Export your data before continuing.');
+  if (canonical(local.scheduler) !== canonical(remote.scheduler)) throw new Error('Scheduler settings differ. Export your data before continuing.');
+  const reviewSettings = canonical(local.reviewSettings) === canonical(remote.reviewSettings) ? local.reviewSettings
+    : canonical(local.reviewSettings) === canonical(base.reviewSettings) ? remote.reviewSettings
+      : canonical(remote.reviewSettings) === canonical(base.reviewSettings) ? local.reviewSettings
+        : Date.parse(local.reviewSettings.updatedAt) > Date.parse(remote.reviewSettings.updatedAt) ? local.reviewSettings
+          : Date.parse(remote.reviewSettings.updatedAt) > Date.parse(local.reviewSettings.updatedAt) ? remote.reviewSettings
+            : canonical(local.reviewSettings) > canonical(remote.reviewSettings) ? local.reviewSettings : remote.reviewSettings;
   const snapshot: Snapshot = {
-      schemaVersion: 3, scheduler: local.scheduler,
+      schemaVersion: 4, scheduler: local.scheduler, reviewSettings,
       decks: merge('decks', base.decks, local.decks, remote.decks),
       notes: merge('notes', base.notes, local.notes, remote.notes),
       cards: merge('cards', base.cards, local.cards, remote.cards),

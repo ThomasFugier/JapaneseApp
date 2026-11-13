@@ -20,7 +20,7 @@ test('version 2 libraries upgrade without losing review undo history', () => {
   data.reviews.push({ id: 'review', cardId: data.cards[0].id, rating: 3, reviewedAt: '2026-11-09T10:00:00.000Z' });
   data.reviewUndos.push({ id: 'undo', reviewId: 'review', undoneAt: '2026-11-09T10:01:00.000Z' });
   const migrated = validateSnapshot({ ...data, schemaVersion: 2 });
-  assert.equal(migrated.schemaVersion, 3);
+  assert.equal(migrated.schemaVersion, 4);
   assert.deepEqual(migrated.reviews, data.reviews);
   assert.deepEqual(migrated.reviewUndos, data.reviewUndos);
 });

@@ -1,5 +1,6 @@
 import { createEmptyCard, fsrs, State, type Card, type Grade } from 'ts-fsrs';
 import type { Snapshot, StudyCard, Review } from './model';
+import { MAX_REVIEW_INTERVAL_MINUTES } from './review-settings';
 
 export function descendants(data: Snapshot, deckId: string): string[] {
   const ids = new Set<string>();
@@ -29,15 +30,44 @@ export function effectiveReviews(data: Snapshot, cardId?: string): Review[] {
 
 export function scheduleForCard(data: Snapshot, cardId: string): Card {
   const scheduler = fsrs({ request_retention: data.scheduler?.retention ?? 0.9, enable_fuzz: false });
-  return replayReviews(effectiveReviews(data, cardId), scheduler);
+  return replayReviewHistory(effectiveReviews(data, cardId), scheduler);
 }
 
-function replayReviews(reviews: Review[], scheduler: ReturnType<typeof fsrs>): Card {
+export function replayReviewHistory(reviews: readonly Review[], scheduler: ReturnType<typeof fsrs>): Card {
   let card = createEmptyCard(new Date(0));
   for (const review of reviews) {
     card = scheduler.next(card, new Date(review.reviewedAt), review.rating as Grade).card;
+    if (review.dueAt) {
+      const due = new Date(review.dueAt);
+      const minutes = Math.round((due.getTime() - Date.parse(review.reviewedAt)) / 60000);
+      card = { ...card, due, scheduled_days: Math.max(0, Math.round(minutes / 1440)), ...(minutes >= 1440 && (review.rating === 3 || review.rating === 4) ? { state: State.Review, learning_steps: 0 } : {}) };
+    }
   }
   return card;
+}
+
+function plannedMinutes(settings: Snapshot['reviewSettings'], rating: 1 | 2 | 3 | 4, previousRating: Review['rating'] | undefined): number {
+  const configured = [settings.againMinutes, settings.hardMinutes, settings.goodMinutes, settings.easyMinutes][rating - 1];
+  if (!settings.growIntervals || rating !== previousRating || rating === 1 || rating === 2) return configured;
+  const multiplier = rating === 3 ? 2 : 3;
+  return Math.min(MAX_REVIEW_INTERVAL_MINUTES, configured * multiplier);
+}
+
+function candidate(data: Snapshot, rating: 1 | 2 | 3 | 4, card: Card, scheduler: ReturnType<typeof fsrs>, now: Date, previousRating: Review['rating'] | undefined): { card: Card; dueAt?: string } {
+  const next = scheduler.next(card, now, rating as Grade).card;
+  if (data.reviewSettings.mode === 'automatic') return { card: next };
+  const minutes = plannedMinutes(data.reviewSettings, rating, previousRating);
+  const dueAt = new Date(now.getTime() + minutes * 60000).toISOString();
+  const intervalDays = minutes / 1440;
+  return { card: { ...next, due: new Date(dueAt), scheduled_days: Math.round(intervalDays), ...(intervalDays >= 1 && (rating === 3 || rating === 4) ? { state: State.Review, learning_steps: 0 } : {}) }, dueAt };
+}
+
+export function createReview(data: Snapshot, cardId: string, rating: 1 | 2 | 3 | 4, now: Date, id: string): Review {
+  const scheduler = fsrs({ request_retention: data.scheduler?.retention ?? 0.9, enable_fuzz: false });
+  const history = effectiveReviews(data, cardId);
+  const card = replayReviewHistory(history, scheduler);
+  const planned = candidate(data, rating, card, scheduler, now, history.at(-1)?.rating);
+  return { id, cardId, rating, reviewedAt: now.toISOString(), ...(planned.dueAt ? { dueAt: planned.dueAt } : {}) };
 }
 
 function reviewOrder(card: StudyCard): number {
@@ -56,7 +86,7 @@ export function dueCards(data: Snapshot, deckId: string | null, now = new Date()
   }
   const ranked = cardsForDeck(data, deckId)
     .map((card) => {
-      const schedule = replayReviews(histories.get(card.id) ?? [], scheduler);
+      const schedule = replayReviewHistory(histories.get(card.id) ?? [], scheduler);
       const phase = !schedule.reps ? 0 : schedule.state === State.Learning || schedule.state === State.Relearning ? 1 : 2;
       return { card, due: schedule.due.getTime(), phase, recall: phase === 2 ? scheduler.get_retrievability(schedule, now, false) : 0, order: reviewOrder(card) };
     })
@@ -100,9 +130,10 @@ export function reviewCounts(data: Snapshot, deckId: string | null, now = new Da
 
 export function ratingIntervals(data: Snapshot, cardId: string, now = new Date()): Record<1 | 2 | 3 | 4, string> {
   const scheduler = fsrs({ request_retention: data.scheduler?.retention ?? 0.9, enable_fuzz: false });
-  const card = scheduleForCard(data, cardId);
-  const format = (grade: Grade) => {
-    const minutes = Math.max(1, Math.round((scheduler.next(card, now, grade).card.due.getTime() - now.getTime()) / 60000));
+  const history = effectiveReviews(data, cardId);
+  const card = replayReviewHistory(history, scheduler);
+  const format = (grade: 1 | 2 | 3 | 4) => {
+    const minutes = Math.max(1, Math.round((candidate(data, grade, card, scheduler, now, history.at(-1)?.rating).card.due.getTime() - now.getTime()) / 60000));
     if (minutes < 60) return `${minutes} min`;
     if (minutes < 1440) return `${Math.round(minutes / 60)} h`;
     return `${Math.round(minutes / 1440)} d`;

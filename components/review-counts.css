@@ -1,0 +1,10 @@
+.review-direction-counts { display:flex; align-items:center; flex-wrap:wrap; gap:4px 16px; }
+.review-direction-counts>span { white-space:nowrap; }
+.review-direction-counts b { color:#72727d; font-weight:500; font-variant-numeric:tabular-nums; }
+.review-deck>.review-direction-counts { grid-column:2; grid-row:2; color:#9898a1; font-size:11px; }
+.review-count-note { margin:12px 0 -10px; color:#92929d; font-size:11px; line-height:1.8; }
+@media (max-width:640px) {
+  .review-direction-counts { gap:4px 12px; }
+  .review-count-note { font-size:11px; }
+  .review-deck>.review-direction-counts { grid-column:1 / -1; font-size:11px; }
+}

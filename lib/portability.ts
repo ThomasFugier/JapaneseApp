@@ -9,7 +9,7 @@ export function backupBytes(snapshot: Snapshot): Uint8Array {
   if (json.byteLength > MAX_BYTES) throw new Error('The backup exceeds the 20 MB limit for this version.');
   const bytes = zipSync({
     'kotoba.json': json,
-    'README.txt': strToU8('Japanese — complete backup, format 3\nThe kotoba.json file contains notes, cards, decks, deck assignments, reviews, and undo records.\nIDs are stable. Dates use ISO 8601.\nThis version does not support media.\n'),
+    'README.txt': strToU8('Japanese — complete backup, format 4\nThe kotoba.json file contains notes, cards, decks, deck assignments, reviews, saved review deadlines, review settings, and undo records.\nIDs are stable. Dates use ISO 8601.\nThis version does not support media.\n'),
   });
   if (bytes.byteLength > MAX_BYTES) throw new Error('The backup exceeds the 20 MB limit for this version.');
   return bytes;

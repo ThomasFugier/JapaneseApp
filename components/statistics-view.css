@@ -4,6 +4,7 @@
 .statistics-page select { max-width:100%; border:1px solid #e2e2e7; border-radius:8px; background:white; padding:10px 30px 10px 12px; color:#61616b; font-size:12px; min-height:40px; text-overflow:ellipsis; }
 .statistics-scope select { width:100%; }
 .statistics-scope .button { flex-shrink:0; }
+.statistics-unit-note { margin:-12px 0 22px; color:#92929d; font-size:11px; line-height:1.8; }
 .statistics-summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:20px; }
 .statistics-summary>div { min-width:0; display:flex; flex-direction:column; gap:7px; padding:20px 22px; border:1px solid var(--line); border-radius:11px; }
 .statistics-summary>div>span { color:#898992; font-size:11px; }

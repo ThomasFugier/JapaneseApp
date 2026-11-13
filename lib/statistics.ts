@@ -1,5 +1,5 @@
-import { createEmptyCard, fsrs, State, type Grade } from 'ts-fsrs';
-import { cardsForDeck, effectiveReviews } from './engine';
+import { fsrs, State } from 'ts-fsrs';
+import { cardsForDeck, effectiveReviews, replayReviewHistory } from './engine';
 import type { Note, Review, Snapshot, StudyCard } from './model';
 
 export type DirectionStatistics = {
@@ -70,8 +70,7 @@ export function buildStatistics(data: Snapshot, now = new Date(), deckId: string
   let recallSum = 0, recallCount = 0;
   for (const card of scopedCards) {
     const history = histories.get(card.id) ?? [];
-    let schedule = createEmptyCard(new Date(0));
-    for (const review of history) schedule = scheduler.next(schedule, new Date(review.reviewedAt), review.rating as Grade).card;
+    const schedule = replayReviewHistory(history, scheduler);
     const studied = history.length > 0 && schedule.reps > 0;
     const recall = studied ? scheduler.get_retrievability(schedule, now, false) : null;
     if (recall !== null) {

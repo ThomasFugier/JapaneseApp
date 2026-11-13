@@ -23,11 +23,11 @@ function direction(data: Snapshot, value: StudyCard['direction'], noteId = data.
 }
 
 test('legacy and current snapshots deterministically gain both directions without mutating input', () => {
-  for (const schemaVersion of [1, 2, 3]) {
+  for (const schemaVersion of [1, 2, 3, 4]) {
     const input = { ...singleDirection(), schemaVersion };
     const original = structuredClone(input);
     const migrated = validateSnapshot(input);
-    assert.equal(migrated.schemaVersion, 3);
+    assert.equal(migrated.schemaVersion, 4);
     assert.equal(migrated.cards.length, 2);
     assert.deepEqual(direction(migrated, 'ja-fr'), original.cards[0]);
     assert.deepEqual(direction(migrated, 'fr-ja').deckIds, ['a']);

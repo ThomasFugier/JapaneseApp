@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { migrateSampleLanguage } from './sample-content';
+import { DEFAULT_REVIEW_SETTINGS, reviewSettingsSchema } from './review-settings';
 
 const id = z.string().min(1).max(160);
 const date = z.iso.datetime({ offset: true });
@@ -21,12 +22,13 @@ const cardSchema = z.object({
 });
 const reviewSchema = z.object({
   id, cardId: id, rating: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
-  reviewedAt: date,
+  reviewedAt: date, dueAt: date.optional(),
 });
 const reviewUndoSchema = z.object({ id, reviewId: id, undoneAt: date });
 const snapshotSchema = z.object({
-  schemaVersion: z.literal(3),
+  schemaVersion: z.literal(4),
   scheduler: z.object({ algorithm: z.literal('fsrs'), version: z.literal('5'), retention: z.literal(0.9) }).default({ algorithm: 'fsrs', version: '5', retention: 0.9 }),
+  reviewSettings: reviewSettingsSchema,
   decks: z.array(deckSchema).max(2000), notes: z.array(noteSchema).max(20000),
   cards: z.array(cardSchema).max(40000), reviews: z.array(reviewSchema).max(200000),
   reviewUndos: z.array(reviewUndoSchema).max(200000),
@@ -38,16 +40,23 @@ export type StudyCard = z.infer<typeof cardSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ReviewUndo = z.infer<typeof reviewUndoSchema>;
 export type Snapshot = z.infer<typeof snapshotSchema>;
+export type { ReviewSettings } from './review-settings';
+export const CURRENT_SCHEMA_VERSION = 4 as const;
 
 export function emptySnapshot(): Snapshot {
-  return { schemaVersion: 3, scheduler: { algorithm: 'fsrs', version: '5', retention: 0.9 }, decks: [], notes: [], cards: [], reviews: [], reviewUndos: [] };
+  return { schemaVersion: CURRENT_SCHEMA_VERSION, scheduler: { algorithm: 'fsrs', version: '5', retention: 0.9 }, reviewSettings: { ...DEFAULT_REVIEW_SETTINGS }, decks: [], notes: [], cards: [], reviews: [], reviewUndos: [] };
 }
 
 export function validateSnapshot(input: unknown): Snapshot {
-  const legacy = input && typeof input === 'object' && [1, 2].includes((input as { schemaVersion?: unknown }).schemaVersion as number);
-  const migrated = legacy ? { ...(input as Record<string, unknown>), schemaVersion: 3, reviewUndos: (input as { reviewUndos?: unknown }).reviewUndos ?? [] } : input;
+  const version = input && typeof input === 'object' ? (input as { schemaVersion?: unknown }).schemaVersion : undefined;
+  const legacy = typeof version === 'number' && [1, 2, 3].includes(version);
+  const migrated = legacy ? { ...(input as Record<string, unknown>), schemaVersion: CURRENT_SCHEMA_VERSION, reviewSettings: { ...DEFAULT_REVIEW_SETTINGS }, reviewUndos: (input as { reviewUndos?: unknown }).reviewUndos ?? [] } : input;
   const result = snapshotSchema.safeParse(migrated);
-  if (!result.success) throw new Error('Invalid backup or unsupported version.');
+  if (!result.success) {
+    const settingsIssue = result.error.issues.find(issue => issue.path[0] === 'reviewSettings');
+    if (settingsIssue?.message.includes('Again ≤ Hard ≤ Good ≤ Easy')) throw new Error(settingsIssue.message);
+    throw new Error('Invalid backup or unsupported version.');
+  }
   const data = result.data;
   for (const collection of [data.decks, data.notes, data.cards, data.reviews, data.reviewUndos]) {
     if (new Set(collection.map((item) => item.id)).size !== collection.length) throw new Error('The backup contains duplicate IDs.');
@@ -78,6 +87,7 @@ export function validateSnapshot(input: unknown): Snapshot {
   }
   for (const review of data.reviews) {
     if (!cards.has(review.cardId)) throw new Error('A review references a missing card.');
+    if (review.dueAt && (Date.parse(review.dueAt) <= Date.parse(review.reviewedAt) || Date.parse(review.dueAt) - Date.parse(review.reviewedAt) > 3650 * 86400000)) throw new Error('Invalid review due date.');
   }
   const reviewIds = new Set(data.reviews.map((review) => review.id));
   for (const undo of data.reviewUndos) {
