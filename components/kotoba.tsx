@@ -38,11 +38,11 @@ import './classroom-review.css';
 import { ClassroomHome } from './classroom-home';
 import './classroom-layout.css';
 import './learning-game.css';
-import './classroom-motion.css';
 import './reference.css';
 import { classroomTransition } from './classroom-motion';
 import { TranslationTargets } from './contextual-translation';
 import './contextual-translation.css';
+import './classroom-motion.css';
 import { useActivitySound } from './use-activity-sound';
 
 type Tab = WorkspaceTab;
@@ -320,7 +320,7 @@ export default function Kotoba() {
 
       {error && <div role="alert" className="error-banner"><CloudOff size={18} /><span>{error}</span><button className="icon-button" onClick={() => setError('')} aria-label="Dismiss message"><X size={16} /></button></div>}
 
-      <main id="main-content" className={`main-content ${session ? 'session-main' : ''}`} aria-label={labels[tab]}>
+      <main id="main-content" className={`main-content ${session ? 'session-main' : ''} ${tab === 'home' && interfaceStyle === 'classroom' ? 'is-activity-home' : ''}`} aria-label={labels[tab]}>
         {!session && <h1 className="sr-only">{labels[tab]}</h1>}
         {(tab === 'home' || tab === 'library') && <WorkspaceSearch home={tab === 'home'} value={tab === 'home' ? '' : reading.search} sort={reading.sort} onChange={searchLibrary} onSortChange={sort => changeReading({ sort })} actionsRef={setSearchActions} />}
         <div key={tab} className="workspace-view" data-view={tab}>

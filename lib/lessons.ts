@@ -1,6 +1,8 @@
+import { wantsAdjectiveLessons } from './lessons-wants-adjectives';
+
 export type JapaneseLine = { text: string; reading?: string };
 export type Lesson = {
-  id: 'comparisons' | 'obligation';
+  id: 'comparisons' | 'obligation' | 'wants' | 'negative-adjectives';
   category: 'Grammaire' | 'Conjugaison';
   title: string;
   japanese: string;
@@ -116,6 +118,7 @@ export const lessons: Lesson[] = [
       { title: 'Fondation du Japon · Grammaire Irodori', url: 'https://www.irodori.jpf.go.jp/assets/data/Grammar_all.pdf' },
     ],
   },
+  ...wantsAdjectiveLessons,
 ];
 
 export type LessonId = Lesson['id'];

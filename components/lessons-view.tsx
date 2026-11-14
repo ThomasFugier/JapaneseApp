@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ExternalLink, Check, RotateCcw } from 'lucide-react';
 import { lessons, type JapaneseLine, type LessonId } from '@/lib/lessons';
-import { JapaneseText } from './furigana';
+import { JapaneseText, JapaneseSentence } from './furigana';
 import './lessons.css';
 import { LessonImmersion } from './lesson-immersion';
 import { lessonImmersions } from '@/lib/lesson-immersion';
@@ -23,7 +23,7 @@ function InlineJapanese({ text }: { text: string }) {
 }
 
 function Japanese({ text, reading }: JapaneseLine) {
-  return <span lang="ja"><JapaneseText text={text} reading={reading} /></span>;
+  return <span lang="ja">{reading ? <JapaneseSentence text={text} reading={reading} /> : <JapaneseText text={text} />}</span>;
 }
 
 export function LessonsView({ lessonId, onSelect, validatedIds, onToggleValidated, progress, onFinishReview, classroom = false }: { classroom?: boolean; progress?: LessonProgress[]; onFinishReview: (id: LessonId) => Promise<void>; lessonId: LessonId | null; onSelect: (id: LessonId | null) => void; validatedIds: LessonId[]; onToggleValidated: (id: LessonId) => void }) {

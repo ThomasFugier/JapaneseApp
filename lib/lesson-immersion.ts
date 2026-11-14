@@ -1,3 +1,4 @@
+import { wantsAdjectiveImmersions } from './immersions-wants-adjectives';
 import type { LessonId } from './lessons';
 
 export type ImmersionLine = {
@@ -18,6 +19,7 @@ export type LessonImmersion = {
 };
 
 export const lessonImmersions: Record<LessonId, LessonImmersion> = {
+  ...wantsAdjectiveImmersions,
   comparisons: {
     kind: 'dialogue',
     title: 'Un rendez-vous pour demain',

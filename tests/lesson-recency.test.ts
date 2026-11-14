@@ -7,13 +7,13 @@ import { lessonReviewOrder, markLessonReviewed, setLessonValidated } from '../li
 const early = '2026-11-14T10:00:00.000Z', late = '2026-11-14T11:00:00.000Z';
 test('suggest never-reviewed lessons first, then the oldest review, independently of validation', () => {
   let data = setLessonValidated(emptySnapshot(), 'obligation', true, early);
-  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['comparisons', 'obligation']);
+  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['comparisons', 'obligation', 'wants', 'negative-adjectives']);
   data = markLessonReviewed(data, 'comparisons', early);
-  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['obligation', 'comparisons']);
+  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['obligation', 'wants', 'negative-adjectives', 'comparisons']);
   data = markLessonReviewed(data, 'obligation', late);
-  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['comparisons', 'obligation']);
+  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['wants', 'negative-adjectives', 'comparisons', 'obligation']);
   data = markLessonReviewed(data, 'comparisons', '2026-11-14T12:00:00.000Z');
-  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['obligation', 'comparisons']);
+  assert.deepEqual(lessonReviewOrder(data.lessonProgress), ['wants', 'negative-adjectives', 'obligation', 'comparisons']);
 });
 test('validation changes preserve review dates and review completion never checks a lesson', () => {
   const reviewed = markLessonReviewed(emptySnapshot(), 'comparisons', early);

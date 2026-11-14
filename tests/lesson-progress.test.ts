@@ -19,6 +19,17 @@ test('manual completion writes an explicit validation record and ZIP round-trips
   assert.deepEqual(readBackup(backupBytes(snapshot)), snapshot);
 });
 
+test('new lessons keep their validation through sync and backup without touching cards', () => {
+  const base = emptySnapshot();
+  const first = setLessonValidated(base, 'wants', true, at(1));
+  const second = setLessonValidated(base, 'negative-adjectives', true, at(2));
+  const merged = mergeSnapshots(base, first, second).snapshot;
+  assert.deepEqual(new Set(validatedLessonIds(merged)), new Set(['wants', 'negative-adjectives']));
+  assert.deepEqual(readBackup(backupBytes(merged)), merged);
+  assert.deepEqual(merged.cards, base.cards);
+  assert.deepEqual(merged.reviews, base.reviews);
+});
+
 test('latest validation or uncheck wins, while ties prefer unchecked', () => {
   const base = setLessonValidated(emptySnapshot(), 'comparisons', true, at(1));
   const checkedElsewhere = setLessonValidated(base, 'obligation', true, at(3));

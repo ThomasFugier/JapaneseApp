@@ -12,7 +12,6 @@ type Props = {
 
 export function ClassroomHome({ ready, cards, decks, canReview, onStart, onOpen }: Props) {
   return <section className="activity-menu" aria-label="Learning activities">
-    <h2>Choose an activity</h2>
     <div className="activity-grid">
       <article className="activity-card activity-review">
         <button className="activity-open" onClick={() => onOpen('review')}><ClassroomEmoji>🎴</ClassroomEmoji><span className="activity-copy"><strong>Review</strong><span>Japanese ↔ English</span></span><ArrowRight size={25}/></button>
