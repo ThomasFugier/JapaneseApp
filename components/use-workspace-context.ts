@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { defaultReadingContext, sanitizeReadingContext, updateReadingContext, type ReadingContext } from '@/lib/library-view';
 import { isLessonId, type LessonId } from '@/lib/lessons';
 
-export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats';
+export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats' | 'japan';
 export type JapaneseFont = 'brush' | 'plain';
 export type PageTheme = 'plain' | 'waves' | 'sakura' | 'maple';
 const KEY = 'kotoba-workspace-v1';
@@ -64,7 +64,7 @@ export function useWorkspaceContext() {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         const next = sanitizeReadingContext(saved.reading);
-        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' ? saved.tab : 'home';
+        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' || saved.tab === 'japan' ? saved.tab : 'home';
         lessonIdRef.current = isLessonId(saved.lessonId) ? saved.lessonId : null; setLessonIdState(lessonIdRef.current);
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
         const nextTheme: PageTheme = saved.pageTheme === 'plain' || saved.pageTheme === 'sakura' || saved.pageTheme === 'maple' ? saved.pageTheme : 'waves';

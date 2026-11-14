@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, X } from 'lucide-react';
+import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, MapPin, X } from 'lucide-react';
 import { useLibrary } from './use-library';
 import { useWorkspaceContext, type WorkspaceTab } from './use-workspace-context';
 import { LibraryView } from './library-view';
@@ -22,14 +22,19 @@ import { libraryNotes, type ReadingContext } from '@/lib/library-view';
 import { bulkLibraryAction, moveLibraryDeck, type LibraryAction } from '@/lib/library-actions';
 import { cardsForDeck, createReview, descendants, effectiveReviews, ratingIntervals, reviewCounts } from '@/lib/engine';
 import { type Deck, type Note, type Snapshot, validateSnapshot } from '@/lib/model';
-import { advanceReviewSession, createReviewSession, rewindReviewSession, type ReviewSession as Session } from '@/lib/review-session';
+import { advanceReviewSession, continueAfterReviewDeletion, createReviewSession, rewindReviewSession, type ReviewSession as Session } from '@/lib/review-session';
+import { deleteReviewNote, restoreReviewNote, type ReviewDeletion } from '@/lib/review-delete';
 import { downloadBackup, downloadCsv, parseImport } from '@/lib/portability';
 import { DeckEditor, NoteEditor, Modal, type NoteNavigationGuard } from './editors';
+import './review-delete.css';
+import './japan-navigation.css';
+import { JapanView } from './japan-view';
+import { AmbiencePlayer } from './ambience-player';
 
 type Tab = WorkspaceTab;
-const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'writing', 'stats'];
-const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats' };
-const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3 };
+const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'japan', 'writing', 'stats'];
+const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', japan: 'Japan' };
+const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, japan: MapPin };
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 const active = <T extends { deletedAt?: string | null }>(items: T[]) => items.filter(item => !item.deletedAt);
 const countNotes = (data: Snapshot, id: string | null) => new Set(cardsForDeck(data, id).map(card => card.noteId)).size;
@@ -42,10 +47,14 @@ export default function Kotoba() {
   const setDeckId = (id: string | null) => setReading({ deckId: id });
   const [editing, setEditing] = useState(false);
   const [searchActions, setSearchActions] = useState<HTMLDivElement | null>(null);
+  const [japanDraft, setJapanDraft] = useState<Pick<Note, 'japanese' | 'reading' | 'meaning'> | undefined>();
   const [noteModal, setNoteModal] = useState<Note | 'new' | null>(null);
   const [deckModal, setDeckModal] = useState<Deck | 'new' | null>(null);
   const [settings, setSettings] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const sessionRef = useRef(session); sessionRef.current = session;
+  const [deletedReview, setDeletedReview] = useState<{ undo: ReviewDeletion; session: Session } | null>(null);
+  const [deletingReviewNote, setDeletingReviewNote] = useState<Note | null>(null);
   const [sessionBusy, setSessionBusy] = useState(false);
   const [importing, setImporting] = useState<Snapshot | null>(null);
   const [conflictChoices, setConflictChoices] = useState<Record<string, 'local' | 'remote'>>({});
@@ -78,7 +87,7 @@ export default function Kotoba() {
     if (!editorGuard.current) { action(); return; }
     void finishEditor().then(ok => { if (ok) action(); });
   }
-  function openNoteEditor(note: Note | 'new') { withSavedEditor(() => setNoteModal(note)); }
+  function openNoteEditor(note: Note | 'new') { withSavedEditor(() => { setJapanDraft(undefined); setNoteModal(note); }); }
   async function applyLibraryAction(ids: string[], action: LibraryAction) {
     if (!await finishEditor()) throw new Error('Finish or discard the current edit first.');
     await update(snapshot => bulkLibraryAction(snapshot, ids, action));
@@ -128,7 +137,7 @@ export default function Kotoba() {
   function navigate(next: Tab, id?: string | null) {
     if (editorGuard.current) { withSavedEditor(() => navigate(next, id)); return; }
     if (tab === 'library') captureReadingScroll();
-    setSession(null); setEditing(false);
+    sessionRef.current = null; setSession(null); setDeletedReview(null); setEditing(false);
     if (id !== undefined) setReading({ deckId: id, search: '', expanded: null, scrollY: 0 });
     setTab(next);
     if (next === 'library' && tab === 'library') restoreReadingScroll();
@@ -139,14 +148,14 @@ export default function Kotoba() {
     const next = createReviewSession(latestData.current, id, practice);
     if (!next) { setNotice('This deck has no cards yet.'); return; }
     if (tab === 'library') captureReadingScroll();
-    setTab('review'); setSession(next);
+    setTab('review'); sessionRef.current = next; setSession(next); setDeletedReview(null);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   const currentCard = session ? data.cards.find(card => card.id === session.ids[session.index]) : undefined;
-  const currentNote = currentCard ? notes.find(note => note.id === currentCard.noteId) : undefined;
+  const currentNote = currentCard ? notes.find(note => note.id === currentCard.noteId) ?? (deletingReviewNote?.id === currentCard.noteId ? deletingReviewNote : undefined) : undefined;
   const intervals = useMemo(() => session?.revealed && !session.practice && currentCard ? ratingIntervals(data, currentCard.id) : null, [data, currentCard?.id, session?.revealed, session?.practice, clock]);
   const answer = useCallback(async (rating: 1 | 2 | 3 | 4) => {
-    if (!session || !session.revealed || !currentCard || answering.current) return;
+    if (!session || sessionRef.current !== session || !session.revealed || !currentCard || answering.current) return;
     answering.current = true; setSessionBusy(true);
     try {
       const reviewId = session.practice ? null : crypto.randomUUID();
@@ -157,24 +166,56 @@ export default function Kotoba() {
         return reviewed;
       });
       const now = new Date();
-      setSession(previous => previous === session ? advanceReviewSession(previous, reviewed, reviewId, now) : previous);
+      if (sessionRef.current === session) {
+        const next = advanceReviewSession(session, reviewed, reviewId, now);
+        sessionRef.current = next; setSession(next); setDeletedReview(null);
+      }
       setClock(Date.now());
     } catch { /* Storage failure is shown by useLibrary; keep current card on screen. */ }
     finally { answering.current = false; setSessionBusy(false); }
   }, [session, currentCard, data, update]);
 
 
-  const undoLastAnswer = useCallback(async () => {
-    const previous = session?.answers.at(-1);
-    if (!session || !previous || answering.current) return;
-    answering.current = true; setSessionBusy(true);
+  const deleteCurrentReview = useCallback(async () => {
+    if (!session || sessionRef.current !== session || !session.revealed || !currentNote || answering.current) return;
+    answering.current = true; setSessionBusy(true); setDeletingReviewNote(currentNote);
+    const result = { snapshot: data, undo: null as ReviewDeletion | null };
     try {
-      if (previous.reviewId) await update(snapshot => snapshot.reviewUndos.some(undo => undo.reviewId === previous.reviewId) ? snapshot : { ...snapshot, reviewUndos: [...snapshot.reviewUndos, { id: crypto.randomUUID(), reviewId: previous.reviewId!, undoneAt: new Date().toISOString() }] });
-      setSession(current => current === session ? rewindReviewSession(current) : current);
-      setClock(Date.now()); setNotice('Last answer undone.');
-    } catch { /* Preserve the current session when local storage fails. */ }
+      await update(snapshot => {
+        const removed = deleteReviewNote(snapshot, currentNote.id);
+        result.snapshot = removed.snapshot; result.undo = removed.undo;
+        return removed.snapshot;
+      });
+      if (result.undo && sessionRef.current === session) {
+        const next = continueAfterReviewDeletion(session, result.snapshot);
+        sessionRef.current = next; setSession(next); setDeletedReview({ undo: result.undo, session });
+      }
+      setClock(Date.now());
+    } catch (cause) {
+      if (!result.undo) setError(cause instanceof Error ? cause.message : 'Unable to delete this card.');
+    } finally { answering.current = false; setSessionBusy(false); setDeletingReviewNote(null); }
+  }, [session, currentNote, data, update, setError]);
+
+  const undoLastReviewAction = useCallback(async () => {
+    const previous = session?.answers.at(-1);
+    if (!session || sessionRef.current !== session || (!previous && !deletedReview) || answering.current) return;
+    answering.current = true; setSessionBusy(true);
+    let prepared = false;
+    try {
+      if (deletedReview) {
+        await update(snapshot => { const restored = restoreReviewNote(snapshot, deletedReview.undo); prepared = true; return restored; });
+        if (sessionRef.current === session) { sessionRef.current = deletedReview.session; setSession(deletedReview.session); setDeletedReview(null); }
+      } else if (previous) {
+        if (previous.reviewId) await update(snapshot => { prepared = true; return snapshot.reviewUndos.some(undo => undo.reviewId === previous.reviewId) ? snapshot : { ...snapshot, reviewUndos: [...snapshot.reviewUndos, { id: crypto.randomUUID(), reviewId: previous.reviewId!, undoneAt: new Date().toISOString() }] }; });
+        if (sessionRef.current === session) { const next = rewindReviewSession(session); sessionRef.current = next; setSession(next); }
+        setNotice('Last answer undone.');
+      }
+      setClock(Date.now());
+    } catch (cause) {
+      if (!prepared) setError(cause instanceof Error ? cause.message : 'Unable to undo this action.');
+    }
     finally { answering.current = false; setSessionBusy(false); }
-  }, [session, update, setNotice]);
+  }, [session, deletedReview, update, setNotice, setError]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -266,6 +307,7 @@ export default function Kotoba() {
         </>}
 
         {tab === 'writing' && <WritingView data={data} japaneseFont={japaneseFont} />}
+        {tab === 'japan' && <JapanView data={data} onOpenNote={openNoteEditor} onAddWord={word => { setJapanDraft(word); setNoteModal('new'); }} />}
         {tab === 'lessons' && <LessonsView lessonId={lessonId} onSelect={setLessonId} />}
         {tab === 'stats' && <StatisticsView data={data} now={new Date(clock)} onReview={id => startSession(id)} onOpenLibrary={() => navigate('library')} onOpenCard={note => { navigate('library'); setReading({ deckId: null, search: note.japanese, expanded: note.id, scrollY: 0 }); }} onEditCard={setNoteModal} />}
 
@@ -273,15 +315,16 @@ export default function Kotoba() {
 
         {tab === 'review' && !session && <><button className="review-all" disabled={!allCards.length} onClick={() => startSession(null)}><div className="review-all-icon"><Layers size={27} /></div><div><h2>All my decks</h2><p>{dueCount ? <ReviewDirectionCounts counts={counts} /> : 'Free practice'}</p></div><span className="button primary">Start <ArrowRight size={17} /></span></button><ReviewDirectionHint /><div className="section-heading review-section"><h2>My decks</h2><span className="muted">Subdecks are included</span></div><div className="review-deck-list">{decks.map(deck => { const breakdown = reviewCounts(data, deck.id, new Date(clock)); const amount = breakdown.total; return <div className="review-deck" key={deck.id}><span className={`deck-symbol ${deck.color}`}><DeckSymbol deck={deck} /></span><div className="review-deck-title">{deck.parentId && <span className="breadcrumb"><JapaneseText text={deckPath(data, deck).slice(0, -1).join(' / ')} /></span>}<h3><JapaneseText text={deck.name} /></h3></div><ReviewDirectionCounts counts={breakdown} /><div className="review-deck-end"><span className={`due-pill ${amount ? '' : 'done'}`}>{amount ? `${amount} ${amount === 1 ? 'direction' : 'directions'}` : 'Up to date'}</span><button className="icon-button" aria-label={`Browse ${deck.name}`} title="Browse freely" onClick={() => navigate('library', deck.id)}><BookOpen size={18} /></button><button className="icon-button" aria-label={`Review ${deck.name}`} onClick={() => startSession(deck.id)}><ArrowRight size={19} /></button></div></div>; })}</div>{!decks.length && <div className="empty-state"><Layers size={32} /><h3>No decks</h3><button className="button primary" onClick={() => navigate('library')}>Create a deck</button></div>}</>}
 
-        {tab === 'review' && session && <div className="study-space"><div className="study-top"><button className="text-button" onClick={() => navigate('review')}><ArrowLeft size={16} />Leave</button><span className="study-context"><span><JapaneseText text={decks.find(deck => deck.id === session.deckId)?.name || 'All my decks'} /></span>{session.practice && <small>Free practice</small>}</span><div className="study-controls"><span className="study-reviewed" aria-label={`${session.index} answers in this session`}>{session.index}<span> answered</span></span>{session.answers.length > 0 && <button type="button" className="icon-button mobile-study-control" title="Undo last answer" aria-label="Undo last answer" disabled={sessionBusy} onClick={() => void undoLastAnswer()}><Undo2 size={18} /></button>}{currentNote && <button type="button" className="icon-button study-edit" title="Edit current card (E)" aria-label="Edit current card" disabled={sessionBusy} onClick={() => setNoteModal(currentNote)}><Pencil size={17} /></button>}<button type="button" className="icon-button mobile-study-control" aria-label="Review settings" title="Settings" onClick={() => setSettings(true)}><Settings2 size={18} /></button></div></div><div className="study-undo">{session.answers.length > 0 && <button className="text-button" disabled={sessionBusy} onClick={() => void undoLastAnswer()}><Undo2 size={15} />Undo last answer</button>}</div>{session.index >= session.ids.length ? <div className="session-complete"><div className="complete-art"><Layers size={30} /></div><h1>No cards available</h1><p>This deck has no cards.</p><button className="button primary" onClick={() => navigate('review')}>Back to decks <ArrowRight size={17} /></button></div> : currentNote && currentCard ? <><div className={`flashcard${session.revealed ? ' is-revealed' : ''}`} key={`${currentCard.id}:${session.index}`}><div className="flashcard-label"><span className="deck-dot sage" />{currentCard.direction === 'ja-fr' ? 'Japanese → Meaning' : 'Meaning → Japanese'}{!session.practice && <span>{reviewedIds.has(currentCard.id) ? 'Due review' : 'New direction'}</span>}</div><ReviewPages className="flashcard-prompt" label="Question" contentKey={`${currentNote.id}:${currentNote.updatedAt}:${japaneseFont}:${furiganaEnabled}`}><h2 lang={currentCard.direction === 'ja-fr' ? 'ja' : undefined} className={currentCard.direction === 'fr-ja' ? 'french-prompt' : ''}>{!session.revealed ? (currentCard.direction === 'ja-fr' ? currentNote.japanese : currentNote.meaning) : currentCard.direction === 'ja-fr' ? <JapaneseText text={currentNote.japanese} reading={currentNote.reading} /> : <JapaneseText text={currentNote.meaning} />}</h2>{session.revealed && currentCard.direction === 'ja-fr' && <span className="prompt-reading" lang="ja">{currentNote.reading}</span>}</ReviewPages>{session.revealed ? <ReviewPages className="flashcard-answer" label="Answer" contentKey={`${currentNote.id}:${currentNote.updatedAt}:${japaneseFont}:${furiganaEnabled}`}><span className="eyebrow">THE ANSWER</span><h3 lang={currentCard.direction === 'fr-ja' ? 'ja' : undefined}>{currentCard.direction === 'ja-fr' ? <JapaneseText text={currentNote.meaning} /> : <JapaneseText text={currentNote.japanese} reading={currentNote.reading} />}</h3>{currentCard.direction === 'fr-ja' && <p lang="ja">{currentNote.reading}</p>}{currentNote.example && <div className="answer-example"><span lang="ja"><JapaneseText text={currentNote.example} /></span><p><JapaneseText text={currentNote.exampleTranslation} /></p></div>}{currentNote.explanation && <p className="answer-explanation"><JapaneseText text={currentNote.explanation} /></p>}</ReviewPages> : <div className="reveal-zone"><button className="button primary reveal-button" onClick={() => setSession({ ...session, revealed: true })}>Reveal answer <ChevronDown size={17} /></button></div>}</div>{session.revealed && <div className="rating-zone">{session.practice ? <button className="button primary" onClick={() => void answer(3)} disabled={sessionBusy}>Next card <ArrowRight size={17} /></button> : <div className="rating-buttons">{([{ value: 1, label: 'Again', color: 'rose' }, { value: 2, label: 'Hard', color: 'amber' }, { value: 3, label: 'Good', color: 'sage' }, { value: 4, label: 'Easy', color: 'sky' }] as const).map(rating => <button key={rating.value} className={`rating-button ${rating.color}`} disabled={sessionBusy} onClick={() => void answer(rating.value)}><span>{rating.label}</span><small>{intervals?.[rating.value]}</small><kbd>{rating.value}</kbd></button>)}</div>}</div>}<p className="keyboard-hint"><span className="desktop-keyboard-hint">{session.revealed ? session.practice ? 'Space to continue · E to edit' : '1–4 to answer · E to edit' : 'Space to reveal · E to edit'}</span><span className="mobile-study-notice" role="status" aria-atomic="true">{notice}</span></p></> : <div className="empty-state"><p>This note is no longer available.</p><button className="button secondary" onClick={() => setSession({ ...session, index: session.index + 1 })}>Continue</button></div>}</div>}
+        {tab === 'review' && session && <div className="study-space"><div className="study-top"><button className="text-button" onClick={() => navigate('review')}><ArrowLeft size={16} />Leave</button><span className="study-context"><span><JapaneseText text={decks.find(deck => deck.id === session.deckId)?.name || 'All my decks'} /></span>{session.practice && <small>Free practice</small>}</span><div className="study-controls"><span className="study-reviewed" aria-label={`${session.index} answers in this session`}>{session.index}<span> answered</span></span>{!deletedReview && session.answers.length > 0 && <button type="button" className="icon-button mobile-study-control" title="Undo last answer" aria-label="Undo last answer" disabled={sessionBusy} onClick={() => void undoLastReviewAction()}><Undo2 size={18} /></button>}{currentNote && <button type="button" className="icon-button study-edit" title="Edit current card (E)" aria-label="Edit current card" disabled={sessionBusy} onClick={() => setNoteModal(currentNote)}><Pencil size={17} /></button>}{session.revealed && currentNote && <button type="button" className="icon-button study-delete" title="Delete this card from all decks, in both directions" aria-label="Delete card" disabled={sessionBusy} onClick={() => void deleteCurrentReview()}><Trash2 size={17} /></button>}<button type="button" className="icon-button mobile-study-control" aria-label="Review settings" title="Settings" onClick={() => setSettings(true)}><Settings2 size={18} /></button></div></div><div className={`study-undo${deletedReview ? ' has-deletion' : ''}`}>{deletedReview && <span className="study-deleted-label" role="status">Card deleted</span>}{(deletedReview || session.answers.length > 0) && <button className="text-button" disabled={sessionBusy} onClick={() => void undoLastReviewAction()}><Undo2 size={15} />{deletedReview ? 'Undo deletion' : 'Undo last answer'}</button>}</div>{session.index >= session.ids.length ? <div className="session-complete"><div className="complete-art"><Layers size={30} /></div><h1>No cards available</h1><p>This deck has no cards.</p><button className="button primary" onClick={() => navigate('review')}>Back to decks <ArrowRight size={17} /></button></div> : currentNote && currentCard ? <><div className={`flashcard${session.revealed ? ' is-revealed' : ''}`} key={`${currentCard.id}:${session.index}`}><div className="flashcard-label"><span className="deck-dot sage" />{currentCard.direction === 'ja-fr' ? 'Japanese → Meaning' : 'Meaning → Japanese'}{!session.practice && <span>{reviewedIds.has(currentCard.id) ? 'Due review' : 'New direction'}</span>}</div><ReviewPages className="flashcard-prompt" label="Question" contentKey={`${currentNote.id}:${currentNote.updatedAt}:${japaneseFont}:${furiganaEnabled}`}><h2 lang={currentCard.direction === 'ja-fr' ? 'ja' : undefined} className={currentCard.direction === 'fr-ja' ? 'french-prompt' : ''}>{!session.revealed ? (currentCard.direction === 'ja-fr' ? currentNote.japanese : currentNote.meaning) : currentCard.direction === 'ja-fr' ? <JapaneseText text={currentNote.japanese} reading={currentNote.reading} /> : <JapaneseText text={currentNote.meaning} />}</h2>{session.revealed && currentCard.direction === 'ja-fr' && <span className="prompt-reading" lang="ja">{currentNote.reading}</span>}</ReviewPages>{session.revealed ? <ReviewPages className="flashcard-answer" label="Answer" contentKey={`${currentNote.id}:${currentNote.updatedAt}:${japaneseFont}:${furiganaEnabled}`}><span className="eyebrow">THE ANSWER</span><h3 lang={currentCard.direction === 'fr-ja' ? 'ja' : undefined}>{currentCard.direction === 'ja-fr' ? <JapaneseText text={currentNote.meaning} /> : <JapaneseText text={currentNote.japanese} reading={currentNote.reading} />}</h3>{currentCard.direction === 'fr-ja' && <p lang="ja">{currentNote.reading}</p>}{currentNote.example && <div className="answer-example"><span lang="ja"><JapaneseText text={currentNote.example} /></span><p><JapaneseText text={currentNote.exampleTranslation} /></p></div>}{currentNote.explanation && <p className="answer-explanation"><JapaneseText text={currentNote.explanation} /></p>}</ReviewPages> : <div className="reveal-zone"><button className="button primary reveal-button" onClick={() => setSession({ ...session, revealed: true })}>Reveal answer <ChevronDown size={17} /></button></div>}</div>{session.revealed && <div className="rating-zone">{session.practice ? <button className="button primary" onClick={() => void answer(3)} disabled={sessionBusy}>Next card <ArrowRight size={17} /></button> : <div className="rating-buttons">{([{ value: 1, label: 'Again', color: 'rose' }, { value: 2, label: 'Hard', color: 'amber' }, { value: 3, label: 'Good', color: 'sage' }, { value: 4, label: 'Easy', color: 'sky' }] as const).map(rating => <button key={rating.value} className={`rating-button ${rating.color}`} disabled={sessionBusy} onClick={() => void answer(rating.value)}><span>{rating.label}</span><small>{intervals?.[rating.value]}</small><kbd>{rating.value}</kbd></button>)}</div>}</div>}<p className="keyboard-hint"><span className="desktop-keyboard-hint">{session.revealed ? session.practice ? 'Space to continue · E to edit' : '1–4 to answer · E to edit' : 'Space to reveal · E to edit'}</span><span className="mobile-study-notice" role="status" aria-atomic="true">{notice}</span></p></> : <div className="empty-state"><p>This note is no longer available.</p><button className="button secondary" onClick={() => setSession({ ...session, index: session.index + 1 })}>Continue</button></div>}</div>}
         </div>
       </main>
     </div>
 
     <aside className="display-toolbar" aria-label="Display tools"><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /></aside>
+    <AmbiencePlayer studying={!!session && session.index < session.ids.length} />
     <nav className="mobile-nav" aria-label="Mobile navigation">{navigationTabs.map(item => { const Icon = icons[item]; return <button key={item} className={tab === item ? 'selected' : ''} onClick={() => navigate(item)} aria-label={item === 'review' ? `Review, ${dueCount} directions ready` : undefined} aria-current={tab === item ? 'page' : undefined}><Icon size={21} /><span>{labels[item]}</span></button>; })}</nav>
     {notice && <div className="toast" role="status"><CheckCheck size={18} /><span>{notice}</span></div>}
-    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
+    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} initialValues={noteModal === 'new' ? japanDraft : undefined} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
     {deckModal && <DeckEditor data={data} deck={deckModal === 'new' ? null : deckModal} defaultParentId={deckId} onClose={() => setDeckModal(null)} onSave={async fn => { await update(fn); setDeckModal(null); setNotice('Deck saved.'); }} />}
     {settings && <Modal title="Settings" focusInput={false} onClose={() => setSettings(false)}><PageThemePicker value={pageTheme} onChange={setPageTheme} /><ReviewSettingsEditor settings={data.reviewSettings} onSave={async reviewSettings => { await update(snapshot => validateSnapshot({ ...snapshot, reviewSettings })); if (session) setSettings(false); }} /><section className="mobile-display-settings" aria-label="Display settings"><h3>Display</h3><div className="mobile-display-row"><span>Japanese font</span><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /></div><div className="mobile-display-row"><span>Furigana</span><FuriganaToggle onChange={setFuriganaEnabled} /></div></section><BackupSummary state={backupState} /><GitHubConnection status={library.status} onDisconnect={library.disconnectGitHub} />{library.status?.authenticated && <div className="settings-buttons"><button className="button primary" onClick={() => void library.sync()} disabled={library.syncing}>{library.syncing ? <LoaderCircle size={17} className="spin" /> : <Cloud size={17} />}Sync</button></div>}<hr /><h3>Export my data</h3><p className="muted">The ZIP preserves decks, notes, cards, and the full review history.</p><div className="settings-buttons"><button className="button secondary" onClick={() => { try { downloadBackup(data); setNotice('ZIP backup downloaded.'); } catch (cause) { setError(String(cause)); } }}><ArrowDownToLine size={17} />Full backup</button><button className="button ghost" onClick={() => downloadCsv(data)}>CSV content</button></div><hr /><h3>Restore a backup</h3><p className="muted">Open a Japanese export in ZIP or JSON format. A preview will appear before any changes.</p><button className="button secondary" onClick={() => inputFile.current?.click()}><Upload size={16} />Choose a file</button><input type="file" accept=".zip,.json,application/zip,application/json" ref={inputFile} hidden onChange={async event => { const file = event.target.files?.[0]; event.target.value = ''; if (!file) return; try { setImporting(await parseImport(file)); } catch (cause) { setError(cause instanceof Error ? cause.message : 'Unable to read file.'); } }} /><div className="settings-footnote"><CircleHelp size={16} /><span>After an online visit, you can use this site offline in the same browser. Your progress syncs and merges automatically when the site is open and the connection returns.</span></div><p className="dictionary-credits"><a href="/furigana/NOTICE.txt" target="_blank" rel="noreferrer">Dictionary credits</a></p></Modal>}
     {importing && <Modal title="Restore this library?" onClose={() => setImporting(null)}><p>The file contains <b>{active(importing.decks).length} deck{active(importing.decks).length !== 1 ? 's' : ''}</b>, <b>{active(importing.notes).length} note{active(importing.notes).length !== 1 ? 's' : ''}</b> and <b>{importing.reviews.length} review{importing.reviews.length !== 1 ? 's' : ''}</b>.</p><p className="muted">Current content will be replaced. Your existing review history will be kept. A backup of the current library will be downloaded before restoration.</p><div className="modal-actions"><button className="button secondary" onClick={() => setImporting(null)}>Cancel</button><button className="button primary" onClick={() => void restoreImport()}>Restore</button></div></Modal>}

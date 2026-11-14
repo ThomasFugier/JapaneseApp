@@ -1,4 +1,4 @@
-const CACHE = 'kotoba-shell-v22';
+const CACHE = 'kotoba-shell-v24';
 const DICTIONARIES = 'japanese-dictionaries-v1';
 
 async function cacheAsset(cache, url) {

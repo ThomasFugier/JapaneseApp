@@ -1,0 +1,51 @@
+.japan-view { width:100%; min-width:0; padding-bottom:40px; }
+.japan-scene-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.japan-scene-tabs button { display:flex; align-items:center; gap:9px; min-height:44px; padding:10px 16px; border:1px solid #e6e5e1; border-radius:8px; color:#76766e; background:#fff; font:inherit; font-size:12px; cursor:pointer; }
+.japan-scene-tabs button[aria-pressed=true] { color:#9e303b; background:#fff5f5; border-color:#eacdd0; }
+.japan-explore { display:grid; grid-template-columns:minmax(0,1fr) 270px; align-items:start; gap:24px; }
+.japan-illustration { overflow:hidden; min-width:0; border:1px solid #e5e1d8; border-radius:12px; background:#f5f3ed; }
+.japan-scene { display:block; width:100%; height:auto; font-family:var(--font-japanese-plain),sans-serif; }
+.japan-hotspot { cursor:pointer; outline:none; }
+.japan-hotspot rect { fill:transparent; stroke:transparent; stroke-width:1.5; transition:fill .15s,stroke .15s; }
+.japan-hotspot text { fill:#353b33; user-select:text; }
+.japan-hotspot:hover rect { fill:#ffffff66; stroke:#b3906b; }
+.japan-hotspot.is-selected rect { fill:#fff8edcc; stroke:#ad4546; }
+.japan-hotspot.is-selected text { fill:#9e303b; }
+.japan-hotspot:focus-visible rect { stroke:#b50030; stroke-width:3; }
+.japan-scene-caption { padding:18px 24px; border-top:1px solid #e5e1d8; background:#fdfcf9; }
+.japan-scene-caption p { margin:0 0 8px; color:#57594f; font-size:13px; line-height:1.65; }
+.japan-scene-caption>span { font-size:10px; color:#96958b; letter-spacing:.04em; }
+.japan-word-panel { min-width:0; padding:22px; background:#fff; border:1px solid #e8e6e1; border-radius:12px; }
+.japan-word-number { display:block; margin-bottom:30px; font-size:10px; letter-spacing:.15em; color:#9c9c94; font-variant-numeric:tabular-nums; }
+.japan-word-detail h2 { margin:0; color:#292d28; font-size:32px; line-height:1.7; overflow-wrap:anywhere; font-weight:400; }
+.japan-word-reading { margin:2px 0 20px; color:#92928a; font-size:13px; }
+.japan-word-meaning { min-height:44px; margin:0 0 20px; font-size:14px; color:#55584f; line-height:1.6; }
+.japan-card-action { width:100%; justify-content:center; font-size:12px; }
+.japan-word-list { display:flex; flex-direction:column; margin-top:26px; border-top:1px solid #eeece7; padding-top:12px; gap:3px; }
+.japan-word-list button { display:flex; align-items:center; gap:12px; width:100%; min-height:42px; border:0; border-radius:5px; padding:8px; background:transparent; color:#6d7166; text-align:left; cursor:pointer; font:inherit; }
+.japan-word-list button>span:first-child { font-size:9px; color:#a7a89f; }
+.japan-word-list button>span:nth-child(2) { flex:1; font-size:14px; }
+.japan-word-list button>svg { opacity:0; }
+.japan-word-list button.is-selected { color:#a43545; background:#fdf2f3; }
+.japan-word-list button.is-selected>svg { opacity:1; }
+.japan-scene-note { font-size:10px; color:#a3a39b; margin:14px 0 0; }
+@media (max-width:800px) {
+  .japan-explore { grid-template-columns:minmax(0,1fr); gap:16px; }
+  .japan-word-panel { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px 24px; }
+  .japan-word-detail { grid-row:1 / 3; }
+  .japan-word-number { margin-bottom:16px; }
+  .japan-word-list { margin-top:0; }
+}
+@media (max-width:480px) {
+  .japan-scene-tabs { gap:6px; margin-bottom:16px; }
+  .japan-scene-tabs button { flex:1 1 0; flex-direction:column; gap:7px; padding:10px 5px; font-size:10px; text-align:center; }
+  .japan-scene-caption { padding:14px 16px; }
+  .japan-word-panel { display:block; padding:20px; }
+  .japan-word-detail h2 { font-size:30px; }
+  .japan-word-number { margin-bottom:10px; }
+  .japan-word-meaning { min-height:0; }
+  .japan-word-list { margin-top:16px; }
+}
+@media (prefers-reduced-motion:reduce) { .japan-hotspot rect { transition:none; } }
+
+.japan-scene text[lang=ja] { font-family:var(--font-japanese-plain),sans-serif; }

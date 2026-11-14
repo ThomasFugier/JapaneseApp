@@ -80,9 +80,9 @@ function NotePanel({ title, onClose, navigation, children }: { title: string; on
   return <section className="note-side-panel" role="region" aria-labelledby={heading} ref={root}><div className="note-panel-heading"><h2 id={heading}>{title}</h2><button type="button" className="icon-button" aria-label="Close editor" onClick={onClose}><X size={19} /></button></div>{navigation}{children}</section>;
 }
 
-export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, contentOnly = false, presentation = 'modal', navigation, onNavigationGuard }: { data: Snapshot; note: Note | null; defaultDeckId: string | null; onClose: () => void; onSave: Save; contentOnly?: boolean; presentation?: 'modal' | 'panel'; navigation?: NoteEditorNavigation; onNavigationGuard?: (guard: NoteNavigationGuard | null) => void }) {
+export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, contentOnly = false, presentation = 'modal', navigation, onNavigationGuard, initialValues }: { data: Snapshot; note: Note | null; initialValues?: Pick<Note, 'japanese' | 'reading' | 'meaning'>; defaultDeckId: string | null; onClose: () => void; onSave: Save; contentOnly?: boolean; presentation?: 'modal' | 'panel'; navigation?: NoteEditorNavigation; onNavigationGuard?: (guard: NoteNavigationGuard | null) => void }) {
   const existing = data.cards.filter(card => card.noteId === note?.id && !card.deletedAt);
-  const [values, setValues] = useState(() => noteValues(note));
+  const [values, setValues] = useState(() => ({ ...noteValues(note), ...(!note ? initialValues : {}) }));
   const [tags, setTags] = useState<string[]>(() => [...(note?.tags ?? [])]);
   const [tagDraft, setTagDraft] = useState('');
   const availableTags = useMemo(() => registeredTags(data.notes), [data.notes]);

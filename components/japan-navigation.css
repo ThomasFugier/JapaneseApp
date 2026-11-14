@@ -1,0 +1,13 @@
+.desktop-tabs { grid-template-columns:66px 100px 66px 72px 58px 70px 58px; }
+@media (min-width:641px) and (max-width:1100px) {
+  .topbar { height:112px; }
+  .topbar-inner { grid-template-columns:minmax(0,1fr) auto; grid-template-rows:62px 50px; gap:0 16px; }
+  .topbar-inner .brand { grid-row:1; grid-column:1; }
+  .topbar-actions { grid-row:1; grid-column:2; }
+  .desktop-tabs { grid-row:2; grid-column:1 / -1; grid-template-columns:repeat(7,minmax(0,1fr)); width:100%; }
+  .desktop-tabs button { font-size:12px; }
+}
+@media (max-width:640px) {
+  .mobile-nav { grid-template-columns:repeat(7,minmax(0,1fr)); padding-left:4px; padding-right:4px; }
+  .mobile-nav button { min-width:0; padding-left:0; padding-right:0; font-size:9px; }
+}

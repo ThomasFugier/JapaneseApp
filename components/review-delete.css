@@ -1,0 +1,8 @@
+.study-delete { color:#a1a1aa; }
+.study-delete:hover:not(:disabled) { color:var(--red); background:var(--red-soft); }
+.study-undo.has-deletion { align-items:center; justify-content:space-between; gap:12px; }
+.study-deleted-label { color:#92929d; font-size:11px; }
+@media (max-width:640px) {
+  .is-studying .study-undo.has-deletion { display:flex; flex-shrink:0; min-height:28px; margin:0; }
+  .study-undo.has-deletion .text-button { min-height:36px; font-size:11px; }
+}
