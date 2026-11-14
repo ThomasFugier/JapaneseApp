@@ -2,13 +2,14 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type DragEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, Eye, EyeOff, Folder, GripVertical, PanelRightClose, PanelRightOpen, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, Eye, Folder, GripVertical, PanelRightClose, PanelRightOpen, Pencil, Plus, Trash2 } from 'lucide-react';
 import { descendants } from '@/lib/engine';
 import type { LibraryAction } from '@/lib/library-actions';
 import { deckAncestors, LIBRARY_BATCH_SIZE, libraryDisplayCount, type ReadingContext } from '@/lib/library-view';
 import { buildLibraryIndex } from '@/lib/library-index';
 import type { Deck, Note, Snapshot } from '@/lib/model';
 import { JapaneseText, useFuriganaEnabled } from './furigana';
+import { ContextualTranslation } from './contextual-translation';
 import { LibraryBulkActions } from './library-bulk-actions';
 import './library-view.css';
 
@@ -200,7 +201,8 @@ export function LibraryView({ data, notes, searchPending, searchActions, context
         {actionError && <p className="library-action-error" role="alert">{actionError}</p>}
         {(actionStatus || dragging) && <p className="library-action-status" role="status">{dragging ? dragging.kind === 'cards' ? `Add ${dragging.ids.length} card${dragging.ids.length === 1 ? '' : 's'} to a deck` : 'Drop on a deck to place it inside' : actionStatus}</p>}
         {selectedDeck && decks.some(deck => deck.parentId === deckId) && <div className="subdeck-chips">{decks.filter(deck => deck.parentId === deckId).map(deck => <button key={deck.id} onClick={() => selectDeck(deck.id)}><span className={`deck-dot ${deck.color}`} /><JapaneseText text={deck.name} /><ChevronRight size={13} /></button>)}</div>}
-        <div className="dictionary-labels"><span>JAPANESE</span><span className="translation-heading">TRANSLATION<button className={`translation-toggle ${hideTranslations ? 'enabled' : ''}`} aria-label={hideTranslations ? 'Show translations' : 'Hide translations'} title={hideTranslations ? 'Show translations' : 'Hide translations'} aria-pressed={hideTranslations} onClick={() => onContextChange({ hideTranslations: !hideTranslations })}>{hideTranslations ? <EyeOff size={15} /> : <Eye size={15} />}</button></span><span /></div>
+        {notes.length > 0 && <ContextualTranslation visible={!hideTranslations} onChange={visible => onContextChange({ hideTranslations: !visible })} />}
+        <div className="dictionary-labels"><span>JAPANESE</span><span className="translation-heading">TRANSLATION</span><span /></div>
         <div className="entries" ref={entries} inert={searchPending}>{visibleNotes.map(note => {
           const showAnswer = !hideTranslations || revealed.has(note.id);
           const memberships = index.memberships.get(note.id) ?? [];

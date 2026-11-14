@@ -1,4 +1,4 @@
-const CACHE = 'kotoba-shell-v37';
+const CACHE = 'kotoba-shell-v45';
 const DICTIONARIES = 'japanese-dictionaries-v1';
 
 async function cacheAsset(cache, url) {
@@ -49,7 +49,7 @@ self.addEventListener('fetch', event => {
       if (response.ok && url.pathname === '/' && !url.search) { const cache = await caches.open(CACHE); await cache.put('/', response.clone()); }
       return response;
     }).catch(async () => (await caches.match('/')) || Response.error()));
-  } else if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/furigana/') || url.pathname === '/icon.svg') {
+  } else if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/reference/') || url.pathname.startsWith('/furigana/') || url.pathname === '/icon.svg') {
     event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(async response => {
       if (response.ok) { const cache = await caches.open(url.pathname.startsWith('/furigana/') ? DICTIONARIES : CACHE); await cache.put(event.request, response.clone()); }
       return response;

@@ -1,76 +1,85 @@
 /* One rhythm: quick feedback, soft settling, no perpetual movement. */
 .theme-classroom { --motion-ease:cubic-bezier(.22,1,.36,1); --motion-spring:cubic-bezier(.2,1.35,.4,1); }
 .theme-classroom .workspace-view { animation:classroom-arrive .3s var(--motion-ease); }
-.theme-classroom .activity-card { animation:classroom-arrive .4s var(--motion-spring) backwards; }
-.theme-classroom .activity-card:nth-child(2) { animation-delay:35ms; }
-.theme-classroom .activity-card:nth-child(3) { animation-delay:70ms; }
-.theme-classroom .activity-card:nth-child(4) { animation-delay:105ms; }
-.theme-classroom .activity-open>.classroom-emoji { transition:transform .32s var(--motion-spring),border-radius .3s,background .2s; }
-.theme-classroom .activity-open>svg { transition:transform .25s var(--motion-spring),background .2s; }
-.theme-classroom .activity-open:is(:hover,:focus-visible)>svg { transform:translateX(4px); background:#ffffffa0; }
-.theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji { transform:rotate(-8deg) scale(1.1); border-radius:32% 48% 38% 44%; }
-.theme-classroom .activity-card { transition:transform .28s var(--motion-spring),border-radius .3s var(--motion-ease),background .2s,border-color .2s; }
-.theme-classroom .desktop-tabs .classroom-nav-tile { transition:transform .28s var(--motion-spring); }
+.theme-classroom .activity-card { animation:classroom-arrive .22s var(--motion-ease) backwards; }
+.theme-classroom .activity-open>.classroom-emoji { transition:none; }
+.theme-classroom .activity-open>svg { transition:background .15s; }
+.theme-classroom .activity-open:is(:hover,:focus-visible)>svg { transform:none; background:#ffffffa0; }
+.theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji { transform:none; }
+.theme-classroom .activity-card { transition:background .15s,border-color .15s; }
+.theme-classroom .desktop-tabs .classroom-nav-tile { transition:none; }
+.theme-classroom .desktop-tabs>button:is(.selected,:hover,:focus-visible) .classroom-nav-tile { transform:none; }
 .theme-classroom .workspace-search { transition-duration:.32s; transition-timing-function:var(--motion-ease); }
 .theme-classroom .workspace-search :is(.library-search-group,.library-search,.library-search input,.library-sort) { transition-duration:.28s; transition-timing-function:var(--motion-ease); }
 .theme-classroom .flashcard-label { animation:classroom-fade .18s ease-out; }
 .theme-classroom .flashcard-prompt { animation:classroom-card-in .22s var(--motion-ease); }
 .theme-classroom .flashcard-answer { animation:classroom-arrive .24s var(--motion-ease); }
-.theme-classroom .rating-button { animation:classroom-arrive .24s var(--motion-spring) backwards; }
-.theme-classroom .rating-button:nth-child(2) { animation-delay:25ms; }
-.theme-classroom .rating-button:nth-child(3) { animation-delay:50ms; }
-.theme-classroom .rating-button:nth-child(4) { animation-delay:75ms; }
-.theme-classroom .review-page-flow { transition:transform .22s var(--motion-ease); }
+.theme-classroom .review-page-flow { transition:none; }
 .theme-classroom .modal-backdrop { animation:classroom-fade .18s ease-out; }
-.theme-classroom .modal { animation:classroom-dialog-in .28s var(--motion-spring); transform-origin:50% 65%; }
+.theme-classroom .modal { animation:classroom-dialog-in .28s var(--motion-spring); transform-origin:center; }
 .theme-classroom .note-side-panel { animation:classroom-panel-in .28s var(--motion-ease); }
 .theme-classroom :is(.entry-detail,.immersion-focus,.immersion-french) { animation:classroom-arrive .22s var(--motion-ease); }
-.theme-classroom .immersion-message { animation:classroom-message-in .3s var(--motion-spring); transform-origin:0 100%; }
-.theme-classroom .immersion-message.from-second { transform-origin:100% 100%; }
+.theme-classroom .immersion-message { animation:classroom-message-in .3s var(--motion-spring); transform-origin:center; }
+.theme-classroom .immersion-message.from-second { transform-origin:center; }
 .theme-classroom .classroom-lesson-activity .lesson-section { animation:classroom-arrive .3s var(--motion-ease); }
 .theme-classroom .classroom-lesson-activity .lesson-contents button { transition:background .22s,border-color .22s,transform .22s var(--motion-spring); }
-.theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step] { transform:translateY(-2px); }
+.theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step] { transform:none; }
 .theme-classroom .lesson-validation span { transition:background .2s,transform .25s var(--motion-spring); }
-.theme-classroom .lesson-validation[aria-pressed=true] span { transform:rotate(-6deg) scale(1.08); }
+.theme-classroom .lesson-validation[aria-pressed=true] span { transform:none; }
 @keyframes classroom-fade { from { opacity:0; } to { opacity:1; } }
-@keyframes classroom-arrive { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:none; } }
-@keyframes classroom-card-in { from { opacity:0; transform:translateX(14px) scale(.98); } to { opacity:1; transform:none; } }
-@keyframes classroom-dialog-in { from { opacity:0; transform:translateY(16px) scale(.96); } to { opacity:1; transform:none; } }
-@keyframes classroom-panel-in { from { opacity:0; transform:translateX(24px); } to { opacity:1; transform:none; } }
-@keyframes classroom-message-in { from { opacity:0; transform:translateY(8px) scale(.94); } to { opacity:1; transform:none; } }
+@keyframes classroom-arrive { from { opacity:0; transform:scale(.98); } to { opacity:1; transform:none; } }
+@keyframes classroom-card-in { from { opacity:0; transform:scale(.98); } to { opacity:1; transform:none; } }
+@keyframes classroom-dialog-in { from { opacity:0; transform:scale(.97); } to { opacity:1; transform:none; } }
+@keyframes classroom-panel-in { from { opacity:0; transform:scale(.98); } to { opacity:1; transform:none; } }
+@keyframes classroom-message-in { from { opacity:0; transform:scale(.97); } to { opacity:1; transform:none; } }
 
-/* Shared surfaces expand from the activity menu into their destination. */
+/* Pages pop in place. Only search and the revealed question share geometry. */
 @supports (view-transition-name: classroom-page) {
- .theme-classroom .workspace-view { view-transition-name:classroom-page; }
+ .theme-classroom .workspace-view[data-view=home] { view-transition-name:classroom-home-page; }
+ .theme-classroom .workspace-view[data-view=review] { view-transition-name:classroom-review-page; }
+ .theme-classroom .workspace-view[data-view=library] { view-transition-name:classroom-library-page; }
+ .theme-classroom .workspace-view[data-view=lessons] { view-transition-name:classroom-lessons-page; }
+ .theme-classroom .workspace-view[data-view=writing] { view-transition-name:classroom-writing-page; }
+ .theme-classroom .workspace-view[data-view=stats] { view-transition-name:classroom-stats-page; }
  .theme-classroom .workspace-search { view-transition-name:classroom-search; }
- .theme-classroom :is(.activity-review,.review-all,.flashcard) { view-transition-name:classroom-review; }
- .theme-classroom :is(.activity-writing,.writing-paper) { view-transition-name:classroom-writing; }
- .theme-classroom :is(.activity-library,.library-dictionary) { view-transition-name:classroom-library; }
- .theme-classroom :is(.activity-lessons,.lesson-revisit,.lesson-heading) { view-transition-name:classroom-lessons; }
  .theme-classroom .flashcard-prompt { view-transition-name:classroom-question; }
- @media(min-width:641px) { .theme-classroom .desktop-tabs>button.selected { view-transition-name:classroom-selection; } }
- @media(max-width:640px) { .theme-classroom .mobile-nav>button.selected { view-transition-name:classroom-selection; } }
+ .theme-classroom .modal-backdrop:not(:has(~ .modal-backdrop)) .modal { view-transition-name:classroom-dialog; }
  html:has(.theme-classroom)::view-transition,
  html:has(.theme-classroom)::view-transition-group(*),
  html:has(.theme-classroom)::view-transition-image-pair(*),
  html:has(.theme-classroom)::view-transition-old(*),
  html:has(.theme-classroom)::view-transition-new(*) { pointer-events:none; }
- html:has(.theme-classroom)::view-transition-group(*) { animation-duration:.3s; animation-timing-function:cubic-bezier(.22,1,.36,1); }
+ html:has(.theme-classroom)::view-transition-group(*) { animation-duration:0s; }
+ html:has(.theme-classroom)::view-transition-group(classroom-search),
+ html:has(.theme-classroom)::view-transition-group(classroom-question) { animation-duration:.22s; animation-timing-function:cubic-bezier(.22,1,.36,1); }
+ html:has(.theme-classroom)::view-transition-old(*) { animation:classroom-pop-out .14s ease-in both; transform-origin:center; }
+ html:has(.theme-classroom)::view-transition-new(*) { animation:classroom-pop-in .22s cubic-bezier(.22,1,.36,1) both; transform-origin:center; }
  html:has(.theme-classroom)::view-transition-old(root) { animation:none; opacity:0; }
  html:has(.theme-classroom)::view-transition-new(root) { animation:none; }
- html:has(.theme-classroom)::view-transition-old(classroom-page) { animation:classroom-fade .12s reverse both; }
- html:has(.theme-classroom)::view-transition-new(classroom-page) { animation:classroom-fade .22s both; }
- html:has(.theme-classroom)::view-transition-image-pair(classroom-review),
- html:has(.theme-classroom)::view-transition-image-pair(classroom-writing),
- html:has(.theme-classroom)::view-transition-image-pair(classroom-library),
- html:has(.theme-classroom)::view-transition-image-pair(classroom-lessons) { overflow:clip; border-radius:26px; }
+ html:has(.theme-classroom)::view-transition-old(root) { animation:none; opacity:0; }
+ html:has(.theme-classroom)::view-transition-new(root) { animation:none; }
+ html:has(.theme-classroom)::view-transition-old(classroom-search),
+ html:has(.theme-classroom)::view-transition-old(classroom-question) { animation:classroom-fade .12s reverse both; }
+ html:has(.theme-classroom)::view-transition-new(classroom-search),
+ html:has(.theme-classroom)::view-transition-new(classroom-question) { animation:classroom-fade .18s both; }
+
 }
-@media(hover:hover) and (prefers-reduced-motion:no-preference) {
- .theme-classroom .activity-card:hover { border-radius:36px 30px 34px 30px; transform:translateY(-4px); }
-}
+@keyframes classroom-pop-in { from { opacity:0; transform:scale(.98); } to { opacity:1; transform:scale(1); } }
+@keyframes classroom-pop-out { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(.98); } }
+/* Press slightly, then settle back with one small bounce. */
+.theme-classroom .activity-card:hover,.theme-classroom .activity-card:active { transform:none; }
+.theme-classroom .rating-button:hover:not(:disabled) { transform:none; filter:none; }
+.theme-classroom :is(.button,.icon-button,.text-button,.rating-button,.activity-open,.desktop-tabs>button,.mobile-nav>button),
+.theme-classroom .classroom-lesson-activity .lesson-contents button { transition:transform .24s cubic-bezier(.2,1.45,.4,1),background .15s,border-color .15s; }
+.theme-classroom button:active:not(:disabled),.theme-classroom :is(.button,.icon-button,.rating-button):active:not(:disabled),
+.theme-classroom .classroom-lesson-activity .lesson-contents button:active:not(:disabled) { transform:scale(.97); transition-duration:.07s; }
+.theme-classroom .desktop-tabs>button.selected .classroom-nav-tile,
+.theme-classroom .mobile-nav>button.selected .classroom-nav-tile { animation:classroom-tap-bounce .24s ease-out; }
+@keyframes classroom-tap-bounce { 0% { transform:scale(.97); } 50% { transform:scale(1.035); } 100% { transform:scale(1); } }
 @media(prefers-reduced-motion:reduce) {
  .theme-classroom *, .theme-classroom *::before, .theme-classroom *::after { animation:none !important; transition:none !important; }
  html:has(.theme-classroom)::view-transition-group(*) { animation-duration:0s; }
+ .theme-classroom button:active:not(:disabled),.theme-classroom :is(.button,.icon-button,.rating-button):active:not(:disabled),.theme-classroom .classroom-lesson-activity .lesson-contents button:active:not(:disabled) { transform:none; }
  .theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji,
  .theme-classroom .activity-open:is(:hover,:focus-visible)>svg,
  .theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step] { transform:none; }

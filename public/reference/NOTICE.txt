@@ -1,0 +1,18 @@
+KANJIDIC2 reference data
+
+Copyright Electronic Dictionary Research and Development Group (EDRDG).
+Source: https://www.edrdg.org/kanjidic/kanjidic2.xml.gz
+Dictionary date: 2026-11-14
+Source SHA-256: 3f87d9388b1bcb6178576ad3812cdafe0055731bd5813c2089167dcd09de0b70
+
+Licensed under Creative Commons Attribution-ShareAlike 4.0:
+https://creativecommons.org/licenses/by-sa/4.0/
+https://www.edrdg.org/edrdg/licence.html
+
+Changes: selected the 2,136 joyo characters (grades 1-6 and 8), retained
+English meanings, on/kun readings, school grade and stroke count, converted
+to JSON and sorted by grade/stroke count. This derived data remains CC BY-SA 4.0.
+Machine-readable copy: /reference/kanji.json
+The software UI is separate from this dictionary dataset.
+
+Maintainers: refresh monthly with node scripts/update-kanji-reference.mjs.

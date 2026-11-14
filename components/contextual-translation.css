@@ -1,0 +1,7 @@
+.translation-control-slot { display:flex; align-items:center; }
+.translation-control-slot:empty { display:none; }
+.contextual-translation-toggle { width:76px; }
+.display-reading-aids { display:flex; align-items:center; gap:8px; }
+.mobile-display-settings .display-reading-aids .furigana-toggle { width:66px; height:44px; padding:0 4px; }
+.mobile-display-settings .display-reading-aids .contextual-translation-toggle { width:76px; }
+.mobile-display-settings .display-reading-aids .furigana-toggle>span:first-child { display:block; }

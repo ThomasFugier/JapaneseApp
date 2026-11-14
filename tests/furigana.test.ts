@@ -1,6 +1,34 @@
 import test from 'node:test';
+import { toHiragana } from 'wanakana';
 import assert from 'node:assert/strict';
-import { buildReadingIndex, hasKanji, normalizeFuriganaReading, readingForText, splitFurigana } from '../lib/furigana';
+import { buildReadingIndex, hasKanji, normalizeFuriganaReading, readingForText, splitFurigana, splitSentenceFurigana } from '../lib/furigana';
+import { lessonImmersions } from '../lib/lesson-immersion';
+
+test('sentence readings stay attached to their words across commas and full stops', () => {
+  assert.deepEqual(splitSentenceFurigana('明日、駅で会いませんか。', 'あした、えきであいませんか。'), [
+    { text: '明日', reading: 'あした' }, { text: '、' }, { text: '駅', reading: 'えき' },
+    { text: 'で' }, { text: '会', reading: 'あ' }, { text: 'いませんか' }, { text: '。' },
+  ]);
+  assert.deepEqual(splitSentenceFurigana('駅。「お茶。」', 'えき。「おちゃ。」'), [
+    { text: '駅', reading: 'えき' }, { text: '。「' }, { text: 'お' }, { text: '茶', reading: 'ちゃ' }, { text: '。」' },
+  ]);
+});
+
+test('all immersion sentences preserve their text and complete authored readings', () => {
+  for (const immersion of Object.values(lessonImmersions)) for (const line of immersion.lines) {
+    const parts = splitSentenceFurigana(line.text, line.reading);
+    assert.equal(parts.map(part => part.text).join(''), line.text);
+    assert.ok(parts.some(part => part.reading), line.text);
+    assert.ok(parts.every(part => !part.reading || /^[\p{Script=Han}々〆]+$/u.test(part.text)), line.text);
+    assert.equal(toHiragana(parts.map(part => part.reading ?? part.text).join(''), { convertLongVowelMark: false }), line.reading, line.text);
+  }
+});
+
+test('mismatched or ambiguous sentence transcriptions defer safely to the dictionary', () => {
+  assert.deepEqual(splitSentenceFurigana('駅、学校。', 'えきがっこう。'), [{ text: '駅、学校。' }]);
+  assert.deepEqual(splitSentenceFurigana('お茶', 'ちゃ'), [{ text: 'お茶' }]);
+  assert.deepEqual(splitSentenceFurigana('今日', 'きょう'), [{ text: '今日', reading: 'きょう' }]);
+});
 
 test('kanji detection includes iteration marks and supplementary Han', () => {
   for (const text of ['食べる', '々', '〆', '𠮷']) assert.equal(hasKanji(text), true, text);

@@ -13,11 +13,27 @@ export function hasKanji(text: string): boolean {
   return kanjiPattern.test(text);
 }
 
+/** Sentence punctuation marks boundaries, not alternative vocabulary readings. */
+export function splitSentenceFurigana(text: string, reading: string): FuriganaPart[] {
+  const chunks = text.split(/([\p{P}\s]+)/u);
+  const readings = reading.split(/([\p{P}\s]+)/u);
+  // A mismatched transcription must never put one sentence's reading on another.
+  if (chunks.length !== readings.length || chunks.some((chunk, index) => index % 2 && chunk.normalize('NFKC') !== readings[index].normalize('NFKC'))) return [{ text }];
+  return chunks.flatMap((chunk, index) => {
+    if (!chunk) return [];
+    if (index % 2) return [{ text: chunk }];
+    const parts = splitFurigana(chunk, readings[index]);
+    // An ambiguous mixed phrase is better tokenized by the dictionary than
+    // rendered as a single wide ruby. Keep genuine kanji compounds together.
+    return parts.map(part => part.reading && kanaPattern.test(part.text) ? { text: part.text } : part);
+  });
+}
+
 export function normalizeFuriganaReading(value: string | undefined): string | undefined {
   if (!value || value.length > maximumReadingLength) return undefined;
   const first = value.normalize('NFKC').split(/[・、,，;；/／|｜\r\n]/, 1)[0].trim().replace(/[.．]/g, '');
   // Leave Latin text intact so a meaning or malformed reading cannot become ruby.
-  const kana = toHiragana(first, { passRomaji: true }).normalize('NFC');
+  const kana = toHiragana(first, { passRomaji: true, convertLongVowelMark: false }).normalize('NFC');
   return readingPattern.test(kana) && /\p{Script=Hiragana}/u.test(kana) ? kana : undefined;
 }
 
@@ -33,7 +49,7 @@ function tokenize(text: string): Token[] {
   }
   for (const token of tokens) {
     if (token.kind === 'kana') {
-      token.anchor = toHiragana(token.text.normalize('NFKC'), { passRomaji: true }).normalize('NFC');
+      token.anchor = toHiragana(token.text.normalize('NFKC'), { passRomaji: true, convertLongVowelMark: false }).normalize('NFC');
       token.length = Array.from(token.anchor).length;
     }
   }

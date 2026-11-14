@@ -4,8 +4,6 @@
 .immersion-format { display:block; margin-bottom:9px; font-size:10px; color:var(--red); letter-spacing:.06em; }
 .immersion-heading h3 { margin:0; font-size:19px; font-weight:550; }
 .immersion-heading p { margin:9px 0 0; color:var(--muted); font-size:12px; line-height:1.75; }
-.immersion-translation { display:flex; align-items:center; justify-content:center; flex-shrink:0; gap:7px; min-height:40px; padding:8px 11px; border:1px solid var(--line); border-radius:8px; color:#82828b; font-size:11px; }
-.immersion-translation[aria-pressed=true] { border-color:#ebcbd3; color:var(--red); background:#fff5f7; }
 .immersion-transcript { height:clamp(300px,48dvh,470px); overflow-y:auto; overscroll-behavior:contain; padding:26px; background:#fcfbfa; scrollbar-width:thin; }
 .immersion-message { display:flex; align-items:flex-start; gap:10px; margin:0 0 22px; animation:immersion-message-in .18s ease-out; }
 .immersion-message:last-child { margin-bottom:0; }
@@ -43,11 +41,13 @@
 .immersion-complete .button:disabled { opacity:1; color:#6e826b; border-color:#d9e3d6; background:#f6f9f4; cursor:default; }
 .lesson-immersion button:focus-visible,.immersion-explanation summary:focus-visible,.immersion-transcript:focus-visible { outline:2px solid var(--red); outline-offset:-3px; }
 .has-furigana .immersion-bubble>p[lang=ja],.has-furigana .immersion-paragraph>div>p[lang=ja] { line-height:2.3; }
+.lesson-immersion .furigana-ruby { white-space:nowrap; ruby-align:center; }
+.lesson-immersion .furigana-ruby rt { font-size:.45em; letter-spacing:0; }
+.has-furigana .immersion-focus>span,.has-furigana .immersion-explanation>span { line-height:2.3; }
 @keyframes immersion-message-in { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
 @media (max-width:640px) {
   .immersion-heading { padding:18px; gap:14px; flex-wrap:wrap; }
   .immersion-heading h3 { font-size:18px; }
-  .immersion-translation { min-height:42px; }
   .immersion-transcript { height:clamp(280px,45dvh,390px); padding:18px 12px; }
   .immersion-message { gap:7px; }
   .immersion-avatar { width:25px; height:25px; font-size:10px; }

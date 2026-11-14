@@ -9,11 +9,12 @@ import { TagInput } from './tag-input';
 import { updateNoteContent } from '@/lib/note-edit';
 import { type Deck, type Note, type Snapshot, type StudyCard, validateSnapshot } from '@/lib/model';
 import './note-editor.css';
+import { classroomTransition } from './classroom-motion';
 
 export function Modal({ title, subtitle, onClose, children, compact = false, sheet = false, focusInput = true }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; compact?: boolean; sheet?: boolean; focusInput?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const heading = useId();
-  const close = useRef(onClose); close.current = onClose;
+  const close = useRef(onClose); close.current = () => classroomTransition(!!ref.current?.closest('.theme-classroom'), onClose);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const overflow = document.body.style.overflow; document.body.style.overflow = 'hidden';
@@ -34,7 +35,7 @@ export function Modal({ title, subtitle, onClose, children, compact = false, she
     window.addEventListener('keydown', handle);
     return () => { window.removeEventListener('keydown', handle); document.body.style.overflow = overflow; previous?.focus(); };
   }, [focusInput]);
-  return <div className={`modal-backdrop${sheet ? ' note-sheet-backdrop' : ''}`} onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}><div className={`modal${compact ? ' compact-note-modal' : ''}${sheet ? ' note-editor-sheet' : ''}`} role="dialog" aria-modal="true" aria-labelledby={heading} ref={ref}><div className="modal-heading"><div>{subtitle && <span className="eyebrow">{subtitle}</span>}<h2 id={heading}>{title}</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close"><X size={21} /></button></div>{children}</div></div>;
+  return <div className={`modal-backdrop${sheet ? ' note-sheet-backdrop' : ''}`} onMouseDown={event => { if (event.target === event.currentTarget) close.current(); }}><div className={`modal${compact ? ' compact-note-modal' : ''}${sheet ? ' note-editor-sheet' : ''}`} role="dialog" aria-modal="true" aria-labelledby={heading} ref={ref}><div className="modal-heading"><div>{subtitle && <span className="eyebrow">{subtitle}</span>}<h2 id={heading}>{title}</h2></div><button type="button" className="icon-button" onClick={() => close.current()} aria-label="Close"><X size={21} /></button></div>{children}</div></div>;
 }
 
 type Save = (fn: (snapshot: Snapshot) => Snapshot) => Promise<void>;

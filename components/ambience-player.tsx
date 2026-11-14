@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { ChevronUp, Music2, Pause, Play, X } from 'lucide-react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Music2, Pause, Play, X } from 'lucide-react';
 import { startAmbience, type Ambience, type AmbienceSound } from '@/lib/ambience';
 import './ambience.css';
 
@@ -11,7 +12,10 @@ const choices: { id: Ambience; name: string; detail: string }[] = [
   { id: 'rain', name: 'Rain', detail: 'A quiet afternoon' },
 ];
 const key = 'japanese-ambience-v1';
-export function AmbiencePlayer({ studying }: { studying: boolean }) {
+export function AmbiencePlayer({ studying, target, embedded }: { studying: boolean; target: HTMLElement | null; embedded: boolean }) {
+  const panelId = useId();
+  const control = useRef<HTMLElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const [kind, setKind] = useState<Ambience>('koto');
   const [volume, setVolume] = useState(0.35);
   const [playing, setPlaying] = useState(false);
@@ -32,6 +36,15 @@ export function AmbiencePlayer({ studying }: { studying: boolean }) {
     return () => { mounted.current = false; generation.current++; sound.current?.stop(); sound.current = null; };
   }, []);
   useEffect(() => { if (studying) setOpen(false); }, [studying]);
+  useEffect(() => { setOpen(false); }, [target]);
+  useEffect(() => {
+    if (!open || embedded) return;
+    const dismiss = (event: PointerEvent) => { if (!control.current?.contains(event.target as Node)) setOpen(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { setOpen(false); trigger.current?.focus(); } };
+    document.addEventListener('pointerdown', dismiss);
+    document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', dismiss); document.removeEventListener('keydown', escape); };
+  }, [open, embedded]);
   function remember(nextKind: Ambience, nextVolume: number) {
     try { localStorage.setItem(key, JSON.stringify({ kind: nextKind, volume: nextVolume })); } catch { /* Playback still works without storage. */ }
   }
@@ -48,17 +61,15 @@ export function AmbiencePlayer({ studying }: { studying: boolean }) {
     } catch { if (mounted.current && request === generation.current) { setError('Audio could not start. Try again.'); setOpen(true); } }
     finally { if (mounted.current && request === generation.current) setPending(false); }
   }
-  return <aside className={`ambience-widget${open ? ' is-open' : ''}${studying ? ' in-review' : ''}`} aria-label="Ambient audio">
-    {open && <div className="ambience-panel" id="ambience-panel">
-      <div className="ambience-panel-heading"><span>Ambience</span><button type="button" aria-label="Close ambience" onClick={() => setOpen(false)}><X size={16} /></button></div>
-      <div className="ambience-choices" role="group" aria-label="Soundscape">{choices.map(choice => <button key={choice.id} type="button" aria-pressed={kind === choice.id} onClick={() => { setKind(choice.id); remember(choice.id, volume); if (playing || pending) void play(choice.id); }}><span>{choice.name}</span><small>{choice.detail}</small></button>)}</div>
-      <label className="ambience-volume"><span>Volume</span><input aria-label="Ambience volume" type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={event => { const next = Number(event.target.value) / 100; volumeRef.current = next; setVolume(next); sound.current?.setVolume(next); remember(kind, next); }} /></label>
-      <p className="ambience-credit">Original synthesized soundscapes.</p>
+  if (!target) return null;
+  const current = choices.find(choice => choice.id === kind)!;
+  return createPortal(<aside ref={control} className={'ambience-control' + (embedded ? ' is-embedded' : '')} aria-label="Ambient audio">
+    {!embedded && <button ref={trigger} className="icon-button ambience-trigger" type="button" aria-label="Ambience" title={playing ? current.name + ' playing' : 'Ambience'} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen(value => !value)}><Music2 size={19} />{playing && <span className="ambience-playing-dot" aria-label="Playing" />}</button>}
+    {(open || embedded) && <section className="ambience-panel" id={panelId} aria-label="Ambience controls">
+      <div className="ambience-panel-heading"><h3><Music2 size={17} />Ambience</h3>{!embedded && <button type="button" aria-label="Close ambience" onClick={() => { setOpen(false); trigger.current?.focus(); }}><X size={16} /></button>}</div>
+      <div className="ambience-choices" role="group" aria-label="Soundscape">{choices.map(choice => <button key={choice.id} type="button" aria-pressed={kind === choice.id} title={choice.detail} onClick={() => { setKind(choice.id); remember(choice.id, volume); if (playing || pending) void play(choice.id); }}><span>{choice.name}</span></button>)}</div>
+      <div className="ambience-transport"><button className="button secondary ambience-play" type="button" aria-label={playing || pending ? 'Pause ambience' : 'Play ambience'} aria-pressed={playing} onClick={() => playing || pending ? pause() : void play()}>{playing || pending ? <Pause size={16} /> : <Play size={16} />}<span>{pending ? 'Starting…' : playing ? 'Pause' : 'Play'}</span></button><label className="ambience-volume"><span>Volume</span><input aria-label="Ambience volume" type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={event => { const next = Number(event.target.value) / 100; volumeRef.current = next; setVolume(next); sound.current?.setVolume(next); remember(kind, next); }} /></label></div>
       {error && <p className="ambience-error" role="alert">{error}</p>}
-    </div>}
-    <div className="ambience-bar">
-      <button className="ambience-play" type="button" aria-label={playing || pending ? 'Pause ambience' : 'Play ambience'} aria-pressed={playing} onClick={() => playing || pending ? pause() : void play()}>{playing || pending ? <Pause size={15} /> : <Play size={15} />}</button>
-      <button className="ambience-expand" type="button" aria-label="Choose ambience" aria-expanded={open} aria-controls="ambience-panel" onClick={() => setOpen(value => !value)}><Music2 size={14} /><span>{choices.find(choice => choice.id === kind)?.name}</span><ChevronUp size={13} /></button>
-    </div>
-  </aside>;
+    </section>}
+  </aside>, target);
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { buildReadingIndex, hasKanji, normalizeFuriganaReading, splitFurigana, type FuriganaPart } from '@/lib/furigana';
+import { buildReadingIndex, hasKanji, normalizeFuriganaReading, splitFurigana, splitSentenceFurigana, type FuriganaPart } from '@/lib/furigana';
 import { japaneseReadings } from '@/lib/furigana-client';
 import type { Note } from '@/lib/model';
 import './furigana.css';
@@ -72,6 +72,11 @@ export function useFuriganaParts(text: string, reading?: string): { enabled: boo
 export function JapaneseText({ text, reading }: { text: string; reading?: string }) {
   const { parts } = useFuriganaParts(text, reading);
   return <>{parts.map((part, index) => part.reading ? <ruby className="furigana-ruby" lang="ja" key={index}>{part.text}<rp>(</rp><rt>{part.reading}</rt><rp>)</rp></ruby> : part.text)}</>;
+}
+
+export function JapaneseSentence({ text, reading }: { text: string; reading: string }) {
+  const parts = useMemo(() => splitSentenceFurigana(text, reading), [text, reading]);
+  return <>{parts.map((part, index) => <JapaneseText key={index} text={part.text} reading={part.reading} />)}</>;
 }
 
 export function FuriganaToggle({ onChange }: { onChange: (enabled: boolean) => void }) {
