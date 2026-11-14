@@ -1,7 +1,7 @@
 export type JapaneseLine = { text: string; reading?: string };
 export type Lesson = {
   id: 'comparisons' | 'obligation';
-  category: 'Grammar' | 'Conjugation';
+  category: 'Grammaire' | 'Conjugaison';
   title: string;
   japanese: string;
   description: string;
@@ -9,77 +9,77 @@ export type Lesson = {
   steps: string[];
   patterns: { label: string; form: string; meaning: string; note?: string }[];
   tables?: { title: string; columns: string[]; rows: (string | JapaneseLine)[][] }[];
-  examples: (JapaneseLine & { english: string; note?: string })[];
-  reminders: { title: string; explanation: string; example?: JapaneseLine & { english: string } }[];
+  examples: (JapaneseLine & { translation: string; note?: string })[];
+  reminders: { title: string; explanation: string; example?: JapaneseLine & { translation: string } }[];
   sources: { title: string; url: string }[];
 };
 
 export const lessons: Lesson[] = [
   {
     id: 'comparisons',
-    category: 'Grammar',
-    title: 'Making comparisons',
+    category: 'Grammaire',
+    title: 'Faire des comparaisons',
     japanese: 'ほうが・より',
-    description: 'Compare two things, actions or preferences.',
+    description: 'Comparer deux choses, deux actions ou exprimer une préférence.',
     rule: [
-      'より marks the reference point: “than”. ほうが marks the side described as more, faster, quieter, or better liked. The adjective tells you what is being compared.',
-      'In AのほうがBより…, you are describing A. Changing the order to BよりAのほうが… keeps the same meaning.',
+      'より indique le point de comparaison : « que ». ほうが désigne ce qui est plus rapide, plus calme ou préféré. Le mot qui suit précise le critère de comparaison.',
+      'Dans AのほうがBより…, on décrit A. Inverser l’ordre en BよりAのほうが… conserve le même sens.',
     ],
     steps: [
-      'Choose A, the thing you want to describe, and B, the reference point.',
-      'For nouns, attach のほうが to A and より to B.',
-      'Add the adjective or preference, then です for a polite sentence.',
+      'Choisis A, ce que tu veux décrire, et B, le point de comparaison.',
+      'Avec des noms, ajoute のほうが après A et より après B.',
+      'Ajoute l’adjectif ou l’expression de préférence, puis です pour une phrase polie.',
     ],
     patterns: [
-      { label: 'Compare nouns', form: 'A のほうが B より … です。', meaning: 'A is more … than B.', note: 'Use の between a noun and ほうが.' },
-      { label: 'Another word order', form: 'B より A のほうが … です。', meaning: 'The same comparison: A is more … than B.' },
-      { label: 'Compare actions', form: 'V₁ より V₂ ほうが … です。', meaning: 'Doing V₂ is more … than doing V₁.', note: 'Use dictionary-form verbs. Do not add の after the verb.' },
-      { label: 'Ask which one', form: 'A と B と、どちらのほうが … ですか。', meaning: 'Which is more …, A or B?', note: 'どっち is the more casual alternative to どちら.' },
+      { label: 'Comparer des noms', form: 'A のほうが B より … です。', meaning: 'A est plus… que B.', note: 'Place の entre le nom et ほうが.' },
+      { label: 'Un autre ordre possible', form: 'B より A のほうが … です。', meaning: 'La comparaison reste la même : A est plus… que B.' },
+      { label: 'Comparer des actions', form: 'V₁ より V₂ ほうが … です。', meaning: 'Faire V₂ est plus… que faire V₁.', note: 'Utilise les verbes à la forme du dictionnaire, sans ajouter の après le verbe.' },
+      { label: 'Demander lequel', form: 'A と B と、どちらのほうが … ですか。', meaning: 'Lequel est le plus… : A ou B ?', note: 'どっち est la variante plus familière de どちら.' },
     ],
     examples: [
-      { text: '電車のほうがバスより速いです。', reading: 'でんしゃのほうがばすよりはやいです。', english: 'The train is faster than the bus.', note: 'The train is the side described as faster.' },
-      { text: 'バスより電車のほうが速いです。', reading: 'ばすよりでんしゃのほうがはやいです。', english: 'The train is faster than the bus.', note: 'The order changes; the meaning stays the same.' },
-      { text: 'この店のほうがあの店より静かです。', reading: 'このみせのほうがあのみせよりしずかです。', english: 'This shop is quieter than that shop.' },
-      { text: '買うより借りるほうが安いです。', reading: 'かうよりかりるほうがやすいです。', english: 'Renting is cheaper than buying.', note: 'Dictionary-form verbs, without の.' },
-      { text: 'コーヒーとお茶と、どちらのほうが好きですか。', reading: 'こーひーとおちゃと、どちらのほうがすきですか。', english: 'Which do you prefer, coffee or tea?' },
-      { text: 'お茶のほうが好きです。', reading: 'おちゃのほうがすきです。', english: 'I prefer tea.', note: 'You can leave out the comparison point when it is already clear.' },
+      { text: '電車のほうがバスより速いです。', reading: 'でんしゃのほうがばすよりはやいです。', translation: 'Le train est plus rapide que le bus.', note: 'C’est le train qui est décrit comme plus rapide.' },
+      { text: 'バスより電車のほうが速いです。', reading: 'ばすよりでんしゃのほうがはやいです。', translation: 'Le train est plus rapide que le bus.', note: 'L’ordre change, mais le sens reste identique.' },
+      { text: 'この店のほうがあの店より静かです。', reading: 'このみせのほうがあのみせよりしずかです。', translation: 'Ce magasin est plus calme que celui-là.' },
+      { text: '買うより借りるほうが安いです。', reading: 'かうよりかりるほうがやすいです。', translation: 'Louer coûte moins cher qu’acheter.', note: 'Les verbes sont à la forme du dictionnaire, sans の.' },
+      { text: 'コーヒーとお茶と、どちらのほうが好きですか。', reading: 'こーひーとおちゃと、どちらのほうがすきですか。', translation: 'Que préférez-vous : le café ou le thé ?' },
+      { text: 'お茶のほうが好きです。', reading: 'おちゃのほうがすきです。', translation: 'Je préfère le thé.', note: 'Le point de comparaison peut être omis si le contexte est clair.' },
     ],
     reminders: [
-      { title: 'Follow ほうが', explanation: 'The side with ほうが is the one described by the adjective. The side with より is the reference point.' },
-      { title: 'Noun + の; verb without の', explanation: 'Use 電車のほうが with a noun, but 借りるほうが with a dictionary-form verb.' },
-      { title: 'Advice is a different pattern', explanation: 'A past-form verb followed by ほうがいい means “you should”. Keep it separate from a simple comparison.', example: { text: '早く寝たほうがいいです。', reading: 'はやくねたほうがいいです。', english: 'You should go to bed early.' } },
+      { title: 'Repérer ほうが', explanation: 'L’élément suivi de ほうが est celui que décrit l’adjectif. Celui suivi de より sert de point de comparaison.' },
+      { title: 'Un nom avec の, un verbe sans の', explanation: 'On dit 電車のほうが avec un nom, mais 借りるほうが avec un verbe à la forme du dictionnaire.' },
+      { title: 'Ne pas confondre avec un conseil', explanation: 'Un verbe à la forme passée suivi de ほうがいい signifie « tu devrais ». C’est une autre construction.', example: { text: '早く寝たほうがいいです。', reading: 'はやくねたほうがいいです。', translation: 'Tu devrais te coucher tôt.' } },
     ],
     sources: [
-      { title: 'Japan Foundation · Irodori grammar reference', url: 'https://www.irodori.jpf.go.jp/assets/data/Grammar_all.pdf' },
-      { title: 'Japan Foundation · Marugoto teacher notes', url: 'https://marugoto.jpf.go.jp/assets/docs/teacher/resource/pre_intermediate/preintermediate_teachers_notes.pdf' },
+      { title: 'Fondation du Japon · Grammaire Irodori', url: 'https://www.irodori.jpf.go.jp/assets/data/Grammar_all.pdf' },
+      { title: 'Fondation du Japon · Notes pédagogiques Marugoto', url: 'https://marugoto.jpf.go.jp/assets/docs/teacher/resource/pre_intermediate/preintermediate_teachers_notes.pdf' },
     ],
   },
   {
     id: 'obligation',
-    category: 'Conjugation',
-    title: 'Must / have to',
+    category: 'Conjugaison',
+    title: 'Devoir faire / être obligé de',
     japanese: '〜なければならない',
-    description: 'Express obligation, from polite forms to casual speech.',
+    description: 'Exprimer une obligation, de la forme polie aux contractions familières.',
     rule: [
-      'To say you must do something, start from the verb’s ない form. The full patterns express the idea that not doing it is not acceptable.',
-      'The obligation stays the same across these common forms. The ending and the situation determine how polite or casual the sentence sounds.',
+      'Pour exprimer une obligation, pars de la forme en ない du verbe. Les constructions complètes expriment l’idée que ne pas faire l’action n’est pas acceptable.',
+      'Ces formes courantes expriment toutes une obligation. La terminaison et le contexte déterminent le niveau de politesse.',
     ],
     steps: [
-      'Make the plain negative form of the verb: the ない form.',
-      'Replace the final ない with an ending below. Keep everything before ない.',
-      'Choose a polite, plain or contracted ending for the situation.',
+      'Mets le verbe à la forme négative simple, en ない.',
+      'Remplace le ない final par une des terminaisons ci-dessous. Conserve tout ce qui précède ない.',
+      'Choisis une terminaison polie, neutre ou contractée selon le contexte.',
     ],
     patterns: [
-      { label: 'Full form · polite', form: 'V なければなりません', meaning: 'Must / have to.', note: 'Plain: なければならない. You will also encounter なければいけない / なければいけません.' },
-      { label: 'Another full form · polite', form: 'V なくてはいけません', meaning: 'Must / have to.', note: 'Plain: なくてはいけない. なくてはならない / なくてはなりません are also possible.' },
-      { label: 'Common in conversation', form: 'V ないといけない', meaning: 'Have to.', note: 'Polite: ないといけません. In casual speech, the sentence may end at ないと when the obligation is understood.' },
-      { label: 'Casual contraction', form: 'V なきゃ（いけない）', meaning: 'Gotta / have to.', note: 'なきゃ contracts なければ. The ending can be left out in casual speech; なきゃならない is another complete form.' },
-      { label: 'Casual contraction', form: 'V なくちゃ（いけない）', meaning: 'Gotta / have to.', note: 'なくちゃ contracts なくては. The ending can be left out in casual speech; なくちゃならない is another complete form.' },
+      { label: 'Forme complète · polie', form: 'V なければなりません', meaning: 'Devoir faire / être obligé de.', note: 'Forme neutre : なければならない. On rencontre aussi なければいけない / なければいけません.' },
+      { label: 'Autre forme complète · polie', form: 'V なくてはいけません', meaning: 'Devoir faire / être obligé de.', note: 'Forme neutre : なくてはいけない. なくてはならない / なくてはなりません sont également possibles.' },
+      { label: 'Courant à l’oral', form: 'V ないといけない', meaning: 'Devoir faire.', note: 'Forme polie : ないといけません. À l’oral familier, on peut s’arrêter à ないと si l’obligation est comprise.' },
+      { label: 'Contraction familière', form: 'V なきゃ（いけない）', meaning: 'Il faut que je… / je dois…', note: 'なきゃ est la contraction de なければ. La fin peut être omise à l’oral familier ; なきゃならない est une autre forme complète.' },
+      { label: 'Contraction familière', form: 'V なくちゃ（いけない）', meaning: 'Il faut que je… / je dois…', note: 'なくちゃ est la contraction de なくては. La fin peut être omise à l’oral familier ; なくちゃならない est une autre forme complète.' },
     ],
     tables: [
       {
-        title: 'Build from the negative form',
-        columns: ['Dictionary', 'Negative', 'Must · plain'],
+        title: 'Construire à partir de la forme négative',
+        columns: ['Dictionnaire', 'Négatif', 'Obligation · neutre'],
         rows: [
           [{ text: '食べる', reading: 'たべる' }, { text: '食べない', reading: 'たべない' }, { text: '食べなければならない', reading: 'たべなければならない' }],
           [{ text: '行く', reading: 'いく' }, { text: '行かない', reading: 'いかない' }, { text: '行かなければならない', reading: 'いかなければならない' }],
@@ -89,31 +89,31 @@ export const lessons: Lesson[] = [
         ],
       },
       {
-        title: 'Politeness and past forms',
-        columns: ['Meaning', 'Plain', 'Polite'],
+        title: 'Politesse et formes passées',
+        columns: ['Sens', 'Forme neutre', 'Forme polie'],
         rows: [
-          ['Have to go', { text: '行かなければならない', reading: 'いかなければならない' }, { text: '行かなければなりません', reading: 'いかなければなりません' }],
-          ['Had to go', { text: '行かなければならなかった', reading: 'いかなければならなかった' }, { text: '行かなければなりませんでした', reading: 'いかなければなりませんでした' }],
+          ['Devoir y aller', { text: '行かなければならない', reading: 'いかなければならない' }, { text: '行かなければなりません', reading: 'いかなければなりません' }],
+          ['Avoir dû y aller', { text: '行かなければならなかった', reading: 'いかなければならなかった' }, { text: '行かなければなりませんでした', reading: 'いかなければなりませんでした' }],
         ],
       },
     ],
     examples: [
-      { text: '毎日、薬を飲まなければなりません。', reading: 'まいにち、くすりをのまなければなりません。', english: 'I have to take medicine every day.', note: 'A full polite form.' },
-      { text: '明日は早く起きなくてはいけません。', reading: 'あしたははやくおきなくてはいけません。', english: 'I have to get up early tomorrow.', note: 'The time word gives this non-past sentence a future meaning.' },
-      { text: '宿題をしないといけない。', reading: 'しゅくだいをしないといけない。', english: 'I have to do my homework.' },
-      { text: 'もう帰らなきゃ。', reading: 'もうかえらなきゃ。', english: 'I have to head home now.', note: 'Casual; the final いけない or ならない is understood.' },
-      { text: '部屋を掃除しなくちゃ。', reading: 'へやをそうじしなくちゃ。', english: 'I have to clean my room.' },
-      { text: '昨日は働かなければなりませんでした。', reading: 'きのうははたらかなければなりませんでした。', english: 'I had to work yesterday.', note: 'Put the ending into the past; keep the verb stem unchanged.' },
+      { text: '毎日、薬を飲まなければなりません。', reading: 'まいにち、くすりをのまなければなりません。', translation: 'Je dois prendre un médicament chaque jour.', note: 'Une forme complète et polie.' },
+      { text: '明日は早く起きなくてはいけません。', reading: 'あしたははやくおきなくてはいけません。', translation: 'Demain, je dois me lever tôt.', note: 'L’indication de temps donne ici un sens futur à la forme non passée.' },
+      { text: '宿題をしないといけない。', reading: 'しゅくだいをしないといけない。', translation: 'Je dois faire mes devoirs.' },
+      { text: 'もう帰らなきゃ。', reading: 'もうかえらなきゃ。', translation: 'Je dois rentrer maintenant.', note: 'Forme familière : la fin いけない ou ならない est sous-entendue.' },
+      { text: '部屋を掃除しなくちゃ。', reading: 'へやをそうじしなくちゃ。', translation: 'Je dois nettoyer ma chambre.' },
+      { text: '昨日は働かなければなりませんでした。', reading: 'きのうははたらかなければなりませんでした。', translation: 'J’ai dû travailler hier.', note: 'Mets la terminaison au passé et conserve la base du verbe.' },
     ],
     reminders: [
-      { title: 'Replace the whole ない', explanation: '食べない becomes 食べなければならない. Replacing only い and then adding なければ would incorrectly repeat な.' },
-      { title: '来る changes its reading', explanation: 'くる becomes こない, so the obligation starts with こなければ. For する, use しなければ.' },
-      { title: '“Don’t have to” is permission to skip', explanation: 'なくてもいい removes the obligation. It does not forbid the action.', example: { text: '明日は来なくてもいいです。', reading: 'あしたはこなくてもいいです。', english: 'You do not have to come tomorrow.' } },
-      { title: '“Must not” is a prohibition', explanation: 'てはいけない forbids an action. It is different from not having to do it.', example: { text: 'ここで写真を撮ってはいけません。', reading: 'ここでしゃしんをとってはいけません。', english: 'You must not take photos here.' } },
+      { title: 'Remplacer tout le ない', explanation: '食べない devient 食べなければならない. Retirer seulement い avant d’ajouter なければ répéterait な à tort.' },
+      { title: 'La lecture de 来る change', explanation: 'くる devient こない : l’obligation commence donc par こなければ. Pour する, utilise しなければ.' },
+      { title: 'Ne pas être obligé', explanation: 'なくてもいい lève l’obligation, sans interdire l’action.', example: { text: '明日は来なくてもいいです。', reading: 'あしたはこなくてもいいです。', translation: 'Vous n’avez pas besoin de venir demain.' } },
+      { title: 'Ne pas avoir le droit', explanation: 'てはいけない exprime une interdiction. Il ne signifie pas « ne pas être obligé ».', example: { text: 'ここで写真を撮ってはいけません。', reading: 'ここでしゃしんをとってはいけません。', translation: 'Il est interdit de prendre des photos ici.' } },
     ],
     sources: [
-      { title: 'Japan Foundation · Irodori, Lesson 10', url: 'https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L10.pdf' },
-      { title: 'Japan Foundation · Irodori grammar reference', url: 'https://www.irodori.jpf.go.jp/assets/data/Grammar_all.pdf' },
+      { title: 'Fondation du Japon · Irodori, leçon 10', url: 'https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L10.pdf' },
+      { title: 'Fondation du Japon · Grammaire Irodori', url: 'https://www.irodori.jpf.go.jp/assets/data/Grammar_all.pdf' },
     ],
   },
 ];

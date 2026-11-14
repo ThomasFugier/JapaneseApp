@@ -1,4 +1,6 @@
 .lesson-categories { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; }
+.lesson-categories,.lesson-article { min-width:0; overflow-wrap:anywhere; }
+.lesson-category,.lesson-tiles,.lesson-section,.lesson-footer>div { min-width:0; max-width:100%; }
 .lesson-category h2 { margin-bottom:18px; font-size:17px; font-weight:550; letter-spacing:-.3px; }
 .lesson-tiles { display:grid; gap:16px; }
 .lesson-tile { display:flex; flex-direction:column; align-items:stretch; min-width:0; padding:26px; text-align:left; background:white; border:1px solid var(--line); border-radius:13px; transition:border-color .15s,transform .15s,box-shadow .15s; }
@@ -8,7 +10,7 @@
 .lesson-tile-top svg { color:#a1a1aa; margin-top:13px; flex-shrink:0; }
 .lesson-tile strong { font-size:16px; font-weight:550; }
 .lesson-tile-description { margin-top:6px; color:var(--muted); font-size:12px; line-height:1.7; }
-.lesson-article { max-width:800px; margin:0 auto; min-width:0; }
+.lesson-article { width:100%; max-width:800px; margin:0 auto; }
 .lesson-back { margin-bottom:26px; }
 .lesson-heading { margin-bottom:25px; }
 .lesson-category-label { display:block; margin-bottom:8px; color:var(--muted); font-size:11px; }
@@ -34,7 +36,7 @@
 .lesson-pattern-meaning { color:#575760; font-size:12px; }
 .lesson-pattern-note { margin-top:7px; color:#8a8a94; font-size:11px; line-height:1.85; }
 .lesson-reference { margin-top:16px; border:1px solid var(--line); border-radius:10px; background:white; overflow:hidden; }
-.lesson-reference summary { cursor:pointer; padding:17px 20px; font-size:12px; color:#666670; }
+.lesson-reference summary { cursor:pointer; padding:17px 20px; font-size:12px; color:#666670; overflow-wrap:anywhere; }
 .lesson-reference summary:hover { color:var(--red); }
 .lesson-reference summary:focus-visible { outline:2px solid var(--red); outline-offset:-4px; }
 .lesson-table { width:100%; border-collapse:collapse; table-layout:fixed; }
@@ -47,7 +49,7 @@
 .lesson-example>div { min-width:0; }
 .lesson-example-number { flex-shrink:0; color:#b3b3bd; font-size:10px; font-variant-numeric:tabular-nums; padding-top:12px; }
 .lesson-example-japanese { font-size:27px; line-height:1.9; overflow-wrap:anywhere; }
-.lesson-example-english { margin-top:7px; color:#66666f; font-size:13px; line-height:1.7; }
+.lesson-example-translation { margin-top:7px; color:#66666f; font-size:13px; line-height:1.7; }
 .lesson-example-note { color:#95959f; font-size:11px; margin-top:7px; line-height:1.8; }
 .lesson-reminders { display:grid; gap:12px; }
 .lesson-reminder { padding:20px 22px; border:1px solid var(--line); border-radius:10px; background:white; }
@@ -58,7 +60,8 @@
 .lesson-reminder-example>span { display:block; margin-top:4px; color:#92929b; font-size:12px; }
 .lesson-footer { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; border-top:1px solid var(--line); padding-top:20px; }
 .lesson-footer>div { display:grid; gap:7px; padding-top:7px; }
-.lesson-footer a { display:flex; align-items:center; gap:6px; color:#9999a2; font-size:10px; }
+.lesson-footer a { display:flex; align-items:baseline; gap:6px; min-width:0; max-width:100%; color:#9999a2; font-size:10px; }
+.lesson-footer a>span { min-width:0; overflow-wrap:anywhere; }
 .lesson-footer a:hover { color:var(--red); }
 .has-furigana .lesson-example-japanese,.has-furigana .lesson-formula,.has-furigana .lesson-table td>span[lang=ja] { line-height:2.25; }
 @media (max-width:760px) {
@@ -66,6 +69,8 @@
   .lesson-tile-top { margin-bottom:20px; }
 }
 @media (max-width:640px) {
+  html:has(.lesson-article),html:has(.lesson-categories) { overflow-x:clip; overscroll-behavior-x:none; }
+  .lesson-article,.lesson-categories { touch-action:pan-y pinch-zoom; }
   .lesson-tile { padding:21px; }
   .lesson-tile-top>span { font-size:26px; }
   .lesson-heading h2 { font-size:23px; }
@@ -76,14 +81,16 @@
   .lesson-rule,.lesson-pattern,.lesson-reminder { padding:17px; }
   .lesson-formula { font-size:22px; }
   .lesson-reference summary { padding:16px; }
+  .lesson-table,.lesson-table tbody { display:block; width:100%; min-width:0; max-width:100%; }
   .lesson-table thead { display:none; }
-  .lesson-table tr { display:grid; gap:7px; padding:14px 16px; border-top:1px solid var(--line); }
-  .lesson-table td { display:grid; grid-template-columns:80px minmax(0,1fr); align-items:baseline; gap:10px; border:0; padding:0; }
+  .lesson-table tr { display:grid; width:100%; min-width:0; gap:7px; padding:14px 16px; border-top:1px solid var(--line); }
+  .lesson-table td { display:grid; grid-template-columns:80px minmax(0,1fr); align-items:baseline; gap:10px; min-width:0; border:0; padding:0; }
   .lesson-table td:before { content:attr(data-label); color:#9999a2; font-size:10px; }
-  .lesson-table td>span { font-size:18px; }
+  .lesson-table td>span { min-width:0; max-width:100%; overflow-wrap:anywhere; font-size:18px; }
   .lesson-example { gap:12px; padding:18px 0; }
   .lesson-example-japanese { font-size:24px; }
-  .lesson-example-english { font-size:12px; }
+  .lesson-example-translation { font-size:12px; }
   .lesson-example-number { padding-top:10px; }
   .lesson-footer { flex-direction:column; gap:12px; }
+  .lesson-footer>div { width:100%; }
 }
