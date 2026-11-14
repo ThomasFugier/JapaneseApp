@@ -17,9 +17,9 @@
 .kana-reference-section:first-child { grid-row:span 2; }
 .kana-reference-section h2 { font-size:14px; font-weight:600; margin-bottom:18px; }
 .kana-reference-grid { display:grid; gap:7px; }
-.reference-character { min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 6px; gap:4px; background:var(--soft); border:1px solid transparent; border-radius:13px; transition:transform .2s cubic-bezier(.2,1.45,.4,1),background .15s; }
+.reference-character { min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 6px; gap:4px; background:var(--soft); border:1px solid transparent; border-radius:13px; transition:background-color .14s,border-color .14s; }
 .reference-character:hover { border-color:var(--line); background:var(--red-soft); }
-.reference-character:active { transform:scale(.96); }
+.reference-character:active { transform:none; }
 .reference-character>span { font-size:30px; line-height:1.6; }
 .reference-character>small { font-size:11px; color:var(--muted); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .kanji-reference-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:10px; }
@@ -54,7 +54,6 @@
 .theme-classroom .reference-character:hover { background:#e3efd7; border-color:#a6c5a2; }
 .theme-classroom .kanji-reference-grid .reference-character { background:#fffef5; border:2px solid #d8dec4; }
 .theme-classroom .reference-detail-symbol { color:#285e50; }
-.theme-classroom .workspace-view[data-view=reference] { view-transition-name:classroom-reference-page; }
 /* Keep all seven destinations reachable without squeezing the header actions. */
 .app-shell .desktop-tabs { grid-template-columns:64px 100px 68px 76px 100px 72px 54px; }
 .theme-classroom .desktop-tabs { grid-template-columns:72px 102px 76px 82px 108px 78px 64px; gap:4px; }

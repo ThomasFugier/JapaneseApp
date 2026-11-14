@@ -3,8 +3,8 @@
 .lesson-category,.lesson-tiles,.lesson-section,.lesson-footer>div { min-width:0; max-width:100%; }
 .lesson-category h2 { margin-bottom:18px; font-size:17px; font-weight:550; letter-spacing:-.3px; }
 .lesson-tiles { display:grid; gap:16px; }
-.lesson-tile { display:flex; flex-direction:column; align-items:stretch; min-width:0; padding:26px; text-align:left; background:white; border:1px solid var(--line); border-radius:13px; transition:border-color .15s,transform .15s,box-shadow .15s; }
-.lesson-tile:hover { border-color:#d4acb6; transform:translateY(-2px); box-shadow:0 5px 18px #17171905; }
+.lesson-tile { display:flex; flex-direction:column; align-items:stretch; min-width:0; padding:26px; text-align:left; background:white; border:1px solid var(--line); border-radius:13px; transition:border-color .14s,background-color .14s; }
+.lesson-tile:hover { border-color:#d4acb6;  }
 .lesson-tile-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:26px; }
 .lesson-tile-top>span { min-width:0; color:var(--red); font-size:31px; line-height:1.65; overflow-wrap:anywhere; }
 .lesson-tile-top svg { color:#a1a1aa; margin-top:13px; flex-shrink:0; }

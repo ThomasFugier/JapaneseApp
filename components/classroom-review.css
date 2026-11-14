@@ -58,8 +58,8 @@
 .theme-classroom .rating-button.amber { background:#ffe59b; color:#715b25; border-color:#dcc783; }
 .theme-classroom .rating-button.sage { background:#c9edb9; color:#345b3c; border-color:#a9c58e; }
 .theme-classroom .rating-button.sky { background:#c6e9f1; color:#355e6d; border-color:#aecad3; }
-.theme-classroom .rating-button:hover:not(:disabled) { filter:brightness(1.035); transform:translateY(-1px); }
-.theme-classroom .rating-button:active:not(:disabled) { transform:translateY(1px); }
+.theme-classroom .rating-button:hover:not(:disabled) { filter:brightness(1.035); transform:none; }
+.theme-classroom .rating-button:active:not(:disabled) { transform:none; }
 .theme-classroom .rating-button>span { font-weight:700; }
 .theme-classroom .rating-button>small { opacity:1; }
 .theme-classroom .rating-button>kbd { opacity:.55; }

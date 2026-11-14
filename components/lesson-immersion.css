@@ -5,7 +5,7 @@
 .immersion-heading h3 { margin:0; font-size:19px; font-weight:550; }
 .immersion-heading p { margin:9px 0 0; color:var(--muted); font-size:12px; line-height:1.75; }
 .immersion-transcript { height:clamp(300px,48dvh,470px); overflow-y:auto; overscroll-behavior:contain; padding:26px; background:#fcfbfa; scrollbar-width:thin; }
-.immersion-message { display:flex; align-items:flex-start; gap:10px; margin:0 0 22px; animation:immersion-message-in .28s ease-out; }
+.immersion-message { display:flex; align-items:flex-start; gap:10px; margin:0 0 22px; animation:immersion-message-in .12s ease-out; }
 .immersion-message:last-child { margin-bottom:0; }
 .immersion-avatar { display:flex; justify-content:center; align-items:center; flex-shrink:0; width:30px; height:30px; border:1px solid #e0e5df; border-radius:50%; background:#edf0e8; color:#657162; font-size:11px; }
 .immersion-message-content { min-width:0; max-width:85%; }
@@ -44,7 +44,7 @@
 .lesson-immersion .furigana-ruby { white-space:nowrap; ruby-align:center; }
 .lesson-immersion .furigana-ruby rt { font-size:.45em; letter-spacing:0; }
 .has-furigana .immersion-focus>span,.has-furigana .immersion-explanation>span { line-height:2.3; }
-@keyframes immersion-message-in { 0% { scale:.95; } 62% { scale:1.012; } 82% { scale:.997; } 100% { scale:1; } }
+@keyframes immersion-message-in { from { opacity:0; } to { opacity:1; } }
 @media (max-width:640px) {
   .immersion-heading { padding:18px; gap:14px; flex-wrap:wrap; }
   .immersion-heading h3 { font-size:18px; }

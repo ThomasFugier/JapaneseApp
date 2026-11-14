@@ -2,8 +2,8 @@
 .theme-classroom .main-content { padding-top:32px; }
 .theme-classroom .desktop-tabs { align-self:center; height:76px; }
 .theme-classroom .desktop-tabs>button { font-size:12px; border-radius:14px 14px 9px 9px; transition:transform .16s,background .16s; }
-.theme-classroom .desktop-tabs>button.selected { transform:translateY(3px); box-shadow:none; }
-.theme-classroom .desktop-tabs>button:hover:not(.selected) { transform:translateY(-2px); background:#f6f0df; }
+.theme-classroom .desktop-tabs>button.selected { transform:none; box-shadow:none; }
+.theme-classroom .desktop-tabs>button:hover:not(.selected) { transform:none; background:#f6f0df; }
 .theme-classroom .section-heading h2 { font-size:22px; letter-spacing:-.5px; }
 .classroom-home { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(270px,1fr); gap:28px; margin-bottom:38px; align-items:stretch; }
 .classroom-board { position:relative; isolation:isolate; min-width:0; padding:30px 34px 28px; border:5px solid #74a991; border-bottom:10px solid #d7ae72; border-radius:28px 28px 18px 18px; background:#245e50; color:#fffef8; box-shadow:none; }
@@ -25,7 +25,7 @@
 .classroom-board .classroom-supplies { right:16px; top:66px; width:145px; height:148px; z-index:0; }
 .classroom-notebooks { display:grid; gap:14px; grid-template-rows:1.2fr 1fr 1fr; padding:5px 0; min-width:0; }
 .classroom-notebook { display:flex; align-items:center; gap:17px; min-width:0; width:100%; text-align:left; padding:18px 22px 18px 28px; border:1px solid #dfc88e; border-left:9px solid #e4b74f; border-radius:6px 21px 21px 6px; background:#fff0b8; color:#64542f; box-shadow:none; cursor:pointer; transition:transform .16s,box-shadow .16s; }
-.classroom-notebook:hover { transform:translateX(-3px); box-shadow:none; }
+.classroom-notebook:hover { transform:none; box-shadow:none; }
 .classroom-notebook>span { min-width:0; }
 .classroom-notebook strong { display:block; font-size:21px; line-height:1.2; font-weight:700; letter-spacing:-.45px; overflow-wrap:anywhere; }
 .classroom-notebook small { display:block; margin-top:8px; font-size:12px; }
@@ -117,7 +117,7 @@
 .theme-classroom .desktop-tabs .classroom-nav-tile { padding:0; font-size:38px; background:none; border-radius:0; transition:transform .16s; }
 .theme-classroom .desktop-tabs>button.selected { color:#285a47; background:#e2efdb; border-radius:24px; box-shadow:none; transform:none; }
 .theme-classroom .desktop-tabs>button:hover:not(.selected) { color:#285a47; background:#f0f2e3; transform:none; }
-.theme-classroom .desktop-tabs>button:is(.selected,:hover,:focus-visible) .classroom-nav-tile { transform:translateY(-3px) scale(1.12); }
+.theme-classroom .desktop-tabs>button:is(.selected,:hover,:focus-visible) .classroom-nav-tile { transform:none; }
 .theme-classroom .desktop-tabs>button.selected::after { display:none; }
 .theme-classroom .desktop-tabs .nav-count { padding:2px 6px; border-radius:7px; font-size:10px; }
 .theme-classroom .desktop-tabs>button:focus-visible { outline:3px solid #cf9d27; outline-offset:-3px; }
@@ -139,7 +139,7 @@
 .theme-classroom .classroom-board-actions .text-button { font-size:13px; }
 .theme-classroom .classroom-notebooks { gap:16px; padding:0; grid-template-rows:1fr 1fr 1fr; }
 .theme-classroom .classroom-notebook { position:relative; padding:24px 28px; gap:22px; min-height:112px; border:0; border-radius:0; box-shadow:none; clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px)); transition:transform .15s; }
-.theme-classroom .classroom-notebook:hover { transform:translateX(-5px); box-shadow:none; outline:3px solid currentColor; outline-offset:-7px; }
+.theme-classroom .classroom-notebook:hover { transform:none; box-shadow:none; outline:3px solid currentColor; outline-offset:-7px; }
 .theme-classroom .classroom-notebook:focus-visible { outline:4px solid currentColor; outline-offset:-7px; }
 .theme-classroom .classroom-notebook strong { font-size:27px; font-weight:800; letter-spacing:-.6px; }
 .theme-classroom .classroom-notebook small { font-size:14px; }
@@ -212,7 +212,7 @@
 /* Consistent tactile states, without heavy shadows or layout shifts. */
 .theme-classroom .desktop-tabs>button { transition:background .16s,color .16s; }
 .theme-classroom :is(.button,.icon-button,.rating-button,.lesson-tile,.review-deck) { transition:background .16s,border-color .16s,transform .16s; }
-.theme-classroom :is(.button,.icon-button):active:not(:disabled) { transform:scale(.97); }
+.theme-classroom :is(.button,.icon-button):active:not(:disabled) { transform:none; }
 .theme-classroom :is(.button,.icon-button,.rating-button):focus-visible { outline:3px solid #39765d; outline-offset:3px; }
 .theme-classroom .library-search-group { transition:border-color .16s,background .16s; }
 .theme-classroom .library-search-group:focus-within { background:#fff; outline:none; border-color:#6d977b; }

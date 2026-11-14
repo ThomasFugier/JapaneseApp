@@ -14,7 +14,7 @@ import { classroomTransition } from './classroom-motion';
 export function Modal({ title, subtitle, onClose, children, compact = false, sheet = false, focusInput = true }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; compact?: boolean; sheet?: boolean; focusInput?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const heading = useId();
-  const close = useRef(onClose); close.current = () => classroomTransition(!!ref.current?.closest('.theme-classroom'), onClose);
+  const close = useRef(onClose); close.current = () => classroomTransition(false, onClose);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const overflow = document.body.style.overflow; document.body.style.overflow = 'hidden';

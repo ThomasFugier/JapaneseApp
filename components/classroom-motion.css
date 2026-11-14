@@ -1,38 +1,26 @@
-/* Scale in place; one small rebound. Never crossfade outgoing content. */
-.app-shell { --motion-ease:cubic-bezier(.22,1,.36,1); --motion-spring:cubic-bezier(.2,1.65,.4,1); }
-.app-shell .workspace-view { animation:appear .28s ease-out; }
-.app-shell .session-main .workspace-view { animation:none; }
-.app-shell :is(.modal,.note-side-panel,.entry-detail,.immersion-focus,.immersion-french,.immersion-message,.ambience-panel,.tag-suggestions,.flashcard-answer) { animation:appear .28s ease-out; transform-origin:center; }
+/* Quiet motion: stable controls, brief content entrances, shared geometry only. */
+.app-shell { --motion-ease:cubic-bezier(.2,0,0,1); }
+.app-shell :is(.workspace-view,.flashcard-label,.modal-backdrop,.activity-card,.classroom-answer-feedback) { animation:none; }
+.app-shell :is(.modal,.note-side-panel,.entry-detail,.immersion-focus,.immersion-french,.immersion-message,.ambience-panel,.tag-suggestions,.flashcard-prompt,.flashcard-answer) { animation:appear .12s ease-out; }
 .app-shell .ambience-control.is-embedded .ambience-panel { animation:none; }
-.app-shell :is(.modal-backdrop,.flashcard-label) { animation:none; }
-.app-shell .flashcard-prompt { animation:review-card-enter .26s ease-out; }
 .app-shell .review-page-flow { transition:none; }
-.theme-classroom .activity-card { animation:none; transition:background .15s,border-color .15s; }
-.theme-classroom .activity-open>.classroom-emoji { transition:none; }
-.theme-classroom .activity-open>svg { transition:background .15s; }
-.theme-classroom .activity-open:is(:hover,:focus-visible)>svg { transform:none; background:#ffffffa0; }
-.theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji { transform:none; }
-.theme-classroom .desktop-tabs .classroom-nav-tile { transition:none; }
-.theme-classroom .desktop-tabs>button:is(.selected,:hover,:focus-visible) .classroom-nav-tile { transform:none; }
-.theme-classroom .workspace-search { transition-duration:.24s; transition-timing-function:var(--motion-ease); }
-.theme-classroom .workspace-search :is(.library-search-group,.library-search,.library-search input,.library-sort) { transition-duration:.24s; transition-timing-function:var(--motion-ease); }
-.theme-classroom .classroom-lesson-activity .lesson-section { animation:appear .28s ease-out; }
-.theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step],
-.theme-classroom .lesson-validation[aria-pressed=true] span { transform:none; }
+.theme-classroom .classroom-lesson-activity .lesson-section { animation:none; }
+.theme-classroom .activity-open>svg { transition:background-color .14s ease-out; }
+.theme-classroom .activity-open:is(:hover,:focus-visible)>svg { background:#ffffffa0; }
+.theme-classroom :is(.classroom-nav-tile,.activity-open>.classroom-emoji) { animation:none; transition:none; }
+.theme-classroom .workspace-search,
+.theme-classroom .workspace-search :is(.library-search-group,.library-search,.library-search input,.library-sort) { transition-duration:.18s; transition-timing-function:var(--motion-ease); }
+.app-shell button,
+.theme-classroom :is(.button,.icon-button,.text-button,.rating-button,.activity-open,.desktop-tabs>button,.mobile-nav>button,.reference-character,.lesson-tile,.review-deck),
+.theme-classroom .classroom-lesson-activity .lesson-contents button { transition:background-color .14s ease-out,border-color .14s ease-out,color .14s ease-out,filter .1s ease-out; }
+.app-shell button:active:not(:disabled),
+.theme-classroom .rating-button:active:not(:disabled) { filter:brightness(.96); }
+.theme-classroom .lesson-validation span { transition:background-color .14s ease-out,border-color .14s ease-out; }
 
-/* Retained search/question geometry morphs. Other surfaces shrink, then rebound. */
-@supports (view-transition-name: classroom-page) {
- /* The page snapshot owns navigation entrances; avoid nested page bounces. */
- .theme-classroom .workspace-view { animation:none; }
- .theme-classroom .workspace-view[data-view=home] { view-transition-name:classroom-home-page; }
- .theme-classroom .workspace-view[data-view=review] { view-transition-name:classroom-review-page; }
- .theme-classroom .workspace-view[data-view=library] { view-transition-name:classroom-library-page; }
- .theme-classroom .workspace-view[data-view=lessons] { view-transition-name:classroom-lessons-page; }
- .theme-classroom .workspace-view[data-view=writing] { view-transition-name:classroom-writing-page; }
- .theme-classroom .workspace-view[data-view=stats] { view-transition-name:classroom-stats-page; }
+/* No whole-page transitions or outgoing fades. Retain only search/question geometry. */
+@supports (view-transition-name: classroom-search) {
  .theme-classroom .workspace-search { view-transition-name:classroom-search; }
  .theme-classroom .flashcard-prompt { view-transition-name:classroom-question; }
- .theme-classroom .modal-backdrop:not(:has(~ .modal-backdrop)) .modal { view-transition-name:classroom-dialog; }
  html:has(.theme-classroom)::view-transition,
  html:has(.theme-classroom)::view-transition-group(*),
  html:has(.theme-classroom)::view-transition-image-pair(*),
@@ -40,37 +28,14 @@
  html:has(.theme-classroom)::view-transition-new(*) { pointer-events:none; }
  html:has(.theme-classroom)::view-transition-group(*) { animation-duration:0s; }
  html:has(.theme-classroom)::view-transition-image-pair(*) { isolation:auto; }
- html:has(.theme-classroom)::view-transition-old(*) { animation:classroom-pop-out .1s ease-in both; transform-origin:center; mix-blend-mode:normal; }
- html:has(.theme-classroom)::view-transition-new(*) { animation:appear .28s .06s ease-out both; transform-origin:center; mix-blend-mode:normal; }
- html:has(.theme-classroom)::view-transition-old(root) { animation:none; visibility:hidden; }
- html:has(.theme-classroom)::view-transition-new(root) { animation:none; }
+ html:has(.theme-classroom)::view-transition-old(*) { animation:none; visibility:hidden; mix-blend-mode:normal; }
+ html:has(.theme-classroom)::view-transition-new(*) { animation:none; mix-blend-mode:normal; }
  html:has(.theme-classroom)::view-transition-group(classroom-search),
- html:has(.theme-classroom)::view-transition-group(classroom-question) { animation-duration:.24s; animation-timing-function:cubic-bezier(.22,1,.36,1); }
- html:has(.theme-classroom)::view-transition-old(classroom-search),
- html:has(.theme-classroom)::view-transition-old(classroom-question) { animation:none; visibility:hidden; }
- html:has(.theme-classroom)::view-transition-new(classroom-search),
- html:has(.theme-classroom)::view-transition-new(classroom-question) { animation:none; }
+ html:has(.theme-classroom)::view-transition-group(classroom-question) { animation-duration:.18s; animation-timing-function:cubic-bezier(.2,0,0,1); }
 }
-@keyframes classroom-pop-out { from { scale:1; visibility:visible; } to { scale:.92; visibility:hidden; } }
-
-/* Press quickly; the release curve supplies the feedback bounce. */
-.theme-classroom .activity-card:hover,.theme-classroom .activity-card:active { transform:none; }
-.theme-classroom .rating-button:hover:not(:disabled) { transform:none; filter:none; }
-.app-shell button,
-.theme-classroom :is(.button,.icon-button,.text-button,.rating-button,.activity-open,.desktop-tabs>button,.mobile-nav>button,.reference-character,.lesson-tile,.review-deck),
-.theme-classroom .classroom-lesson-activity .lesson-contents button { transition:scale .28s var(--motion-spring),background .15s,border-color .15s,color .15s; }
-.app-shell button:active:not(:disabled),.theme-classroom button:active:not(:disabled),
-.theme-classroom :is(.button,.icon-button,.rating-button):active:not(:disabled),
-.theme-classroom .classroom-lesson-activity .lesson-contents button:active:not(:disabled) { scale:.95; transform:none; transition:scale .065s ease-out,background .15s,border-color .15s,color .15s; }
-.theme-classroom .desktop-tabs>button.selected .classroom-nav-tile,
-.theme-classroom .mobile-nav>button.selected .classroom-nav-tile { animation:classroom-tap-bounce .28s ease-out; }
-@keyframes classroom-tap-bounce { 0% { scale:.94; } 55% { scale:1.05; } 78% { scale:.99; } 100% { scale:1; } }
 @media(prefers-reduced-motion:reduce) {
  .app-shell *, .app-shell *::before, .app-shell *::after { animation:none !important; transition:none !important; }
  html:has(.theme-classroom)::view-transition-group(*),
  html:has(.theme-classroom)::view-transition-old(*),
  html:has(.theme-classroom)::view-transition-new(*) { animation:none !important; }
- .app-shell button:active:not(:disabled),.theme-classroom button:active:not(:disabled),
- .theme-classroom :is(.button,.icon-button,.rating-button):active:not(:disabled),
- .theme-classroom .classroom-lesson-activity .lesson-contents button:active:not(:disabled) { scale:1; transform:none; }
 }

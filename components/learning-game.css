@@ -9,7 +9,7 @@
 .theme-classroom .activity-open:hover { background:#ffffff35; }
 .theme-classroom .activity-open:focus-visible { outline:0; }
 .theme-classroom .activity-open>.classroom-emoji { font-size:68px; width:88px; height:88px; flex-shrink:0; display:grid; place-items:center; border-radius:26px; background:#ffffff45; transition:transform .15s; }
-.theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji { transform:rotate(-6deg) scale(1.08); }
+.theme-classroom .activity-open:is(:hover,:focus-visible)>.classroom-emoji { transform:none; }
 .theme-classroom .activity-copy { display:flex; flex-direction:column; gap:10px; min-width:0; }
 .theme-classroom .activity-copy>strong { font-size:32px; line-height:1.1; font-weight:800; letter-spacing:-1px; }
 .theme-classroom .activity-copy>span { font-size:14px; line-height:1.5; }
@@ -48,10 +48,9 @@
 }
 .activity-sound-setting { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:-6px 0 26px; padding:0 0 24px; border-bottom:1px solid var(--line); font-size:13px; font-weight:600; }
 .theme-classroom .modal .activity-sound-setting input { width:20px; height:20px; accent-color:#29735b; }
-.classroom-answer-feedback { display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; color:#37634b; font-weight:700; font-size:12px; border:1px solid currentColor; animation:answer-stamp .3s ease-out; }
+.classroom-answer-feedback { display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; color:#37634b; font-weight:700; font-size:12px; border:1px solid currentColor;  }
 .classroom-answer-feedback[data-rating="1"] { color:#954a3b; }
 .classroom-answer-feedback[data-rating="2"] { color:#816321; }
-@keyframes answer-stamp { 0% { scale:.82; } 55% { scale:1.08; } 80% { scale:.985; } 100% { scale:1; } }
 .theme-classroom .keyboard-hint:has(.classroom-answer-feedback) .desktop-keyboard-hint,.theme-classroom .keyboard-hint:has(.classroom-answer-feedback) .mobile-study-notice { display:none; }
 @media(min-width:641px) {
   .theme-classroom.is-studying { height:100svh; min-height:0; overflow:hidden; }
@@ -130,8 +129,8 @@
 }
 
 @media(hover:hover) and (prefers-reduced-motion:no-preference) {
- .theme-classroom .activity-card:hover { transform:translateY(-3px); }
- .theme-classroom .activity-card:active { transform:translateY(0) scale(.99); }
+ .theme-classroom .activity-card:hover { transform:none; }
+ .theme-classroom .activity-card:active { transform:none; }
 }
 
 @media(max-width:640px) and (max-height:420px) {

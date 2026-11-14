@@ -10,7 +10,7 @@
 .editor-form .tag-input input.tag-query { flex:1; width:100%; min-width:0; min-height:30px; margin:0; padding:3px 2px; border:0; border-radius:0; outline:none; background:transparent; font-size:13px; }
 .tag-add { display:inline-flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0; min-height:30px; padding:4px 8px; border-radius:5px; color:var(--red); font-size:11px; font-weight:500; }
 .tag-add:hover { background:var(--red-soft); }
-.tag-suggestions { display:grid; gap:2px; max-height:210px; margin-top:6px; padding:4px; overflow:auto; border:1px solid var(--line); border-radius:8px; background:white; animation:appear .28s ease-out; }
+.tag-suggestions { display:grid; gap:2px; max-height:210px; margin-top:6px; padding:4px; overflow:auto; border:1px solid var(--line); border-radius:8px; background:white; animation:appear .12s ease-out; }
 .tag-suggestions button { display:block; width:100%; min-height:32px; padding:6px 10px; border-radius:5px; color:#73737e; text-align:left; font-size:12px; overflow-wrap:anywhere; }
 .tag-suggestions button:hover,.tag-suggestions button.active { background:var(--red-soft); color:var(--red); }
 .tag-input-status { display:block; margin-top:6px; color:var(--muted); font-size:11px; }

@@ -12,7 +12,7 @@
 .theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step] { border-color:#e0b84d; background:#ffe39b; color:#5b4d2d; }
 .theme-classroom .classroom-lesson-activity .lesson-contents button:hover { border-color:#759d80; }
 .theme-classroom .classroom-lesson-activity .lesson-contents button:focus-visible,.theme-classroom .classroom-lesson-pager button:focus-visible { outline:3px solid #39765d; outline-offset:3px; }
-.theme-classroom .classroom-lesson-activity .lesson-section { min-width:0; padding:25px; border-radius:24px; margin:0 0 18px; border:2px solid #d6dfc8; background:#fffef8; animation:classroom-course-page .18s ease-out; }
+.theme-classroom .classroom-lesson-activity .lesson-section { min-width:0; padding:25px; border-radius:24px; margin:0 0 18px; border:2px solid #d6dfc8; background:#fffef8;  }
 .theme-classroom .classroom-lesson-activity .lesson-section[hidden] { display:none; }
 .theme-classroom .classroom-lesson-activity .lesson-section>h3 { font-size:23px; font-weight:800; margin-bottom:24px; scroll-margin-top:144px; }
 .theme-classroom .classroom-lesson-activity .lesson-section>h3:focus { outline:none; }
@@ -27,9 +27,6 @@
 .theme-classroom .classroom-lesson-pager>span { color:#6c7b60; font-size:12px; font-weight:700; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .theme-classroom .classroom-lesson-activity .lesson-course-complete { padding:0 0 24px; }
 .theme-classroom .lesson-review-complete.is-done { position:relative; }
-.theme-classroom .lesson-review-complete.is-done::after { content:'Révisée'; position:absolute; right:7px; top:-23px; padding:7px 13px; border-radius:10px; border:3px solid #317d58; background:#edf7db; color:#317d58; font-size:17px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; pointer-events:none; animation:classroom-review-stamp 1.4s ease-out both; }
-@keyframes classroom-course-page { from { opacity:.6; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-@keyframes classroom-review-stamp { 0% { opacity:0; transform:rotate(-9deg) scale(1.3); } 16%,76% { opacity:1; transform:rotate(-9deg) scale(1); } 100% { opacity:0; transform:rotate(-9deg) scale(1); } }
 @media(min-width:641px) and (max-width:1100px) { .theme-classroom .classroom-lesson-activity .lesson-section>h3 { scroll-margin-top:186px; } }
 @media(max-width:640px) {
   .theme-classroom .classroom-lesson-activity .lesson-heading { display:flex; flex-direction:column; gap:9px; padding:20px; }
@@ -48,5 +45,4 @@
 }
 @media(prefers-reduced-motion:reduce) {
   .theme-classroom .classroom-lesson-activity .lesson-section { animation:none; }
-  .theme-classroom .lesson-review-complete.is-done::after { animation:none; display:none; }
 }

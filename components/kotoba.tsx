@@ -156,7 +156,7 @@ export default function Kotoba() {
   }
   function navigate(next: Tab, id?: string | null) {
     if (editorGuard.current) { withSavedEditor(() => navigate(next, id)); return; }
-    classroomTransition(interfaceStyle === 'classroom', () => {
+    classroomTransition(interfaceStyle === 'classroom' && tab !== next && (tab === 'home' || tab === 'library') && (next === 'home' || next === 'library'), () => {
     if (tab === 'library') captureReadingScroll();
     sessionRef.current = null; setSession(null); setDeletedReview(null); setAnswerFeedback(null); setEditing(false);
     if (id !== undefined) setReading({ deckId: id, search: '', expanded: null, scrollY: 0 });
@@ -169,7 +169,7 @@ export default function Kotoba() {
     if (editorGuard.current) { withSavedEditor(() => startSession(id, practice)); return; }
     const next = createReviewSession(latestData.current, id, practice);
     if (!next) { setNotice('This deck has no cards yet.'); return; }
-    classroomTransition(interfaceStyle === 'classroom', () => {
+    classroomTransition(false, () => {
     if (tab === 'library') captureReadingScroll();
     setTab('review'); sessionRef.current = next; setSession(next); setDeletedReview(null); setAnswerFeedback(null);
     window.scrollTo({ top: 0, behavior: 'instant' });
