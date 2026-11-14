@@ -1,0 +1,90 @@
+/* Classroom review surfaces. Layout and mobile pagination stay owned by the review flow. */
+.theme-classroom .review-all { position:relative; border:3px solid #7e947e; border-bottom:7px solid #d7ae72; border-radius:22px; background:#245e50; color:#fffef8; box-shadow:0 4px 0 #dfdac5; }
+.theme-classroom .review-all:hover:not(:disabled) { border-color:#91a58b; border-bottom-color:#d7ae72; background:#2c6c5b; }
+.theme-classroom .review-all-icon { background:#406556; color:#ffd45c; border:1px solid #75927d; border-radius:17px; }
+.theme-classroom .review-all h2 { color:#fffef8; font-weight:650; }
+.theme-classroom .review-all p,.theme-classroom .review-all .review-direction-counts { color:#d1ddca; }
+.theme-classroom .review-all .review-direction-counts b { color:#fffef8; }
+.theme-classroom .review-all .button.primary { background:#ffd45c; border-color:#ffd45c; color:#344b3f; border-radius:999px; box-shadow:0 3px 0 #bda75e; }
+.theme-classroom .review-all .button.primary:hover { background:#ffe28a; }
+.theme-classroom .review-count-note { color:#6a796a; }
+.theme-classroom .review-section h2 { color:#38483f; font-weight:650; text-decoration:underline; text-decoration-color:#e7cf79; text-decoration-thickness:5px; text-underline-offset:5px; }
+.theme-classroom .review-deck-list { gap:12px; }
+.theme-classroom .review-deck { background:#fffef8; border:1px solid #dfd8c3; border-left:6px solid #84c7ac; border-radius:6px 18px 18px 6px; box-shadow:0 3px 0 #e5e1ce; }
+.theme-classroom .review-deck:nth-child(3n + 2) { border-left-color:#f0b664; }
+.theme-classroom .review-deck:nth-child(3n) { border-left-color:#8ecdd4; }
+.theme-classroom .review-deck .deck-symbol { background:#e5eddc; color:#3b5c47; border-radius:12px; }
+.theme-classroom .review-deck:nth-child(3n + 2) .deck-symbol { background:#fae9c7; color:#755c3d; }
+.theme-classroom .review-deck:nth-child(3n) .deck-symbol { background:#e3eef0; color:#466574; }
+.theme-classroom .review-deck-title h3 { color:#38483f; font-weight:650; }
+.theme-classroom .review-deck-title .breadcrumb,.theme-classroom .review-deck>.review-direction-counts { color:#75816f; }
+.theme-classroom .review-deck .review-direction-counts b { color:#52654f; }
+.theme-classroom .review-deck-end .icon-button { background:#f1f0e2; color:#5a705b; border-radius:12px; }
+.theme-classroom .review-deck-end .icon-button:hover { background:#e3ead8; color:#245e50; }
+.theme-classroom .due-pill { background:#f6e3b4; color:#755825; border-radius:999px; font-weight:600; }
+.theme-classroom .due-pill.done { background:#e8eddf; color:#65745f; }
+.theme-classroom .study-top { border-bottom:2px solid #d4d9c4; color:#61735e; }
+.theme-classroom .study-context { color:#3f594b; font-weight:600; }
+.theme-classroom .study-context>small { color:#77826d; font-weight:400; }
+.theme-classroom .study-controls .icon-button { border-radius:12px; background:#e8eadb; color:#637760; }
+.theme-classroom .study-controls .icon-button:hover:not(:disabled) { background:#dae3ca; color:#245e50; }
+.theme-classroom .study-controls .study-delete:hover:not(:disabled) { color:#a8453b; background:#f6ddd1; }
+.theme-classroom .study-reviewed { color:#67755f; }
+.theme-classroom .study-undo .text-button { color:#657959; }
+.theme-classroom .study-deleted-label { color:#7f6a53; }
+.theme-classroom .flashcard { border:4px solid #74a991; border-bottom:7px solid #d7ae72; border-radius:20px; background:#245e50; box-shadow:0 4px 0 #e5d1ad; }
+.theme-classroom .flashcard-label { color:#cad8c6; letter-spacing:.06em; }
+.theme-classroom .flashcard-label .deck-dot { background:#efd579; margin-left:0; padding:0; border:0; width:6px; height:6px; border-radius:50%; }
+.theme-classroom .flashcard-label>span:last-child:not(.deck-dot) { background:#466b58; color:#f4efce; border:1px solid #6d8a6d; border-radius:999px; padding:4px 9px; }
+.theme-classroom .flashcard-prompt { background:#245e50; color:#fffef8; }
+.theme-classroom .flashcard-prompt h2 { color:#fffef8; }
+.theme-classroom .flashcard-prompt rt,.theme-classroom .flashcard-prompt .prompt-reading { color:#d0ddc5; }
+.theme-classroom .flashcard-prompt .review-pagination,.theme-classroom .flashcard-prompt .review-pagination button { color:#e2ead6; }
+.theme-classroom .flashcard-prompt .review-pagination button:hover:not(:disabled) { background:#416451; }
+.theme-classroom .study-space .reveal-button { background:#ffd45c; border-color:#ffd45c; color:#344b3f; border-radius:999px; box-shadow:0 3px 0 #af995c; }
+.theme-classroom .study-space .reveal-button:hover { background:#ffe28a; color:#344b3f; }
+.theme-classroom .flashcard-answer { background:#fffef8; color:#38483f; border-top:4px solid #d7ae72; }
+.theme-classroom .flashcard-answer h3 { color:#38483f; }
+.theme-classroom .flashcard-answer .eyebrow { display:inline-block; background:#f6e6aa; color:#75622d; border-radius:4px; padding:4px 7px; letter-spacing:.08em; }
+.theme-classroom .flashcard-answer .review-page-content>p,.theme-classroom .flashcard-answer .answer-explanation { color:#6f7767; }
+.theme-classroom .flashcard-answer rt { color:#718169; }
+.theme-classroom .answer-example { border-top-color:#dce1cc; }
+.theme-classroom .answer-example>span { color:#425d48; }
+.theme-classroom .answer-example>p { color:#77806c; }
+.theme-classroom .flashcard-answer .review-pagination,.theme-classroom .flashcard-answer .review-pagination button { color:#687b5f; }
+.theme-classroom .flashcard-answer .review-pagination button:hover:not(:disabled) { background:#e9eddd; }
+.theme-classroom .rating-button { border:1px solid #d5d6be; border-bottom-width:3px; border-radius:17px; color:#4e5c43; background:#f8f2db; transition:background .15s,transform .15s; }
+.theme-classroom .rating-button.rose { background:#ffd1c5; color:#863f35; border-color:#dcae9b; }
+.theme-classroom .rating-button.amber { background:#ffe59b; color:#715b25; border-color:#dcc783; }
+.theme-classroom .rating-button.sage { background:#c9edb9; color:#345b3c; border-color:#a9c58e; }
+.theme-classroom .rating-button.sky { background:#c6e9f1; color:#355e6d; border-color:#aecad3; }
+.theme-classroom .rating-button:hover:not(:disabled) { filter:brightness(1.035); transform:translateY(-1px); }
+.theme-classroom .rating-button:active:not(:disabled) { transform:translateY(1px); }
+.theme-classroom .rating-button>span { font-weight:700; }
+.theme-classroom .rating-button>small { opacity:1; }
+.theme-classroom .rating-button>kbd { opacity:.55; }
+.theme-classroom .rating-button:disabled { opacity:.55; }
+.theme-classroom .keyboard-hint { color:#7c8a74; }
+.theme-classroom .session-complete { color:#3e5948; }
+.theme-classroom .complete-art { background:#e0e9cf; color:#53734e; border:2px solid #b8caa3; }
+.theme-classroom .session-complete p { color:#77816d; }
+@media (max-width:640px) {
+  .theme-classroom .review-all { padding:18px; border-radius:18px; border-bottom-width:5px; }
+  .theme-classroom .review-all-icon { border-radius:13px; }
+  .theme-classroom .review-deck { border-left-width:4px; border-radius:5px 14px 14px 5px; }
+  .theme-classroom.is-studying .flashcard { border-width:3px; border-bottom-width:5px; border-radius:17px; box-shadow:none; }
+  .theme-classroom.is-studying .flashcard-label>span:last-child:not(.deck-dot) { padding:3px 7px; }
+  .theme-classroom.is-studying .flashcard-answer { border-top-width:3px; }
+  .theme-classroom.is-studying .flashcard-answer .eyebrow { display:none; }
+  .theme-classroom.is-studying .study-space .reveal-zone,.theme-classroom.is-studying .study-space .rating-zone { background:#fff5e3; border-top:2px solid #d6d9c3; backdrop-filter:none; }
+  .theme-classroom.is-studying .study-space .rating-zone .button { border-radius:16px; }
+  .theme-classroom.is-studying .rating-button { border-radius:13px; }
+  .theme-classroom.is-studying .study-reviewed { color:#67755f; }
+}
+@media (max-width:640px) and (max-height:420px) {
+  .theme-classroom.is-studying .flashcard.is-revealed .flashcard-answer { border-top:0; border-left:3px solid #d7ae72; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .theme-classroom .rating-button { transition:none; }
+  .theme-classroom .rating-button:hover:not(:disabled),.theme-classroom .rating-button:active:not(:disabled) { transform:none; }
+}

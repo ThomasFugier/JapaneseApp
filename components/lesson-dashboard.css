@@ -1,0 +1,39 @@
+.lesson-dashboard { min-width:0; }
+.lesson-revisit { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:26px 28px; margin-bottom:20px; border:1px solid #ecdfe2; border-radius:14px; background:linear-gradient(115deg,#fff8f8,#fff); }
+.lesson-revisit>div { min-width:0; }
+.lesson-revisit-label { color:var(--red); font-size:11px; }
+.lesson-revisit h2 { font-size:21px; font-weight:550; margin:8px 0; }
+.lesson-revisit p { color:var(--muted); font-size:12px; line-height:1.7; }
+.lesson-revisit-actions { display:flex; flex-direction:column; align-items:center; gap:10px; flex-shrink:0; }
+.lesson-revisit-actions .text-button { font-size:11px; }
+.lesson-validation-count { margin:0 0 30px; color:var(--muted); font-size:11px; }
+.lesson-tile-open { display:flex; flex-direction:column; text-align:left; width:100%; min-width:0; color:inherit; }
+.lesson-tile-actions { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; border-top:1px solid var(--line); padding-top:16px; margin-top:22px; }
+.lesson-tile-actions .text-button { font-size:12px; }
+.lesson-validation { display:flex; align-items:center; gap:7px; min-height:40px; color:#8b8991; font-size:11px; text-align:left; }
+.lesson-validation>span { display:grid; place-items:center; width:19px; height:19px; flex-shrink:0; border:1px solid #d8d6dc; border-radius:50%; }
+.lesson-validation>span svg { opacity:0; }
+.lesson-validation[aria-pressed=true] { color:#527261; }
+.lesson-validation[aria-pressed=true]>span { border-color:#b4c8ba; background:#eff6f1; }
+.lesson-validation[aria-pressed=true]>span svg { opacity:1; }
+.lesson-mode-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin:0 0 25px; }
+.lesson-mode-bar>div { display:flex; gap:3px; padding:4px; border:1px solid var(--line); border-radius:10px; background:#fafafa; }
+.lesson-mode-bar>div button { min-height:37px; padding:0 18px; border-radius:7px; color:var(--muted); font-size:12px; }
+.lesson-mode-bar>div button[aria-pressed=true] { background:white; color:var(--red); box-shadow:0 1px 5px #0000000a; }
+.lesson-dashboard button:focus-visible,.lesson-mode-bar button:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
+@media(max-width:640px) {
+ .lesson-revisit { align-items:stretch; flex-direction:column; gap:18px; padding:21px; }
+ .lesson-revisit h2 { font-size:19px; }
+ .lesson-revisit-actions { align-items:stretch; }
+ .lesson-revisit-actions>.text-button { justify-content:center; }
+ .lesson-validation { min-height:44px; }
+ .lesson-tile-actions { gap:8px; }
+ .lesson-mode-bar>div button { min-height:40px; padding:0 14px; }
+}
+
+.lesson-review-date { color:var(--muted); font-size:11px; line-height:1.6; margin-top:12px; }
+.lesson-course-complete { display:flex; justify-content:flex-end; padding-bottom:28px; }
+.lesson-review-complete { min-width:0; flex-shrink:0; }
+.lesson-review-complete .button { white-space:normal; max-width:100%; }
+.lesson-review-complete p { color:var(--red); font-size:11px; margin-top:8px; }
+@media(max-width:640px) { .lesson-review-complete { width:100%; } .lesson-review-complete .button { width:100%; justify-content:center; } }

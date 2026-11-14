@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, Check, Cloud, CloudOff, HardDrive, LoaderCircle } from 'lucide-react';
+import { Cloud, HardDrive } from 'lucide-react';
 import { deriveBackupStatus, type BackupState } from '@/lib/backup-status';
 import './backup-status.css';
 
@@ -10,11 +10,8 @@ export type BackupSummaryProps = { state: BackupState };
 export function BackupIndicator({ state, onOpen }: BackupIndicatorProps) {
   const status = deriveBackupStatus(state);
   const busy = status.kind === 'saving' || (state.syncing && state.online !== false);
-  const Icon = status.kind === 'error' ? AlertCircle : busy ? LoaderCircle : status.kind === 'offline' ? CloudOff : status.kind === 'synced' ? Check : status.kind === 'local' ? HardDrive : Cloud;
-  return <button type="button" className={'backup-indicator backup-indicator--' + status.kind} onClick={onOpen} aria-label={status.description + ' Open backup settings.'} title={status.description}>
-    <Icon size={15} aria-hidden="true" className={busy && status.kind !== 'error' ? 'spin' : undefined} />
-    <span className="backup-indicator-long" aria-hidden="true">{status.label}</span>
-    <span className="backup-indicator-short" aria-hidden="true">{status.shortLabel}</span>
+  return <button type="button" className={'backup-indicator backup-indicator--' + status.kind + (busy && status.kind !== 'error' ? ' is-busy' : '')} onClick={onOpen} aria-label={status.description + ' Open backup settings.'} title={status.description}>
+    <span className="backup-indicator-dot" aria-hidden="true" />
   </button>;
 }
 

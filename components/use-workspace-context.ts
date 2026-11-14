@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { defaultReadingContext, sanitizeReadingContext, updateReadingContext, type ReadingContext } from '@/lib/library-view';
 import { isLessonId, type LessonId } from '@/lib/lessons';
 
-export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats' | 'japan';
+export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats';
+export type InterfaceStyle = 'classic' | 'classroom';
 export type JapaneseFont = 'brush' | 'plain';
 export type PageTheme = 'plain' | 'waves' | 'sakura' | 'maple';
 const KEY = 'kotoba-workspace-v1';
@@ -13,6 +14,8 @@ export function useWorkspaceContext() {
   const [tab, setTabState] = useState<WorkspaceTab>('home');
   const [reading, setReadingState] = useState<ReadingContext>({ ...defaultReadingContext });
   const [japaneseFont, setJapaneseFontState] = useState<JapaneseFont>('brush');
+  const [interfaceStyle, setInterfaceStyleState] = useState<InterfaceStyle>('classic');
+  const interfaceStyleRef = useRef<InterfaceStyle>('classic');
   const [pageTheme, setPageThemeState] = useState<PageTheme>('waves');
   const [lessonId, setLessonIdState] = useState<LessonId | null>(null);
   const [furiganaEnabled, setFuriganaEnabledState] = useState(false);
@@ -26,7 +29,7 @@ export function useWorkspaceContext() {
   const loaded = useRef(false);
   const save = useCallback(() => {
     if (!loaded.current) return;
-    try { localStorage.setItem(KEY, JSON.stringify({ tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, pageTheme: pageThemeRef.current, lessonId: lessonIdRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ interfaceStyle: interfaceStyleRef.current, tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, pageTheme: pageThemeRef.current, lessonId: lessonIdRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
   }, []);
   const setReading = useCallback((patch: Partial<ReadingContext>) => {
     const next = updateReadingContext(readingRef.current, patch);
@@ -38,6 +41,7 @@ export function useWorkspaceContext() {
   const setFuriganaEnabled = useCallback((value: boolean) => {
     furiganaRef.current = value; setFuriganaEnabledState(value); save();
   }, [save]);
+  const setInterfaceStyle = useCallback((value: InterfaceStyle) => { interfaceStyleRef.current = value; setInterfaceStyleState(value); save(); }, [save]);
   const setPageTheme = useCallback((value: PageTheme) => {
     pageThemeRef.current = value; setPageThemeState(value); save();
   }, [save]);
@@ -64,9 +68,11 @@ export function useWorkspaceContext() {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         const next = sanitizeReadingContext(saved.reading);
-        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' || saved.tab === 'japan' ? saved.tab : 'home';
+        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' ? saved.tab : 'home';
         lessonIdRef.current = isLessonId(saved.lessonId) ? saved.lessonId : null; setLessonIdState(lessonIdRef.current);
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
+        const nextInterface: InterfaceStyle = saved.interfaceStyle === 'classroom' ? 'classroom' : 'classic';
+        interfaceStyleRef.current = nextInterface; setInterfaceStyleState(nextInterface);
         const nextTheme: PageTheme = saved.pageTheme === 'plain' || saved.pageTheme === 'sakura' || saved.pageTheme === 'maple' ? saved.pageTheme : 'waves';
         pageThemeRef.current = nextTheme; setPageThemeState(nextTheme);
         furiganaRef.current = saved.furiganaEnabled === true; setFuriganaEnabledState(furiganaRef.current);
@@ -84,5 +90,5 @@ export function useWorkspaceContext() {
     return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); window.removeEventListener('pagehide', captureReadingScroll); document.removeEventListener('visibilitychange', onHide); };
   }, [captureReadingScroll]);
 
-  return { tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };
+  return { interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };
 }

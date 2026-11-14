@@ -1,0 +1,100 @@
+.interface-picker { margin-bottom:26px; padding-bottom:26px; border-bottom:1px solid var(--line); }
+.interface-picker h3 { margin:0 0 12px; font-size:14px; }
+.interface-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.interface-option { min-width:0; padding:7px; border:1px solid var(--line); border-radius:12px; background:var(--paper,#fff); color:var(--ink); text-align:left; cursor:pointer; }
+.interface-option svg { display:block; width:100%; height:auto; }
+.interface-option>span { display:flex; align-items:center; justify-content:space-between; padding:8px 6px 3px; font-size:12px; font-weight:600; }
+.interface-option>span svg { width:15px; height:15px; }
+.interface-option[aria-pressed=true] { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
+.interface-option:focus-visible { outline:3px solid var(--red); outline-offset:3px; }
+.theme-classroom { --ink:#38483f; --paper:#fffef8; --line:#dfd8c3; --muted:#718073; --red:#b85144; --red-soft:#f7ded3; --soft:#eeefdf; color:var(--ink); background:#fff5e3; min-height:100dvh; font-family:ui-rounded,'Trebuchet MS',Arial,sans-serif; }
+html:has(.theme-classroom) { background:#fff5e3; }
+.theme-classroom button,.theme-classroom input,.theme-classroom select,.theme-classroom textarea { font-family:inherit; }
+.theme-classroom .topbar { height:90px; background:#fffef8; border-bottom:2px solid #dedfc9; backdrop-filter:none; }
+.theme-classroom .topbar-inner { gap:20px; }
+.theme-classroom .brand { gap:9px; font-size:20px; color:#3f5948; }
+.classroom-brand-mark { width:31px; height:35px; display:grid; place-items:center; border-radius:10px 10px 8px 8px; background:#456950; color:#fff6d3; font-size:23px; box-shadow:0 3px 0 #bdc9a8; }
+.theme-classroom .desktop-tabs { grid-template-columns:72px 110px 78px 82px 80px 66px; gap:2px; }
+.theme-classroom .desktop-tabs>button { position:relative; gap:4px; flex-wrap:wrap; justify-content:center; align-content:center; padding:8px 5px; color:#7a806b; border-bottom:0; font-size:11px; font-weight:600; }
+.theme-classroom .desktop-tabs>button.selected { color:#315943; background:#d9f0df; border-radius:16px; }
+.theme-classroom .desktop-tabs>button::after { display:none; }
+.classroom-nav-icon { width:100%; display:flex; justify-content:center; }
+.classroom-nav-icon svg { box-sizing:content-box; padding:6px 12px; border-radius:12px; background:#f9db72; color:#73673f; }
+.classroom-nav-review svg { background:#94d7a6; color:#456449; }
+.classroom-nav-library svg { background:#ffc77b; color:#856641; }
+.classroom-nav-lessons svg { background:#8ed9d3; color:#4b707a; }
+.classroom-nav-writing svg { background:#f6ae99; color:#925a4d; }
+.classroom-nav-stats svg { background:#c9b7ec; color:#736387; }
+.theme-classroom .desktop-tabs .nav-count { border-radius:6px; background:#e2bc6b; color:#574722; font-size:10px; }
+.theme-classroom .icon-button { color:#75816b; border-radius:12px; }
+.theme-classroom .icon-button:hover { background:#e8ecd9; color:#345741; }
+.theme-classroom .button { border-radius:12px; font-weight:600; }
+.theme-classroom .button.primary { background:#29735b; border-color:#29735b; color:#fffef8; box-shadow:0 3px 0 #c1cbb0; }
+.theme-classroom .button.primary:hover { background:#205d4a; border-color:#205d4a; }
+.theme-classroom .button.secondary,.theme-classroom .button.ghost { background:#fffef8; border-color:#d4d9c1; color:#52664d; }
+.theme-classroom .button.secondary:hover,.theme-classroom .button.ghost:hover { background:#eaf0dc; }
+.theme-classroom .workspace-search { margin-bottom:30px; }
+.theme-classroom .library-search-group { border:2px solid #d3dac0; border-radius:18px; background:#fffef8; box-shadow:0 3px 0 #e1e1cb; }
+.theme-classroom .library-search-group:focus-within { border-color:#8aa37b; box-shadow:0 0 0 3px #e4e9d5; }
+.theme-classroom .library-sort { border-color:#d8ddc6; }
+.theme-classroom .overview-grid { gap:22px; margin-bottom:22px; }
+.theme-classroom .overview-review:before { display:none; }
+.theme-classroom .overview-review { position:relative; overflow:hidden; border:4px solid #74a991; border-bottom:8px solid #d7ae72; border-radius:22px; background:#245e50; color:#fffef8; box-shadow:0 4px 0 #e7d5b5; }
+.theme-classroom .overview-review>*:not(.classroom-supplies) { position:relative; z-index:1; }
+.theme-classroom .overview-review .overview-label,.theme-classroom .overview-review .review-direction-counts,.theme-classroom .overview-review .overview-number span { color:#cedcc5; }
+.theme-classroom .overview-review .overview-number,.theme-classroom .overview-review .review-direction-counts b { color:#fffef8; }
+.theme-classroom .overview-review .button.primary { background:#ffd45c; border-color:#ffd45c; color:#344b3f; border-radius:999px; box-shadow:0 3px 0 #bda75e; }
+.classroom-supplies { position:absolute; right:12px; top:35px; width:165px; height:160px; pointer-events:none; }
+.theme-classroom .overview-library { position:relative; border:1px solid #dfd8c3; border-top:8px solid #f3bd60; border-radius:6px 6px 18px 18px; background:#fffef8; box-shadow:0 4px 0 #e1deca; }
+.theme-classroom .overview-library .overview-label { color:#8c7950; }
+.classroom-desk-links { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 36px; }
+.classroom-desk-links button { display:flex; align-items:center; gap:13px; padding:16px 20px; background:#bde7d8; border:1px solid #94cbb8; border-bottom-width:3px; border-radius:16px; color:#536844; cursor:pointer; text-align:left; font-size:13px; font-weight:600; }
+.classroom-desk-links button:nth-child(2) { background:#ffd5b5; border-color:#edb78f; color:#82664b; }
+.classroom-desk-links button>svg:last-child { margin-left:auto; }
+.classroom-desk-links button:hover { filter:brightness(1.025); }
+.theme-classroom .section-heading h2 { font-weight:700; text-decoration:underline; text-decoration-color:#ffd260; text-decoration-thickness:6px; text-underline-offset:4px; }
+.theme-classroom .deck-tile { border:1px solid #dfd8c3; border-top:7px solid #75c3a5; border-radius:7px 7px 17px 17px; background:#fffef8; box-shadow:0 3px 0 #e2dfca; }
+.theme-classroom .deck-tile:nth-child(3n+2) { border-top-color:#f6ae73; }
+.theme-classroom .deck-tile:nth-child(3n) { border-top-color:#78c9d0; }
+.theme-classroom .deck-tile:hover { border-color:#a7b591; border-top-color:#819c6c; background:#fffef6; }
+.theme-classroom .tile-kanji { color:#59724d; }
+.theme-classroom .display-toolbar,.theme-classroom .ambience-bar { background:#fffef8; border-color:#d4dac1; border-radius:19px; box-shadow:0 4px 0 #dedfc7; }
+.theme-classroom .display-toolbar button { border-radius:12px; }
+.theme-classroom .modal { border:2px solid #d7dcc3; border-radius:24px; background:#fffef8; color:#38483f; }
+.theme-classroom .modal h2 { color:#3b5945; }
+.theme-classroom .modal input,.theme-classroom .modal textarea,.theme-classroom .modal select { border-color:#d6dcc3; background:#fffef8; color:#38483f; border-radius:9px; }
+.theme-classroom .modal input:focus,.theme-classroom .modal textarea:focus { border-color:#87a179; outline-color:#87a179; }
+.theme-classroom .backup-summary { background:#f0f3e3; border-color:#d5dec0; border-radius:14px; }
+.theme-classroom .notice { background:#fffef8; border-color:#d3dbbe; color:#536c49; border-radius:15px; }
+@media (min-width:641px) and (max-width:960px) {
+  .theme-classroom .topbar { height:135px; }
+  .theme-classroom .topbar-inner { grid-template-columns:1fr 1fr; grid-template-rows:52px 77px; gap:0; }
+  .theme-classroom .brand { grid-column:1; grid-row:1; }
+  .theme-classroom .topbar-actions { grid-column:2; grid-row:1; }
+  .theme-classroom .desktop-tabs { grid-column:1 / -1; grid-row:2; justify-content:center; height:72px; }
+  .theme-classroom .classroom-supplies { width:110px; right:4px; opacity:.8; }
+}
+@media (max-width:640px) {
+  .theme-classroom .topbar { height:64px; }
+  .theme-classroom .brand { font-size:19px; }
+  .classroom-brand-mark { width:26px; height:29px; font-size:20px; border-radius:8px; }
+  .theme-classroom .workspace-search { margin-bottom:23px; }
+  .theme-classroom .overview-review { border-width:3px; border-bottom-width:6px; padding:22px; }
+  .theme-classroom .overview-library { border-top-width:6px; padding:22px; }
+  .classroom-supplies { width:86px; height:90px; right:12px; top:28px; }
+  .classroom-desk-links { gap:10px; margin:0 0 28px; }
+  .classroom-desk-links button { gap:8px; padding:13px 12px; font-size:12px; }
+  .classroom-desk-links button>svg:first-child { width:20px; flex-shrink:0; }
+  .classroom-desk-links button>svg:last-child { display:none; }
+  .theme-classroom .mobile-nav { background:#fffef8; border-top:2px solid #d9dfc7; backdrop-filter:none; }
+  .theme-classroom .mobile-nav button { color:#7a846f; }
+  .theme-classroom .mobile-nav button.selected { background:#d9f0df; border-radius:13px; color:#3e6245; }
+  .theme-classroom .modal { border-radius:21px 21px 0 0; }
+  .theme-classroom.is-studying .topbar { display:none; }
+}
+@media (prefers-reduced-motion:reduce) { .theme-classroom .button { transition:none; } }
+
+.theme-classroom .ambience-panel { background:#fffef8; border-color:#d4dac1; color:#63745a; }
+.theme-classroom .ambience-choices>button[aria-pressed=true] { background:#e5edd6; border-color:#cbd9b7; color:#42634b; }
+.theme-classroom .ambience-play[aria-pressed=true] { background:#dbe8c9; color:#42634b; }
+@media(max-width:640px) { .theme-classroom .ambience-widget:not(.in-review) .ambience-bar { background:#fff5e3; border-color:#d8dcc4; box-shadow:none; } }

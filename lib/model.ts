@@ -25,6 +25,7 @@ const reviewSchema = z.object({
   reviewedAt: date, dueAt: date.optional(),
 });
 const reviewUndoSchema = z.object({ id, reviewId: id, undoneAt: date });
+const lessonProgressSchema = z.object({ id: z.string().min(1).max(120), validated: z.boolean(), updatedAt: date, lastReviewedAt: date.optional() });
 const snapshotSchema = z.object({
   schemaVersion: z.literal(4),
   scheduler: z.object({ algorithm: z.literal('fsrs'), version: z.literal('5'), retention: z.literal(0.9) }).default({ algorithm: 'fsrs', version: '5', retention: 0.9 }),
@@ -32,6 +33,7 @@ const snapshotSchema = z.object({
   decks: z.array(deckSchema).max(2000), notes: z.array(noteSchema).max(20000),
   cards: z.array(cardSchema).max(40000), reviews: z.array(reviewSchema).max(200000),
   reviewUndos: z.array(reviewUndoSchema).max(200000),
+  lessonProgress: z.array(lessonProgressSchema).max(1000).optional(),
 });
 
 export type Deck = z.infer<typeof deckSchema>;
@@ -39,6 +41,7 @@ export type Note = z.infer<typeof noteSchema>;
 export type StudyCard = z.infer<typeof cardSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ReviewUndo = z.infer<typeof reviewUndoSchema>;
+export type LessonProgress = z.infer<typeof lessonProgressSchema>;
 export type Snapshot = z.infer<typeof snapshotSchema>;
 export type { ReviewSettings } from './review-settings';
 export const CURRENT_SCHEMA_VERSION = 4 as const;
@@ -58,7 +61,7 @@ export function validateSnapshot(input: unknown): Snapshot {
     throw new Error('Invalid backup or unsupported version.');
   }
   const data = result.data;
-  for (const collection of [data.decks, data.notes, data.cards, data.reviews, data.reviewUndos]) {
+  for (const collection of [data.decks, data.notes, data.cards, data.reviews, data.reviewUndos, data.lessonProgress ?? []]) {
     if (new Set(collection.map((item) => item.id)).size !== collection.length) throw new Error('The backup contains duplicate IDs.');
   }
   const decks = new Map(data.decks.map((d) => [d.id, d]));

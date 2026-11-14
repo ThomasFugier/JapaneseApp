@@ -1,4 +1,5 @@
 import { canonical, validateSnapshot, type Deck, type Note, type StudyCard, type Snapshot, type Review, type ReviewUndo } from './model';
+import { mergeLessonProgress } from './lesson-progress';
 
 export type Entity = Deck | Note | StudyCard;
 export type Conflict = { collection: 'decks' | 'notes' | 'cards'; id: string; local: Entity; remote: Entity };
@@ -57,6 +58,9 @@ export function mergeSnapshots(base: Snapshot, local: Snapshot, remote: Snapshot
       cards: merge('cards', base.cards, local.cards, remote.cards),
       reviews: [...reviews.values()].sort((a, b) => Date.parse(a.reviewedAt) - Date.parse(b.reviewedAt) || a.id.localeCompare(b.id)),
       reviewUndos: [...reviewUndos.values()].sort((a, b) => Date.parse(a.undoneAt) - Date.parse(b.undoneAt) || a.id.localeCompare(b.id)),
+      ...([base.lessonProgress, local.lessonProgress, remote.lessonProgress].some(Boolean)
+        ? { lessonProgress: mergeLessonProgress(base.lessonProgress, local.lessonProgress, remote.lessonProgress) }
+        : {}),
   };
 
   const reviewIds = new Set(snapshot.reviews.map((review) => review.id));
