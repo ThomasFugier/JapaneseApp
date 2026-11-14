@@ -15,5 +15,5 @@ export function LessonReviewComplete({ onFinish }: { onFinish: () => Promise<voi
     catch { setError('Enregistrement impossible. Réessaie.'); }
     finally { locked.current = false; setPending(false); }
   }
-  return <div className="lesson-review-complete"><button type="button" className={`button ${done ? 'secondary' : 'primary'}`} disabled={pending || done} onClick={() => void finish()}>{pending ? <LoaderCircle size={16} className="spin" /> : done ? <Check size={16} /> : null}{done ? 'Révision enregistrée' : pending ? 'Enregistrement…' : 'Terminer la révision'}</button>{error && <p role="alert">{error}</p>}</div>;
+  return <div className={`lesson-review-complete${done ? ' is-done' : ''}`}><button type="button" className={`button ${done ? 'secondary' : 'primary'}`} disabled={pending || done} onClick={() => void finish()}>{pending ? <LoaderCircle size={16} className="spin" /> : done ? <Check size={16} /> : null}{done ? 'Révision enregistrée' : pending ? 'Enregistrement…' : 'Terminer la révision'}</button>{error && <p role="alert">{error}</p>}</div>;
 }

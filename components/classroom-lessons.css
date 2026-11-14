@@ -1,0 +1,52 @@
+.theme-classroom .lesson-chapter-number { display:block; color:#537660; font-size:12px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; margin-bottom:16px; }
+.theme-classroom .classroom-lesson-activity { max-width:940px; }
+.theme-classroom .classroom-lesson-activity .lesson-heading { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:8px 28px; padding:24px 28px; margin-bottom:20px; }
+.theme-classroom .classroom-lesson-activity .lesson-category-label { grid-column:1; margin:0; color:#c7dfc6; font-size:12px; font-weight:700; }
+.theme-classroom .classroom-lesson-activity .lesson-heading h2 { grid-column:1; font-size:27px; line-height:1.25; }
+.theme-classroom .classroom-lesson-activity .lesson-heading-japanese { grid-column:2; grid-row:1 / 4; align-self:center; margin:0; font-size:30px; }
+.theme-classroom .classroom-lesson-activity .lesson-description { grid-column:1; font-size:12px; line-height:1.65; }
+.theme-classroom .classroom-lesson-activity .lesson-mode-bar { margin-bottom:22px; }
+.theme-classroom .classroom-lesson-activity .lesson-contents { position:static; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; padding:0; margin:0 0 18px; border:0; background:none; }
+.theme-classroom .classroom-lesson-activity .lesson-contents button { display:flex; align-items:center; justify-content:flex-start; gap:10px; min-height:58px; min-width:0; padding:12px; border:2px solid #d6dfc8; border-radius:16px; background:#fffef8; color:#62745a; font-size:13px; font-weight:700; text-align:left; }
+.theme-classroom .classroom-lesson-activity .lesson-contents button>span { font-size:12px; font-variant-numeric:tabular-nums; opacity:.7; }
+.theme-classroom .classroom-lesson-activity .lesson-contents button[aria-current=step] { border-color:#e0b84d; background:#ffe39b; color:#5b4d2d; }
+.theme-classroom .classroom-lesson-activity .lesson-contents button:hover { border-color:#759d80; }
+.theme-classroom .classroom-lesson-activity .lesson-contents button:focus-visible,.theme-classroom .classroom-lesson-pager button:focus-visible { outline:3px solid #39765d; outline-offset:3px; }
+.theme-classroom .classroom-lesson-activity .lesson-section { min-width:0; padding:25px; border-radius:24px; margin:0 0 18px; border:2px solid #d6dfc8; background:#fffef8; animation:classroom-course-page .18s ease-out; }
+.theme-classroom .classroom-lesson-activity .lesson-section[hidden] { display:none; }
+.theme-classroom .classroom-lesson-activity .lesson-section>h3 { font-size:23px; font-weight:800; margin-bottom:24px; scroll-margin-top:144px; }
+.theme-classroom .classroom-lesson-activity .lesson-section>h3:focus { outline:none; }
+.theme-classroom .classroom-lesson-activity .lesson-rule { padding:0; border:0; border-radius:0; background:none; font-size:16px; line-height:1.95; }
+.theme-classroom .classroom-lesson-activity .lesson-steps { font-size:15px; }
+.theme-classroom .classroom-lesson-activity .lesson-rule p+p { margin-top:18px; }
+.theme-classroom .classroom-lesson-activity .lesson-reminders,.theme-classroom .classroom-lesson-activity .lesson-patterns { gap:18px; }
+.theme-classroom .classroom-lesson-pager { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:14px; margin-bottom:24px; }
+.theme-classroom .classroom-lesson-pager>.button { min-width:0; white-space:normal; min-height:46px; }
+.theme-classroom .classroom-lesson-pager>.button:first-child { justify-self:start; }
+.theme-classroom .classroom-lesson-pager>.button:last-child { justify-self:end; }
+.theme-classroom .classroom-lesson-pager>span { color:#6c7b60; font-size:12px; font-weight:700; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.theme-classroom .classroom-lesson-activity .lesson-course-complete { padding:0 0 24px; }
+.theme-classroom .lesson-review-complete.is-done { position:relative; }
+.theme-classroom .lesson-review-complete.is-done::after { content:'Révisée'; position:absolute; right:7px; top:-23px; padding:7px 13px; border-radius:10px; border:3px solid #317d58; background:#edf7db; color:#317d58; font-size:17px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; pointer-events:none; animation:classroom-review-stamp 1.4s ease-out both; }
+@keyframes classroom-course-page { from { opacity:.6; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+@keyframes classroom-review-stamp { 0% { opacity:0; transform:rotate(-9deg) scale(1.3); } 16%,76% { opacity:1; transform:rotate(-9deg) scale(1); } 100% { opacity:0; transform:rotate(-9deg) scale(1); } }
+@media(min-width:641px) and (max-width:1100px) { .theme-classroom .classroom-lesson-activity .lesson-section>h3 { scroll-margin-top:186px; } }
+@media(max-width:640px) {
+  .theme-classroom .classroom-lesson-activity .lesson-heading { display:flex; flex-direction:column; gap:9px; padding:20px; }
+  .theme-classroom .classroom-lesson-activity .lesson-heading h2 { font-size:24px; }
+  .theme-classroom .classroom-lesson-activity .lesson-heading-japanese { align-self:flex-start; font-size:25px; }
+  .theme-classroom .classroom-lesson-activity .lesson-contents { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .theme-classroom .classroom-lesson-activity .lesson-contents button { min-height:46px; padding:10px; gap:8px; font-size:12px; }
+  .theme-classroom .classroom-lesson-activity .lesson-section { padding:16px; }
+  .theme-classroom .classroom-lesson-activity .lesson-section>h3 { font-size:21px; margin-bottom:18px; scroll-margin-top:82px; }
+  .theme-classroom .classroom-lesson-activity .lesson-rule { font-size:14px; }
+  .theme-classroom .classroom-lesson-activity .lesson-steps { font-size:13px; }
+  .theme-classroom .classroom-lesson-pager { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px; }
+  .theme-classroom .classroom-lesson-pager>span { grid-column:1 / -1; grid-row:1; text-align:center; }
+  .theme-classroom .classroom-lesson-pager>.button { width:100%; padding:10px; font-size:12px; justify-content:center; }
+  .theme-classroom .classroom-lesson-pager>.button svg { flex-shrink:0; width:15px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .theme-classroom .classroom-lesson-activity .lesson-section { animation:none; }
+  .theme-classroom .lesson-review-complete.is-done::after { animation:none; display:none; }
+}

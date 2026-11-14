@@ -1,13 +1,16 @@
 'use client';
 
-import { BarChart3, BookOpen, Check, GraduationCap, Home, Layers, PenLine } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { InterfaceStyle, WorkspaceTab } from './use-workspace-context';
 
-const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3 };
+const icons: Record<WorkspaceTab, string> = { home: '🏡', review: '🎴', library: '📚', lessons: '🎓', writing: '✏️', stats: '📊' };
+
+export function ClassroomEmoji({ children }: { children: string }) {
+  return <span className="classroom-emoji" aria-hidden="true">{children}</span>;
+}
 
 export function ClassroomNavIcon({ tab }: { tab: WorkspaceTab }) {
-  const Icon = icons[tab];
-  return <span className={`classroom-nav-icon classroom-nav-${tab}`} aria-hidden="true"><Icon size={19} strokeWidth={2.1}/></span>;
+  return <span className={`classroom-nav-icon classroom-nav-${tab}`} aria-hidden="true"><span className="classroom-nav-tile classroom-emoji">{icons[tab]}</span></span>;
 }
 
 function InterfacePreview({ classroom }: { classroom: boolean }) {
@@ -34,10 +37,5 @@ export function InterfaceStylePicker({ value, onChange }: { value: InterfaceStyl
 }
 
 export function ClassroomSupplies() {
-  return <svg className="classroom-supplies" viewBox="0 0 210 190" fill="none" aria-hidden="true">
-    <g transform="rotate(9 120 90)"><rect x="76" y="20" width="99" height="137" rx="9" fill="#7bc4a5"/><rect x="65" y="15" width="99" height="137" rx="9" fill="#fff3bb"/><path d="M81 15V152" stroke="#d9b1a0" strokeWidth="2"/>{[42,62,82,102,122].map(y => <path key={y} d={`M93 ${y}H147`} stroke="#d6d5ac" strokeWidth="2"/>)}<rect x="102" y="5" width="28" height="20" rx="5" fill="#f4a37d"/></g>
-    <g transform="rotate(28 57 125)"><path d="M51 62H64V151L57.5 170L51 151Z" fill="#ffd35a"/><path d="M51 151H64L57.5 170Z" fill="#e5c6a0"/><path d="M55 163H60L57.5 170Z" fill="#405749"/><path d="M57 70V149" stroke="#c3a455" strokeWidth="2"/><rect x="51" y="55" width="13" height="15" rx="3" fill="#e1a598"/></g>
-    <rect x="115" y="165" width="48" height="10" rx="4" fill="#f5f1dc" transform="rotate(-7 115 165)"/>
-    <rect x="162" y="149" width="31" height="21" rx="5" fill="#d7aa7a" transform="rotate(12 162 149)"/>
-  </svg>;
+  return <span className="classroom-supplies classroom-emoji" aria-hidden="true">📝</span>;
 }

@@ -14,6 +14,8 @@ export function useWorkspaceContext() {
   const [tab, setTabState] = useState<WorkspaceTab>('home');
   const [reading, setReadingState] = useState<ReadingContext>({ ...defaultReadingContext });
   const [japaneseFont, setJapaneseFontState] = useState<JapaneseFont>('brush');
+  const [activitySounds, setActivitySoundsState] = useState(false);
+  const activitySoundsRef = useRef(false);
   const [interfaceStyle, setInterfaceStyleState] = useState<InterfaceStyle>('classic');
   const interfaceStyleRef = useRef<InterfaceStyle>('classic');
   const [pageTheme, setPageThemeState] = useState<PageTheme>('waves');
@@ -29,7 +31,7 @@ export function useWorkspaceContext() {
   const loaded = useRef(false);
   const save = useCallback(() => {
     if (!loaded.current) return;
-    try { localStorage.setItem(KEY, JSON.stringify({ interfaceStyle: interfaceStyleRef.current, tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, pageTheme: pageThemeRef.current, lessonId: lessonIdRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ activitySounds: activitySoundsRef.current, interfaceStyle: interfaceStyleRef.current, tab: tabRef.current, reading: readingRef.current, japaneseFont: japaneseFontRef.current, pageTheme: pageThemeRef.current, lessonId: lessonIdRef.current, furiganaEnabled: furiganaRef.current })); } catch { /* Preferences are optional; library data lives in IndexedDB. */ }
   }, []);
   const setReading = useCallback((patch: Partial<ReadingContext>) => {
     const next = updateReadingContext(readingRef.current, patch);
@@ -41,6 +43,7 @@ export function useWorkspaceContext() {
   const setFuriganaEnabled = useCallback((value: boolean) => {
     furiganaRef.current = value; setFuriganaEnabledState(value); save();
   }, [save]);
+  const setActivitySounds = useCallback((value: boolean) => { activitySoundsRef.current = value; setActivitySoundsState(value); save(); }, [save]);
   const setInterfaceStyle = useCallback((value: InterfaceStyle) => { interfaceStyleRef.current = value; setInterfaceStyleState(value); save(); }, [save]);
   const setPageTheme = useCallback((value: PageTheme) => {
     pageThemeRef.current = value; setPageThemeState(value); save();
@@ -71,6 +74,7 @@ export function useWorkspaceContext() {
         const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' ? saved.tab : 'home';
         lessonIdRef.current = isLessonId(saved.lessonId) ? saved.lessonId : null; setLessonIdState(lessonIdRef.current);
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
+        activitySoundsRef.current = saved.activitySounds === true; setActivitySoundsState(activitySoundsRef.current);
         const nextInterface: InterfaceStyle = saved.interfaceStyle === 'classroom' ? 'classroom' : 'classic';
         interfaceStyleRef.current = nextInterface; setInterfaceStyleState(nextInterface);
         const nextTheme: PageTheme = saved.pageTheme === 'plain' || saved.pageTheme === 'sakura' || saved.pageTheme === 'maple' ? saved.pageTheme : 'waves';
@@ -90,5 +94,5 @@ export function useWorkspaceContext() {
     return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); window.removeEventListener('pagehide', captureReadingScroll); document.removeEventListener('visibilitychange', onHide); };
   }, [captureReadingScroll]);
 
-  return { interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };
+  return { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };
 }
