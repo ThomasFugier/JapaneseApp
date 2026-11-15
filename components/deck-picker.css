@@ -1,0 +1,31 @@
+.deck-picker { min-width:0; }
+.deck-picker-label { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.deck-picker-label label { font-size:12px; font-weight:500; color:#5f5f6a; }
+.deck-picker-label>span { color:var(--muted); font-size:10px; }
+.deck-picker-control { display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-height:46px; padding:7px 9px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+.deck-picker-control:focus-within { outline:2px solid var(--red); outline-offset:2px; }
+.deck-picker-chip { display:inline-flex; align-items:center; gap:6px; min-width:0; max-width:100%; padding:2px 3px 2px 9px; border-radius:8px; background:var(--soft); color:var(--ink); font-size:11px; }
+.deck-picker-chip>span:nth-child(2) { min-width:0; overflow-wrap:anywhere; }
+.deck-picker-chip .deck-dot { flex-shrink:0; margin:0; }
+.deck-picker-chip button { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:28px; height:28px; border-radius:6px; color:var(--muted); }
+.deck-picker-chip button:hover { color:var(--red); background:var(--red-soft); }
+.deck-picker-entry { display:flex; flex:1 1 160px; align-items:center; gap:8px; min-width:0; }
+.deck-picker-entry>svg { flex-shrink:0; color:var(--muted); }
+.editor-form .deck-picker-control input.deck-picker-query { flex:1; width:100%; min-width:0; min-height:32px; margin:0; padding:4px 0; border:0; border-radius:0; outline:none; background:transparent; color:var(--ink); font-size:13px; }
+.deck-picker-clear { display:grid; place-items:center; flex-shrink:0; min-width:32px; min-height:32px; color:var(--muted); border-radius:6px; }
+.deck-picker-options { display:grid; gap:2px; max-height:240px; overflow:auto; overscroll-behavior:contain; margin-top:6px; padding:4px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+.deck-picker-options button { display:flex; align-items:flex-start; gap:9px; min-height:44px; min-width:0; width:100%; padding:9px 10px; border-radius:8px; text-align:left; color:var(--ink); }
+.deck-picker-options button>.deck-dot { flex-shrink:0; margin:7px 0 0; }
+.deck-picker-options button>span:last-child { display:grid; gap:3px; min-width:0; }
+.deck-picker-options strong { font-size:12px; font-weight:500; overflow-wrap:anywhere; }
+.deck-picker-options small { color:var(--muted); font-size:10px; line-height:1.5; overflow-wrap:anywhere; }
+.deck-picker-options button:hover,.deck-picker-options button.active { background:var(--red-soft); color:var(--red); }
+.deck-picker-hint,.deck-picker-status { margin:7px 0 0; color:var(--muted); font-size:11px; line-height:1.5; }
+.theme-classroom .deck-picker-control,.theme-classroom .deck-picker-options { background:#fffef8; border-color:var(--classroom-frame,#d4d9c1); }
+.theme-classroom .deck-picker-options button.active,.theme-classroom .deck-picker-options button:hover { background:#e2efdb; color:#29735b; }
+.theme-classroom .deck-picker-control:focus-within { outline-color:#39765d; }
+@media(max-width:640px) {
+ .editor-form .deck-picker-control input.deck-picker-query { min-height:38px; font-size:16px; }
+ .deck-picker-chip button { width:36px; height:36px; }
+ .deck-picker-clear { min-height:38px; }
+}

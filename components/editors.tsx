@@ -6,6 +6,7 @@ import { descendants } from '@/lib/engine';
 import { appendTag, registeredTags } from '@/lib/tags';
 import { JapaneseText } from './furigana';
 import { TagInput } from './tag-input';
+import { DeckPicker } from './deck-picker';
 import { updateNoteContent } from '@/lib/note-edit';
 import { findDuplicateNote } from '@/lib/note-similarity';
 import { SimilarNotes } from './similar-notes';
@@ -204,7 +205,7 @@ export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, content
     {wordFields}
     {!note && <>{meaningField}<SimilarNotes data={data} japanese={values.japanese} reading={values.reading} meaning={values.meaning} /></>}
     {contentOnly ? <>{note && meaningField}{notesField}<details className="quick-note-more"><summary>More fields</summary><div className="quick-note-extra">{readingFields}{exampleFields}{tagsField}</div></details></> : <>{readingFields}{note && meaningField}{exampleFields}{notesField}{tagsField}</>}
-    {!contentOnly && <fieldset className="deck-checkboxes"><legend>Which decks?</legend>{data.decks.filter(deck => !deck.deletedAt).map(deck => <label key={deck.id}><input type="checkbox" checked={deckIds.includes(deck.id)} onChange={event => setDeckIds(previous => event.target.checked ? [...previous, deck.id] : previous.filter(id => id !== deck.id))} /><span className={`deck-dot ${deck.color}`} /><JapaneseText text={path(data, deck)} /></label>)}{!data.decks.some(deck => !deck.deletedAt) && <span className="muted">The note will be available in “All cards”.</span>}</fieldset>}
+    {!contentOnly && <DeckPicker decks={data.decks} value={deckIds} onChange={setDeckIds} disabled={busy} />}
     </fieldset>
     {error && <p role="alert" className="form-error">{error}</p>}
     <div className="modal-actions">{panel ? <><span className="note-panel-save-status" role="status">{busy ? 'Saving…' : dirty ? 'Unsaved changes' : saved ? 'Saved' : ''}</span>{dirty && <button type="button" className="text-button" disabled={busy} onClick={discard}>Discard</button>}<button type="button" className="button secondary" disabled={busy} onClick={onClose}>Close</button></> : <button type="button" className="button secondary" onClick={onClose}>Cancel</button>}<button type="submit" disabled={busy || (panel && !dirty)} className="button primary">{busy && <LoaderCircle size={16} className="spin" />}{note ? 'Save' : 'Add card'}</button></div>

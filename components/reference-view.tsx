@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from 'react';
 import { toRomaji } from 'wanakana';
-import { Search, X } from 'lucide-react';
+import { GraduationCap, Search, X } from 'lucide-react';
 import { kanaGroups, smallKana, loanKana, searchKanji, matchesKana, gradeLabel, type KanaEntry, type KanjiEntry } from '@/lib/reference';
 import { ContextualTranslation } from './contextual-translation';
 import { Modal } from './editors';
@@ -25,12 +25,11 @@ export function ReferenceView() {
     {script === 'kanji' && <ContextualTranslation visible={translationsVisible} onChange={setTranslationsVisible} />}
     <header className="reference-intro"><h2>Kanji</h2><p>Explore meanings, readings and kana charts. Select a character for details.</p></header>
     <div className="reference-controls"><div className="reference-toolbar">
-      <div className="reference-switch" role="group" aria-label="Writing system">{(['kanji', 'hiragana', 'katakana'] as const).map(value => <button key={value} aria-pressed={script === value} onClick={() => switchScript(value)}>{value === 'hiragana' ? 'Hiragana' : value === 'katakana' ? 'Katakana' : 'Kanji'}</button>)}</div>
-      </div><div className="reference-filters"><label className="reference-search"><Search size={18} /><span className="sr-only">Search reference</span><input type="search" aria-label="Search reference" value={query} placeholder={script === 'kanji' ? 'Kanji, reading or English meaning…' : 'Kana or romaji…'} onChange={event => { setQuery(event.target.value); setLimit(100); }} />{query && <button aria-label="Clear reference search" onClick={() => { setQuery(''); setLimit(100); }}><X size={16} /></button>}</label>
-      {script === 'kanji' && <label className="reference-grade"><span>School level</span><select aria-label="School level" value={grade} onChange={event => { setGrade(event.target.value); setLimit(100); }}><option value="all">All jōyō kanji</option>{[1, 2, 3, 4, 5, 6].map(value => <option key={value} value={value}>Grade {value}</option>)}<option value="secondary">Secondary school</option></select></label>}</div></div>
-    <div className="reference-caption"><p>{script === 'kanji' ? 'Jōyō kanji · browse by school level or search' : 'Kana charts · grouped by sound'}</p><span>Reference only · separate from your cards</span></div>
+      <div className="reference-switch" role="group" aria-label="Writing system">{(['kanji', 'hiragana', 'katakana'] as const).map(value => <button key={value} aria-pressed={script === value} onClick={() => switchScript(value)}><span className="reference-script-glyph" lang="ja" aria-hidden="true">{value === 'kanji' ? '漢' : value === 'hiragana' ? 'あ' : 'ア'}</span><span>{value === 'hiragana' ? 'Hiragana' : value === 'katakana' ? 'Katakana' : 'Kanji'}</span></button>)}</div>
+      </div><div className={'reference-filters' + (script === 'kanji' ? '' : ' is-kana')}><label className="reference-search"><Search size={18} /><span className="sr-only">Search reference</span><input type="search" aria-label="Search reference" value={query} placeholder={script === 'kanji' ? 'Kanji, reading or English meaning…' : 'Kana or romaji…'} onChange={event => { setQuery(event.target.value); setLimit(100); }} />{query && <button aria-label="Clear reference search" onClick={() => { setQuery(''); setLimit(100); }}><X size={16} /></button>}</label>
+      {script === 'kanji' && <label className="reference-grade" title="School level"><GraduationCap size={18} aria-hidden="true" /><span className="sr-only">School level</span><select aria-label="School level" value={grade} onChange={event => { setGrade(event.target.value); setLimit(100); }}><option value="all">All jōyō kanji</option>{[1, 2, 3, 4, 5, 6].map(value => <option key={value} value={value}>Grade {value}</option>)}<option value="secondary">Secondary school</option></select></label>}</div></div>
+    <div className="reference-caption">{script === 'kanji' ? <p className="reference-result-count" role="status">{results.length.toLocaleString('en')} kanji{results.length > limit ? ` · showing ${limit}` : ''}</p> : <p>Kana charts · grouped by sound</p>}<span>Reference guide · separate from your cards</span></div>
     {script === 'kanji' ? <>
-      <p className="reference-result-count" role="status">{results.length.toLocaleString('en')} kanji{results.length > limit ? ` · showing ${limit}` : ''}</p>
       <div className="kanji-reference-grid">{results.slice(0, limit).map(entry => <button key={entry.character} className="reference-character" onClick={() => setSelected(entry)} aria-label={translationsVisible ? `${entry.character} — ${entry.meanings.join(', ')}` : entry.character}><span lang="ja">{entry.character}</span>{translationsVisible && <small>{entry.meanings[0]}</small>}</button>)}</div>
       {!results.length && <p className="reference-empty">No matching jōyō kanji. Try a reading or an English meaning.</p>}
       {results.length > limit && <button className="button secondary reference-more" onClick={() => setLimit(value => value + 100)}>Load 100 more</button>}
