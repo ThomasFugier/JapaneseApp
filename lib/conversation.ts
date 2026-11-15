@@ -8,6 +8,24 @@ export const CONVERSATION_LIMIT = 120;
 export const isJapaneseMessage = (text: string) => !!text.trim() && !/\p{Letter}/u.test(text.replace(/[\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Script=Han}]/gu, ''));
 export const hasJapaneseReply = (text: string) => isJapaneseMessage(text) && /[\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Script=Han}]/u.test(text);
 
+// WebLLM prepends an empty think block even with enable_thinking:false.
+// Also hide incomplete blocks/tags while their tokens are still arriving.
+export function cleanConversationReply(raw: string): string {
+  let text = raw.replace(/<think\b[^>]*>[\s\S]*?<\/think\s*>/gi, '')
+    .replace(/<think\b[^>]*>[\s\S]*$/gi, '')
+    .replace(/<\/think\s*>/gi, '');
+  const fragment = text.lastIndexOf('<');
+  if (fragment >= 0 && ['<think>', '</think>'].some(tag => tag.startsWith(text.slice(fragment).toLowerCase()))) text = text.slice(0, fragment);
+  return text.trim();
+}
+
+export class ConversationResponseError extends Error {
+  constructor() {
+    super('La réponse n’a pas pu être validée en japonais. Le modèle reste chargé : réessaie la réponse.');
+    this.name = 'ConversationResponseError';
+  }
+}
+
 export function readConversation(value: unknown): ConversationMessage[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is ConversationMessage => !!item && typeof item === 'object'

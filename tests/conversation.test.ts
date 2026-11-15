@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { emptySnapshot } from '../lib/model';
 import { setLessonValidated } from '../lib/lesson-progress';
-import { conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, readConversation, recentConversation, type ConversationMessage } from '../lib/conversation';
+import { cleanConversationReply, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, readConversation, recentConversation, type ConversationMessage } from '../lib/conversation';
 
 const at = '2026-11-15T10:00:00.000Z';
 const turn = (role: ConversationMessage['role'], content: string, id = content): ConversationMessage => ({ id, role, content, createdAt: at });
@@ -92,4 +92,26 @@ test('outgoing messages reject foreign prose without blocking numbers or emoji',
   assert.equal(isJapaneseMessage('3'), true);
   assert.equal(isJapaneseMessage('  '), false);
   assert.equal(recentConversation([turn('assistant', 'こんにちは。')])[0].content, '日本語で話しましょう。');
+});
+
+test('WebLLM thinking wrappers are removed before Japanese validation', () => {
+  for (const raw of [
+    '<think>\n\n</think>\n\nこんにちは。',
+    '<think>Internal reasoning in English.</think>こんにちは。',
+    '</think>\nこんにちは。',
+    'こんにちは。</think>',
+  ]) {
+    const visible = cleanConversationReply(raw);
+    assert.equal(visible, 'こんにちは。');
+    assert.equal(hasJapaneseReply(visible), true);
+  }
+  assert.equal(hasJapaneseReply(cleanConversationReply('<think></think>Bonjour !')), false);
+  assert.equal(hasJapaneseReply(cleanConversationReply('<think></think>こんにちは。Bonjour !')), false);
+});
+
+test('streaming hides incomplete reasoning blocks and partial tags', () => {
+  assert.equal(cleanConversationReply('<thi'), '');
+  assert.equal(cleanConversationReply('<think>日本語の内部推論'), '');
+  assert.equal(cleanConversationReply('<think>English reasoning</thi'), '');
+  assert.equal(cleanConversationReply('<think></think>こんにちは。</thi'), 'こんにちは。');
 });

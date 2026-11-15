@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
-import { CONVERSATION_LIMIT, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, type ConversationMessage } from '@/lib/conversation';
+import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, type ConversationMessage } from '@/lib/conversation';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
 import { JapaneseText } from './furigana';
 import { JapaneseChatInput } from './japanese-chat-input';
@@ -29,6 +29,9 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const [partial, setPartial] = useState('');
   const [error, setError] = useState('');
   const [storageError, setStorageError] = useState('');
+  const [canRetry, setCanRetry] = useState(false);
+  const [cache, setCache] = useState<{ modelId: string; available: boolean } | null>(null);
+  const lastInstruction = useRef<string | undefined>(undefined);
   const [clearConfirm, setClearConfirm] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [viewport, setViewport] = useState<{ height: number; offset: number; keyboard: boolean; top: number; bottom: number } | null>(null);
@@ -98,7 +101,10 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     if (!active || !hydrated || !supported || state !== 'idle' || locked.current) return;
     let live = true;
     void import('@mlc-ai/web-llm').then(async ({ hasModelInCache }) => {
-      if (await hasModelInCache(modelId) && live) void start();
+      const available = await hasModelInCache(modelId);
+      if (!live) return;
+      setCache({ modelId, available: available || !!engine.current });
+      if (available) void start();
     }).catch(() => { /* An uncached model can still be started explicitly. */ });
     return () => { live = false; };
     // Starting follows entering Discussion or choosing a cached model, not pausing.
@@ -144,6 +150,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     const ai = engine.current;
     if (!ai) return;
     const request = epoch.current;
+    lastInstruction.current = instruction; setCanRetry(false);
     stopped.current = false; setBusy(true); setPartial(''); setError(''); nearBottom.current = true;
     let answer = '';
     try {
@@ -162,26 +169,34 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         for await (const chunk of response) {
           if (!mounted.current || request !== epoch.current) return;
           answer += chunk.choices[0]?.delta.content ?? '';
-          setPartial(hasJapaneseReply(answer) ? answer : '');
+          const visible = cleanConversationReply(answer);
+          setPartial(hasJapaneseReply(visible) ? visible : '');
         }
-        if (!stopped.current && answer.trim() && !hasJapaneseReply(answer)) {
+        answer = cleanConversationReply(answer);
+        if (!stopped.current && !hasJapaneseReply(answer)) {
           setPartial('');
           const revised = await ai.chat.completions.create({
-            messages: [...modelMessages, { role: 'assistant', content: answer }, { role: 'user', content: '今の返事を、やさしい日本語だけで書き直してください。外国語、ローマ字、アルファベットは使わないでください。言葉の説明も日本語で書いてください。' }],
+            messages: [
+              { role: 'system', content: 'あなたは日本語の会話相手です。ひらがな、カタカナ、漢字だけを使い、やさしい日本語で短く返事をしてください。外国語、ローマ字、説明の前置きは書かないでください。質問は一つまでです。' },
+              { role: 'user', content: answer
+                ? `次の下書きを、意味を保ちながら自然でやさしい日本語だけに直してください。\n${answer}`
+                : current.at(-1)?.content || instruction || 'やさしい日本語で会話を始めてください。' },
+            ],
             stream: false, extra_body: { enable_thinking: false }, temperature: 0.4, max_tokens: 280,
           });
-          answer = revised.choices[0]?.message.content ?? '';
-          if (!hasJapaneseReply(answer)) throw new Error('Le modèle n’a pas réussi à répondre en japonais. Essaie le modèle Qualité.');
+          answer = cleanConversationReply(revised.choices[0]?.message.content ?? '');
+          if (!hasJapaneseReply(answer)) throw new ConversationResponseError();
         }
       }, 180000);
       if (!mounted.current || request !== epoch.current) return;
-      const clean = answer.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+      const clean = cleanConversationReply(answer);
       if (clean && hasJapaneseReply(clean)) await persist([...current, message('assistant', clean)]);
-      else if (!stopped.current) throw new Error('Le modèle n’a pas produit de réponse. Tu peux réessayer.');
+      else if (!stopped.current) throw new ConversationResponseError();
     } catch (cause) {
-      if (mounted.current) {
+      if (mounted.current && request === epoch.current) {
         setError(cause instanceof Error ? cause.message : 'La réponse a échoué. Relance le modèle pour réessayer.');
-        release();
+        if (cause instanceof ConversationResponseError) setCanRetry(true);
+        else { setCanRetry(false); release(); }
       }
     } finally {
       if (mounted.current) { setBusy(false); setPartial(''); }
@@ -206,6 +221,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         engine.current = ai;
       }, 900000);
       if (!mounted.current) return;
+      setCache({ modelId, available: true });
       setState('ready');
       if (history.current.at(-1)?.role === 'user') await generate(history.current);
       else if (!history.current.length || Date.now() - Date.parse(history.current.at(-1)!.createdAt) > 4 * 60 * 60 * 1000) await generate(history.current, history.current.length
@@ -233,11 +249,19 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   async function clear() {
     if (locked.current) return;
     locked.current = true;
-    try { await persist([]); setClearConfirm(false); setError(''); }
+    try { await persist([]); setClearConfirm(false); setError(''); setCanRetry(false); lastInstruction.current = undefined; }
+    finally { locked.current = false; }
+  }
+
+  async function retryResponse() {
+    if (locked.current || !engine.current) return;
+    locked.current = true;
+    try { await generate(history.current, lastInstruction.current); }
     finally { locked.current = false; }
   }
 
   const selected = models.find(model => model.id === modelId)!;
+  const cached = cache?.modelId === modelId && cache.available;
   if (!active) return <button type="button" className="discussion-preview" onClick={() => { nearBottom.current = true; onOpen(); }} aria-label="Ouvrir la discussion en japonais">
     <span className="discussion-preview-heading"><span className="discussion-preview-avatar"><MessageCircle size={20} /></span><span><strong>Discussion</strong><small>Ton japonais, dans la vraie vie</small></span><ArrowRight size={18} /></span>
     <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={item.content} /></span>) : <span className="discussion-preview-bubble is-assistant" lang="ja"><JapaneseText text="日本語で話しませんか。" /></span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
@@ -253,10 +277,10 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       {busy && <article className="discussion-message is-assistant" aria-label="Partenaire">{partial ? <p lang="ja">{partial}</p> : <span className="discussion-dots" aria-label="Réfléchit">•••</span>}</article>}
     </div>
     <div className="discussion-bottom">
-      {error && <p className="discussion-warning" role="alert">{error}</p>}
+      {error && <div className="discussion-warning"><p role="alert">{error}</p>{canRetry && state === 'ready' && <button className="text-button" disabled={busy} onClick={() => void retryResponse()}>Réessayer la réponse</button>}</div>}
       {storageError && <p className="discussion-warning" role="alert">{storageError}</p>}
       {state === 'loading' && <div className="discussion-loading"><LoaderCircle size={14} className="spin" /><span role="status">Chargement · {Math.round(Math.min(1, Math.max(0, progress.progress)) * 100)} %</span><progress max={1} value={Math.min(1, Math.max(0, progress.progress))} /><button className="icon-button" aria-label="Annuler le chargement" onClick={() => { cancelOperation.current?.(new Error('cancelled')); release(); }}><X size={15} /></button></div>}
-      {state === 'idle' && <div className="discussion-activate">{supported === false ? <span role="status">Un navigateur compatible WebGPU est nécessaire pour l’IA locale.</span> : <><button className="text-button" onClick={() => void start()} disabled={!hydrated || !supported}><Download size={14} />{messages.length ? 'Reprendre la discussion' : 'Activer la conversation'}</button><small>Premier téléchargement · {modelId === models[1].id ? '≈ 2,5 Go' : '≈ 1 Go'}</small></>}</div>}
+      {state === 'idle' && <div className="discussion-activate">{supported === false ? <span role="status">Un navigateur compatible WebGPU est nécessaire pour l’IA locale.</span> : <><button className="text-button" onClick={() => void start()} disabled={!hydrated || !supported}><Download size={14} />{cached ? 'Charger le modèle téléchargé' : messages.length ? 'Reprendre la discussion' : 'Activer la conversation'}</button><small>{cached ? 'Modèle conservé sur cet appareil' : cache?.modelId !== modelId ? 'Vérification du cache…' : `Premier téléchargement · ${modelId === models[1].id ? '≈ 2,5 Go' : '≈ 1 Go'}`}</small></>}</div>}
       {settingsOpen && <div ref={settingsPanel} id="discussion-settings" className="discussion-settings" role="dialog" aria-label="Réglages de discussion">
         <div className="discussion-settings-heading"><h3>Réglages</h3><button className="icon-button" aria-label="Fermer les réglages" onClick={() => setSettingsOpen(false)}><X size={16} /></button></div>
         <label htmlFor="conversation-model">Modèle IA<select id="conversation-model" value={modelId} disabled={state !== 'idle'} onChange={event => { setModelId(event.target.value); try { localStorage.setItem('kotoba-conversation-model', event.target.value); } catch { /* Keep selection for this session. */ } }}>{models.map(model => <option key={model.id} value={model.id}>{model.label}</option>)}</select></label>
