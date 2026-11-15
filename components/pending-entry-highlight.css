@@ -1,0 +1,27 @@
+.pending-entry-highlight-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+.pending-entry-highlight-mirror {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: visible;
+  visibility: visible;
+  pointer-events: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: transparent;
+  transform-origin: top left;
+}
+
+.pending-entry-highlight-mark {
+  color: transparent;
+  background: rgb(193 218 207 / 48%);
+  box-shadow: inset 0 -2px 0 rgb(80 132 116 / 78%);
+  border-radius: 2px;
+}

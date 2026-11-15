@@ -2,18 +2,17 @@
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Download, ListFilter } from 'lucide-react';
-import { applySuggestion, writingMatches, writingToken } from '@/lib/writing';
-import { convertWritingInput, finishKanaInput, type KanaComposition, type WritingInputMode } from '@/lib/kana-input';
+import type { WritingInputMode } from '@/lib/kana-input';
 import type { Note, Snapshot } from '@/lib/model';
 import type { JapaneseFont } from './use-workspace-context';
 import { JapaneseText, useFuriganaEnabled, useFuriganaParts } from './furigana';
+import { useJapaneseEntry } from './use-japanese-entry';
+import { PendingEntryHighlight } from './pending-entry-highlight';
 import './writing-view.css';
 
 const DRAFT_KEY = 'kotoba-writing-draft-v1';
 const INPUT_MODE_KEY = 'kotoba-writing-input-mode-v1';
 const MAX_LENGTH = 100000;
-type Selection = { start: number; end: number };
-type Edit = { text: string; selection: Selection; composition: KanaComposition | null };
 type Position = { top: number; left: number; width: number; maxHeight: number };
 type ReadingPart = { text: string; reading?: string };
 type ReadingSnapshot = { text: string; parts: readonly ReadingPart[] };
@@ -191,32 +190,16 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
   const [suggestionsEnabled, setSuggestionsEnabled] = useState(true);
   const [inputMode, setInputMode] = useState<WritingInputMode>('hiragana');
   const [size, setSize] = useState<'small' | 'medium' | 'large'>('medium');
-  const [selection, setSelection] = useState<Selection>({ start: 0, end: 0 });
-  const [focused, setFocused] = useState(false);
-  const [composing, setComposing] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const [selected, setSelected] = useState(0);
   const [position, setPosition] = useState<Position>({ top: 70, left: 24, width: 340, maxHeight: 250 });
-  const editor = useRef<HTMLTextAreaElement>(null);
   const paper = useRef<HTMLDivElement>(null);
   const suggestionsPanel = useRef<HTMLDivElement>(null);
   const draftReadable = useRef(true);
-  const composingRef = useRef(false);
-  const kanaComposition = useRef<KanaComposition | null>(null);
-  const suppressReopen = useRef(false);
   const latestText = useRef(text);
-  const lastSelection = useRef(selection);
-  const pendingSelection = useRef<Selection | null>(null);
-  const undoEdits = useRef<Edit[]>([]);
-  const redoEdits = useRef<Edit[]>([]);
   const listId = useId();
   const furiganaEnabled = useFuriganaEnabled();
-  const matching = useMemo(() => suggestionsEnabled && focused && !composing && !dismissed && !suppressReopen.current
-    ? writingMatches(data, text, selection.start, selection.end) : null,
-  [data, text, selection, suggestionsEnabled, focused, composing, dismissed]);
-  const notes = matching?.notes ?? [];
-  const open = notes.length > 0;
-  const previewStart = open ? writingToken(text, selection.start, selection.end)!.start : 0;
+  const entry = useJapaneseEntry({ data, value: text, onChange: value => { latestText.current = value; setText(value); }, mode: inputMode, maxLength: MAX_LENGTH, suggestionsEnabled });
+  const { editor, selection, matching, notes, open, selected, textareaProps } = entry;
+  const previewStart = entry.pending?.start ?? 0;
 
   const saveDraft = useCallback((value: string) => {
     if (!draftReadable.current) { setSaved(false); return; }
@@ -278,11 +261,6 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
     if (!textarea) return;
     textarea.style.height = '0px';
     textarea.style.height = `${textarea.scrollHeight}px`;
-    if (pendingSelection.current !== null) {
-      textarea.focus({ preventScroll: true });
-      textarea.setSelectionRange(pendingSelection.current.start, pendingSelection.current.end);
-      pendingSelection.current = null;
-    }
     if (open) measureCaret();
   }, [text, size, japaneseFont, furiganaEnabled, loaded, open, selection, measureCaret]);
 
@@ -333,99 +311,10 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
     else if (bottom > panel.scrollTop + visibleHeight) panel.scrollTop = bottom - visibleHeight + 4;
   }, [open, selected, listId]);
 
-  function readSelection(textarea: HTMLTextAreaElement, reopen = true) {
-    if (textarea.value !== latestText.current) return;
-    const next = { start: textarea.selectionStart, end: textarea.selectionEnd };
-    if (kanaComposition.current && (next.start !== kanaComposition.current.end || next.end !== next.start)) finishInput();
-    if (next.start !== lastSelection.current.start || next.end !== lastSelection.current.end) {
-      lastSelection.current = next; setSelection(next); setSelected(0);
-      if (reopen && !suppressReopen.current) setDismissed(false);
-    }
-  }
-
-  function changed(textarea: HTMLTextAreaElement, inputType = 'insertText') {
-    if (inputType === 'historyUndo' || inputType === 'historyRedo') { restoreEdit(inputType === 'historyUndo'); return; }
-    let value = textarea.value.slice(0, MAX_LENGTH);
-    if (/[\uD800-\uDBFF]$/.test(value)) value = value.slice(0, -1);
-    const converted = composingRef.current || textarea.selectionStart !== textarea.selectionEnd
-      ? { text: value, caret: textarea.selectionStart, composition: null }
-      : convertWritingInput(latestText.current, value, textarea.selectionStart, inputMode, inputType, kanaComposition.current);
-    if (converted.text !== latestText.current) rememberEdit();
-    kanaComposition.current = converted.composition;
-    if (converted.text !== value) pendingSelection.current = { start: converted.caret, end: converted.caret };
-    value = converted.text;
-    suppressReopen.current = false;
-    latestText.current = value; setText(value); setDismissed(false); setSelected(0);
-    lastSelection.current = { start: converted.caret, end: converted.text !== textarea.value ? converted.caret : textarea.selectionEnd };
-    setSelection(lastSelection.current);
-  }
-
-  function finishInput() {
-    const next = finishKanaInput(latestText.current, kanaComposition.current);
-    if (next && next.text !== latestText.current) rememberEdit();
-    kanaComposition.current = null;
-    if (next && next.text !== latestText.current) { latestText.current = next.text; setText(next.text); }
-  }
-
   function changeInputMode(mode: WritingInputMode) {
-    finishInput();
+    entry.commit();
     setInputMode(mode);
     try { localStorage.setItem(INPUT_MODE_KEY, mode); } catch { /* Input remains usable without storage. */ }
-  }
-
-  function snapshotEdit(): Edit {
-    return { text: latestText.current, selection: { ...lastSelection.current }, composition: kanaComposition.current };
-  }
-
-  function pushEdit(stack: Edit[], edit: Edit) {
-    stack.push(edit);
-    let characters = stack.reduce((total, item) => total + item.text.length, 0);
-    while (stack.length > 100 || (characters > 2000000 && stack.length > 1)) characters -= stack.shift()!.text.length;
-  }
-
-  function rememberEdit() {
-    pushEdit(undoEdits.current, snapshotEdit());
-    redoEdits.current = [];
-  }
-
-  function restoreEdit(undo: boolean) {
-    const next = (undo ? undoEdits.current : redoEdits.current).pop();
-    if (!next) return;
-    pushEdit(undo ? redoEdits.current : undoEdits.current, snapshotEdit());
-    latestText.current = next.text; kanaComposition.current = next.composition;
-    lastSelection.current = next.selection; pendingSelection.current = next.selection;
-    suppressReopen.current = true;
-    setText(next.text); setSelection(next.selection); setDismissed(true); setSelected(0);
-  }
-
-  function insert(note: Note) {
-    if (!matching || composingRef.current) return;
-    try {
-      const next = applySuggestion(latestText.current, matching.ranges.get(note.id) ?? matching.range, note.japanese);
-      if (next.text.length > MAX_LENGTH) return;
-      rememberEdit();
-      suppressReopen.current = true;
-      kanaComposition.current = null;
-      latestText.current = next.text; pendingSelection.current = { start: next.caret, end: next.caret };
-      lastSelection.current = { start: next.caret, end: next.caret };
-      setText(next.text); setSelection(lastSelection.current); setSelected(0); setDismissed(true); setFocused(true);
-    } catch { setDismissed(true); }
-  }
-
-  function onKey(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (composingRef.current || event.nativeEvent.isComposing || event.keyCode === 229) return;
-    if ((event.ctrlKey || event.metaKey) && !event.altKey) {
-      const key = event.key.toLowerCase();
-      if (key === 'z' || key === 'y') { event.preventDefault(); restoreEdit(key === 'z' && !event.shiftKey); return; }
-    }
-    if (!open && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
-      suppressReopen.current = false; setDismissed(false);
-    }
-    if (!open) return;
-    if (event.key === 'ArrowDown') { event.preventDefault(); setSelected(previous => (previous + 1) % notes.length); }
-    else if (event.key === 'ArrowUp') { event.preventDefault(); setSelected(previous => (previous - 1 + notes.length) % notes.length); }
-    else if (event.key === 'Enter' || event.key === 'Tab' || event.key === ' ') { event.preventDefault(); insert(notes[Math.min(selected, notes.length - 1)]); }
-    else if (event.key === 'Escape') { event.preventDefault(); suppressReopen.current = true; setDismissed(true); }
   }
 
   function download() {
@@ -440,15 +329,16 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
     <div className="writing-toolbar" aria-label="Writing tools">
       <div className="writing-input-modes" role="group" aria-label="Input mode">{(['hiragana', 'katakana'] as const).map((mode, index) => <button type="button" key={mode} aria-pressed={inputMode === mode} aria-label={`${mode} input`} title={['Hiragana', 'Katakana'][index]} onClick={() => changeInputMode(mode)}><span lang="ja">{['あ', 'ア'][index]}</span></button>)}</div>
       <div className="writing-font-sizes" aria-label="Text size">{(['small', 'medium', 'large'] as const).map((value, index) => <button type="button" key={value} aria-pressed={size === value} aria-label={`${['Small', 'Medium', 'Large'][index]} text size`} onClick={() => setSize(value)}>{['S', 'M', 'L'][index]}</button>)}</div>
-      <button type="button" className={`writing-suggestion-toggle ${suggestionsEnabled ? 'enabled' : ''}`} aria-pressed={suggestionsEnabled} onClick={() => { suppressReopen.current = false; setSuggestionsEnabled(!suggestionsEnabled); setDismissed(false); }}><ListFilter size={16} />Suggestions</button>
+      <button type="button" className={`writing-suggestion-toggle ${suggestionsEnabled ? 'enabled' : ''}`} aria-pressed={suggestionsEnabled} onClick={() => setSuggestionsEnabled(!suggestionsEnabled)}><ListFilter size={16} />Suggestions</button>
       <button type="button" className="icon-button writing-download" aria-label="Download text" title="Download text" onClick={download} disabled={!text}><Download size={17} /></button>
     </div>
     <div className="writing-paper" ref={paper}>
-      <textarea lang="ja" className={`writing-textarea ${size}${furiganaEnabled ? ' with-furigana' : ''}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')} onSelect={event => readSelection(event.currentTarget)} onPointerDown={() => { suppressReopen.current = false; setDismissed(false); }} onFocus={() => setFocused(true)} onBlur={() => { finishInput(); setFocused(false); }} onKeyDown={onKey} onScroll={measureCaret} onCompositionStart={() => { kanaComposition.current = null; composingRef.current = true; setComposing(true); }} onCompositionEnd={event => { composingRef.current = false; setComposing(false); changed(event.currentTarget, 'insertCompositionText'); }} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+      <textarea lang="ja" className={`writing-textarea ${size}${furiganaEnabled ? ' with-furigana' : ''}`} ref={editor} role="combobox" aria-label="Writing page" aria-multiline="true" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${Math.min(selected, notes.length - 1)}` : undefined} value={text} {...textareaProps} onScroll={measureCaret} placeholder="こんにちは" maxLength={MAX_LENGTH} autoCorrect="off" autoCapitalize="off" spellCheck={false} />
+      <PendingEntryHighlight text={text} range={entry.pending} editor={editor} revision={`${size}-${japaneseFont}-${furiganaEnabled}`} />
       <WritingFurigana text={text} size={size} japaneseFont={japaneseFont} editor={editor} paper={paper} />
       {open && <div className="writing-suggestions" ref={suggestionsPanel} style={{ top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}>
-        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <WritingSuggestion key={note.id} note={note} prefix={text.slice(previewStart, matching!.ranges.get(note.id)!.start)} id={`${listId}-${index}`} active={index === selected} onInsert={() => insert(note)} />)}</div>
-        <div className="writing-suggestion-help">↑↓ · Space / Enter to insert · Esc to close</div>
+        <div role="listbox" id={listId} aria-label="Library suggestions">{notes.map((note, index) => <WritingSuggestion key={note.id} note={note} prefix={text.slice(previewStart, matching!.ranges.get(note.id)!.start)} id={`${listId}-${index}`} active={index === selected} onInsert={() => entry.insert(note)} />)}</div>
+        <div className="writing-suggestion-help">↑↓ · Space / Enter to insert · Esc to commit</div>
       </div>}
     </div>
   </section>;
