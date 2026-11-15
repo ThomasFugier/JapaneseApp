@@ -55,6 +55,7 @@ export function PendingEntryHighlight({ text, range, editor, revision }: {
         const style = getComputedStyle(textarea);
         cachedStyle = Object.fromEntries(properties.map(property => [property, style.getPropertyValue(property)]));
         properties.forEach(property => mirror!.style.setProperty(property, cachedStyle[property]));
+        mirror.style.fontFamily = 'var(--jp)';
         layoutDirty = false;
       }
       const overlayBounds = layer.getBoundingClientRect();
