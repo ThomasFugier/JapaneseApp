@@ -116,7 +116,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   }, [hydrated]);
 
   useLayoutEffect(() => {
-    if (!active) { setSettingsOpen(false); return; }
+    if (!active) { setSettingsOpen(false); setClearConfirm(false); return; }
     const header = document.querySelector<HTMLElement>('.topbar');
     const navigation = document.querySelector<HTMLElement>('.mobile-nav');
     const shell = document.querySelector<HTMLElement>('.app-shell');
@@ -300,7 +300,11 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   async function clear() {
     if (locked.current) return;
     locked.current = true;
-    try { await persist([]); setClearConfirm(false); setError(''); setCanRetry(false); lastInstruction.current = undefined; }
+    try {
+      await persist([]);
+      setDraft(''); setPartial(''); setClearConfirm(false); setSettingsOpen(false); setError(''); setCanRetry(false); lastInstruction.current = undefined;
+      try { await engine.current?.resetChat(); } catch { release(); }
+    }
     finally { locked.current = false; }
   }
 
@@ -321,7 +325,8 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
 
   const style = viewport ? { '--discussion-viewport': `${viewport.height}px`, '--discussion-offset': `${viewport.offset}px`, '--discussion-top': `${viewport.top}px`, '--discussion-bottom': `${viewport.bottom}px` } as CSSProperties : undefined;
   return <section className={`discussion-view${viewport?.keyboard ? ' keyboard-open' : ''}`} style={style} aria-labelledby="discussion-title">
-    <header className="discussion-header"><span className="discussion-preview-avatar"><MessageCircle size={18} /></span><div><h2 id="discussion-title">Discussion</h2><span>{state === 'loading' ? 'Préparation…' : busy ? 'Écrit…' : state === 'ready' ? 'IA locale · prête à discuter' : 'Japonais · sur cet appareil'}</span></div><i className={state === 'ready' ? 'is-ready' : ''} aria-hidden="true" /></header>
+    <header className="discussion-header"><span className="discussion-preview-avatar"><MessageCircle size={18} /></span><div><h2 id="discussion-title">Discussion</h2><span>{state === 'loading' ? 'Préparation…' : busy ? 'Écrit…' : state === 'ready' ? 'IA locale · prête à discuter' : 'Japonais · sur cet appareil'}</span></div><i className={state === 'ready' ? 'is-ready' : ''} aria-hidden="true" /><button type="button" className="discussion-reset" aria-label="Nouvelle discussion" aria-expanded={clearConfirm} aria-controls="discussion-reset-confirm" disabled={!hydrated || busy || state === 'loading' || !messages.length} onClick={() => { setSettingsOpen(false); setClearConfirm(value => !value); }}><RotateCcw size={15} /><span>Nouvelle discussion</span></button></header>
+    {clearConfirm && <div id="discussion-reset-confirm" className="discussion-reset-confirm" role="group" aria-label="Confirmer la réinitialisation"><div><strong>Réinitialiser la discussion ?</strong><p>Les messages de cet appareil seront effacés.</p></div><div><button type="button" className="text-button" autoFocus onClick={() => setClearConfirm(false)}>Annuler</button><button type="button" className="text-button" disabled={busy || state === 'loading'} onClick={() => void clear()}>Réinitialiser</button></div></div>}
     <div ref={output} className="discussion-messages" role="log" aria-label="Conversation japonaise" aria-busy={busy} onScroll={event => { const el = event.currentTarget; nearBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 90; }}>
       {!messages.length && !busy && <div className="discussion-empty"><span lang="ja">話そう</span><p>Un peu de japonais, simplement.</p><small>La conversation suit tes leçons et tes cartes.</small></div>}
       <ConversationMessages messages={messages} />
@@ -341,8 +346,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         <div className="discussion-settings-tools">{displayTools}</div>
         <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('やさしい日本語で説明してください。'); }}>Expliquer simplement</button></div>
         <p>Le niveau est guidé par tes acquis ; l’IA peut se tromper. L’historique est conservé uniquement sur cet appareil.</p>
-        {messages.length > 0 && <button className="text-button" disabled={busy || state === 'loading'} onClick={() => setClearConfirm(value => !value)}><RotateCcw size={13} />Effacer l’historique</button>}
-        {clearConfirm && <div className="discussion-clear"><span>Effacer les échanges sur cet appareil ?</span><button className="text-button" onClick={() => setClearConfirm(false)}>Annuler</button><button className="text-button" onClick={() => void clear()}>Effacer</button></div>}
+        {messages.length > 0 && <button className="text-button" disabled={busy || state === 'loading'} onClick={() => { setSettingsOpen(false); setClearConfirm(true); }}><RotateCcw size={13} />Effacer l’historique</button>}
       </div>}
       <JapaneseChatInput data={data} value={draft} onChange={setDraft} onSend={text => void send(text)} onSettings={() => setSettingsOpen(value => !value)} settingsOpen={settingsOpen} busy={busy} ready={state === 'ready'} onStop={() => { stopped.current = true; engine.current?.interruptGenerate(); }} />
     </div>
