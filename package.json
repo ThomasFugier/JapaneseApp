@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && next dev --hostname 0.0.0.0",
-    "build": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && next build",
+    "dev": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && node scripts/prepare-conversation-dictionary.mjs && next dev --hostname 0.0.0.0",
+    "build": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && node scripts/prepare-conversation-dictionary.mjs && next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts"

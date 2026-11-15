@@ -1,5 +1,7 @@
 node_modules/
 .npm-cache/
+.dictionary-cache/
+public/conversation-dictionary/v1/
 .next/
 .env*
 !.env.example

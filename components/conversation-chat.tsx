@@ -1,13 +1,15 @@
 'use client';
 
-import { memo, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
-import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationHelpInstruction, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, repeatsConversationReply, type ConversationMessage } from '@/lib/conversation';
+import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationHelpInstruction, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, repeatsConversationReply, type ConversationMessage } from '@/lib/conversation';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
 import { conversationModelForDevice, isMobileConversationDevice, LIGHT_CONVERSATION_MODEL, QUALITY_CONVERSATION_MODEL, MOBILE_CONVERSATION_MODEL_KEY, markConversationRunning, wasConversationInterrupted } from '@/lib/conversation-runtime';
 import { JapaneseText } from './furigana';
+import { ConversationReply } from './conversation-reply';
+import type { ConversationCardDraft, ConversationWord } from '@/lib/conversation-words';
 import { JapaneseChatInput } from './japanese-chat-input';
 import './conversation-chat.css';
 
@@ -26,11 +28,13 @@ const previewText = (text: string) => {
 };
 
 // Typing a draft must not render the whole transcript and its furigana again.
-const ConversationMessages = memo(function ConversationMessages({ messages }: { messages: ConversationMessage[] }) {
-  return <>{messages.map(item => <article key={item.id} className={`discussion-message is-${item.role}`} aria-label={item.role === 'assistant' ? 'Partenaire' : 'Toi'}><p lang="ja">{item.role === 'assistant' ? <JapaneseText text={item.content} /> : item.content}</p></article>)}</>;
+const ConversationMessages = memo(function ConversationMessages({ messages, data, onAnnotated, onAddCard }: { messages: ConversationMessage[]; data: Snapshot; onAnnotated: (id: string, content: string, words: ConversationWord[]) => void; onAddCard: (draft: ConversationCardDraft) => void }) {
+  return <>{messages.map(item => <article key={item.id} className={`discussion-message is-${item.role}`} aria-label={item.role === 'assistant' ? 'Partenaire' : 'Toi'}><p lang="ja">{item.role === 'assistant' ? <ConversationReply message={item} data={data} onAnnotated={onAnnotated} onAddCard={onAddCard} /> : item.content}</p></article>)}</>;
 });
 
-export function ConversationChat({ data, active, onOpen, displayTools }: { data: Snapshot; active: boolean; onOpen: () => void; displayTools?: ReactNode }) {
+export function ConversationChat({ data, active, onOpen, displayTools, onAddCard }: { onAddCard: (draft: ConversationCardDraft) => void; data: Snapshot; active: boolean; onOpen: () => void; displayTools?: ReactNode }) {
+  const addCardCallback = useRef(onAddCard); addCardCallback.current = onAddCard;
+  const addCard = useCallback((draft: ConversationCardDraft) => addCardCallback.current(draft), []);
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const history = useRef(messages);
   const [hydrated, setHydrated] = useState(false);
@@ -62,7 +66,6 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const cancelOperation = useRef<((error: Error) => void) | null>(null);
   const output = useRef<HTMLDivElement>(null);
   const nearBottom = useRef(true);
-  const latestData = useRef(data); latestData.current = data;
 
   useEffect(() => {
     mounted.current = true;
@@ -165,12 +168,17 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', escape); };
   }, [settingsOpen]);
 
-  async function persist(next: ConversationMessage[]) {
+  const persist = useCallback(async (next: ConversationMessage[]) => {
     history.current = next.slice(-CONVERSATION_LIMIT);
     if (mounted.current) setMessages(history.current);
     try { await saveConversation(history.current); if (mounted.current) setStorageError(''); }
     catch { if (mounted.current) setStorageError('Cet échange n’a pas pu être sauvegardé. Garde cette page ouverte pour le conserver.'); }
-  }
+  }, []);
+
+  const onAnnotated = useCallback((id: string, content: string, words: ConversationWord[]) => {
+    if (!mounted.current || !history.current.some(item => item.id === id && item.content === content && !item.words)) return;
+    void persist(history.current.map(item => item.id === id && item.content === content ? { ...item, words } : item));
+  }, [persist]);
 
   async function operation<T,>(task: () => Promise<T>, milliseconds: number): Promise<T> {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -201,7 +209,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       await operation(async () => {
         const context = recentConversation(current);
         const modelMessages = [
-            { role: 'system', content: conversationPrompt(latestData.current, current, new Date(), current.at(-1)?.content) },
+            { role: 'system', content: conversationPrompt(current) },
             ...context,
             ...(instruction ? [{ role: 'user' as const, content: instruction }] : []),
           ] as { role: 'system' | 'user' | 'assistant'; content: string }[];
@@ -223,7 +231,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
           const repeated = repeatsConversationReply(answer, current);
           const revised = await ai.chat.completions.create({
             messages: [
-              { role: 'system', content: `あなたは親しい友達のようなＡＩです。やさしい日本語だけで１〜３文。外国語やローマ字は禁止です。食事など実際にはしていない体験は作らないでください。下の学習済み文法と基本の「です・ます」、カードの単語を中心に使ってください。質問はしなくていいです。学習データ（参照用）: ${JSON.stringify(conversationProfile(latestData.current, current.at(-1)?.content))}${conversationHelpInstruction(current)}` },
+              { role: 'system', content: `あなたは親しい友達のようなＡＩです。やさしい日本語だけで１〜３文。外国語やローマ字は禁止です。食事など実際にはしていない体験は作らないでください。短い文と日常的な言葉で、相手の質問に直接答えてください。質問はしなくていいです。${conversationHelpInstruction(current)}` },
               { role: 'user', content: repeated
                 ? `次の説明ではわかりませんでした。別の簡単な言葉で説明し、身近な具体例を一つ示してください。同じ文を繰り返さないでください。\n前の説明（引用）: ${JSON.stringify(answer.slice(0, 400))}`
                 : `相手の発言（引用）: ${JSON.stringify(current.at(-1)?.content || instruction || '日本語で話しましょう。')}\n次の下書きを、自然でやさしい日本語だけに直してください。説明の前置きは不要です。\n下書き（引用）: ${JSON.stringify(answer.slice(0, 600))}` },
@@ -328,8 +336,8 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     <header className="discussion-header"><span className="discussion-preview-avatar"><MessageCircle size={18} /></span><div><h2 id="discussion-title">Discussion</h2><span>{state === 'loading' ? 'Préparation…' : busy ? 'Écrit…' : state === 'ready' ? 'IA locale · prête à discuter' : 'Japonais · sur cet appareil'}</span></div><i className={state === 'ready' ? 'is-ready' : ''} aria-hidden="true" /><button type="button" className="discussion-reset" aria-label="Nouvelle discussion" aria-expanded={clearConfirm} aria-controls="discussion-reset-confirm" disabled={!hydrated || busy || state === 'loading' || !messages.length} onClick={() => { setSettingsOpen(false); setClearConfirm(value => !value); }}><RotateCcw size={15} /><span>Nouvelle discussion</span></button></header>
     {clearConfirm && <div id="discussion-reset-confirm" className="discussion-reset-confirm" role="group" aria-label="Confirmer la réinitialisation"><div><strong>Réinitialiser la discussion ?</strong><p>Les messages de cet appareil seront effacés.</p></div><div><button type="button" className="text-button" autoFocus onClick={() => setClearConfirm(false)}>Annuler</button><button type="button" className="text-button" disabled={busy || state === 'loading'} onClick={() => void clear()}>Réinitialiser</button></div></div>}
     <div ref={output} className="discussion-messages" role="log" aria-label="Conversation japonaise" aria-busy={busy} onScroll={event => { const el = event.currentTarget; nearBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 90; }}>
-      {!messages.length && !busy && <div className="discussion-empty"><span lang="ja">話そう</span><p>Un peu de japonais, simplement.</p><small>La conversation suit tes leçons et tes cartes.</small></div>}
-      <ConversationMessages messages={messages} />
+      {!messages.length && !busy && <div className="discussion-empty"><span lang="ja">話そう</span><p>Un peu de japonais, simplement.</p><small>Des échanges libres, en japonais simple.</small></div>}
+      <ConversationMessages messages={messages} data={data} onAnnotated={onAnnotated} onAddCard={addCard} />
       {busy && <article className="discussion-message is-assistant" aria-label="Partenaire">{partial ? <p lang="ja">{partial}</p> : <span className="discussion-dots" aria-label="Réfléchit">•••</span>}</article>}
     </div>
     <div className="discussion-bottom">
@@ -345,7 +353,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         {state === 'ready' && <button className="text-button" disabled={busy} onClick={release}>Mettre le modèle en pause</button>}
         <div className="discussion-settings-tools">{displayTools}</div>
         <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('やさしい日本語で説明してください。'); }}>Expliquer simplement</button></div>
-        <p>Le niveau est guidé par tes acquis ; l’IA peut se tromper. L’historique est conservé uniquement sur cet appareil.</p>
+        <p>Japonais simple, sujets libres. Survole ou touche un mot pour voir son sens et préparer une carte. L’historique reste sur cet appareil.</p>
         {messages.length > 0 && <button className="text-button" disabled={busy || state === 'loading'} onClick={() => { setSettingsOpen(false); setClearConfirm(true); }}><RotateCcw size={13} />Effacer l’historique</button>}
       </div>}
       <JapaneseChatInput data={data} value={draft} onChange={setDraft} onSend={text => void send(text)} onSettings={() => setSettingsOpen(value => !value)} settingsOpen={settingsOpen} busy={busy} ready={state === 'ready'} onStop={() => { stopped.current = true; engine.current?.interruptGenerate(); }} />

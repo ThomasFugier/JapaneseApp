@@ -1,6 +1,6 @@
 import type { FuriganaPart } from './furigana';
 
-export type ReadingToken = { text: string; reading?: string; alignment?: FuriganaPart[] };
+export type ReadingToken = { text: string; reading?: string; lemma?: string; partOfSpeech?: string; alignment?: FuriganaPart[] };
 type Pending = { resolve: (tokens: ReadingToken[]) => void; reject: (error: Error) => void; timer: ReturnType<typeof setTimeout> };
 let worker: Worker | null = null;
 let serial = 0;
@@ -14,15 +14,18 @@ function fail(error: Error) {
   pending.clear();
 }
 
-export function japaneseReadings(text: string, reading?: string): Promise<ReadingToken[]> {
-  const key = `${reading || ''}\0${text}`;
+export const japaneseReadings = (text: string, reading?: string) => requestTokens(text, reading, false);
+export const japaneseWords = (text: string) => requestTokens(text, undefined, true);
+
+function requestTokens(text: string, reading: string | undefined, wordsOnly: boolean): Promise<ReadingToken[]> {
+  const key = `${wordsOnly ? 'words' : 'readings'}\0${reading || ''}\0${text}`;
   if (cached.has(key)) return Promise.resolve(cached.get(key)!);
   const existing = running.get(key);
   if (existing) return existing;
   const request = new Promise<ReadingToken[]>((resolve, reject) => {
     try {
       if (!worker) {
-        worker = new Worker('/furigana/worker-v2.js', { name: 'Japanese readings' });
+        worker = new Worker('/furigana/worker-v3.js', { name: 'Japanese readings' });
         worker.onmessage = event => {
           const { id, tokens, error } = event.data;
           const item = pending.get(id);
@@ -35,7 +38,7 @@ export function japaneseReadings(text: string, reading?: string): Promise<Readin
       }
       const id = ++serial;
       pending.set(id, { resolve, reject, timer: setTimeout(() => fail(new Error('The Japanese dictionary took too long to load. Try again when online.')), 120000) });
-      worker.postMessage({ id, text, reading });
+      worker.postMessage({ id, text, reading, wordsOnly });
     } catch (error) { reject(error instanceof Error ? error : new Error('Furigana unavailable.')); }
   }).then(tokens => {
     cached.set(key, tokens);

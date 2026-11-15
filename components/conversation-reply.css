@@ -1,0 +1,14 @@
+.conversation-word { display:inline; margin:0; padding:0 1px; border:0; border-radius:3px; background:transparent; color:inherit; font:inherit; line-height:inherit; cursor:pointer; }
+.conversation-word:hover,.conversation-word:focus-visible { background:#e9e9ef; text-decoration:underline; text-decoration-color:#858594; text-underline-offset:3px; outline:none; }
+.conversation-annotation-retry { display:inline-block; margin-left:8px; padding:3px 7px; border:1px solid #e5e5eb; border-radius:7px; background:#fff; color:#777782; font-size:10px; cursor:pointer; }
+.conversation-word-popup { position:fixed; z-index:1000; width:min(320px,calc(100vw - 24px)); max-height:min(280px,calc(100dvh - 24px)); overflow:auto; padding:14px; border:1px solid #e7e7ed; border-radius:13px; background:#fff; color:#33333b; box-shadow:0 10px 36px #20202520; font:12px/1.6 system-ui,sans-serif; }
+.conversation-word-heading { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:4px 12px; }
+.conversation-word-heading strong { font-size:18px; font-weight:600; }
+.conversation-word-heading>span,.conversation-word-pos,.conversation-word-source,.conversation-word-language { color:#888892; font-size:10px; }
+.conversation-word-popup ol { margin:8px 0 0; padding-left:20px; }
+.conversation-word-popup li+li { margin-top:3px; }
+.conversation-word-unavailable { margin:9px 0; color:#85858e; }
+.conversation-word-source { display:inline-block; margin-top:8px; text-decoration:underline; text-underline-offset:2px; }
+.conversation-word-add { display:block; margin-top:10px; padding:7px 10px; border:0; border-radius:8px; background:#f0f0f3; color:#45454e; font:inherit; cursor:pointer; }
+.conversation-word-add:hover { background:#e6e6eb; }
+.conversation-word-duplicate { margin:10px 0 0; color:#777781; font-size:11px; }

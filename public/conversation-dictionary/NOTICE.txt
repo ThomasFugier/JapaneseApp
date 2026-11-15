@@ -1,0 +1,24 @@
+Japanese conversation dictionary data
+
+The lookup entries in v1 are derived from JMdict, maintained by the
+Electronic Dictionary Research and Development Group (EDRDG), and distributed
+under the JMdict/EDRDG license:
+https://www.edrdg.org/edrdg/licence.html
+
+Source distribution: scriptin/jmdict-simplified release
+3.6.2+20261109214828, published 2026-11-09:
+https://github.com/scriptin/jmdict-simplified/releases/tag/3.6.2%2B20261109214828
+
+The source project states that JMdict-derived files retain the original
+JMdict license. Its conversion code and other project files are CC BY-SA 4.0;
+that license does not replace the JMdict data license:
+https://github.com/scriptin/jmdict-simplified/blob/master/README.md#license
+
+The build-time prepared data retains Japanese headwords/readings, parts of
+speech, and French or English glosses. Where an entry has French glosses,
+those are used; common English entries fill gaps. Full English data is used
+only for entries tagged as particles, auxiliaries, or copulas, to improve
+function-word coverage. The compact output caps headwords/readings and
+senses/glosses per entry. It is a vocabulary lookup resource, not a sentence
+translation. Source archives and SHA-256 hashes are recorded in the generated
+v1/manifest.json.
