@@ -7,3 +7,5 @@ node_modules/
 coverage/
 
 public/furigana/kuromoji-0.1.2/
+
+/public/ai/conversation.worker.js*

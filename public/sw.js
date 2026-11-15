@@ -1,4 +1,4 @@
-const CACHE = 'kotoba-shell-v53';
+const CACHE = 'kotoba-shell-v54';
 const DICTIONARIES = 'japanese-dictionaries-v1';
 
 async function cacheAsset(cache, url) {
@@ -49,6 +49,12 @@ self.addEventListener('fetch', event => {
       if (response.ok && url.pathname === '/' && !url.search) { const cache = await caches.open(CACHE); await cache.put('/', response.clone()); }
       return response;
     }).catch(async () => (await caches.match('/')) || Response.error()));
+  } else if (url.pathname === '/ai/conversation.worker.js') {
+    event.respondWith(fetch(event.request).then(async response => {
+      if (!response.ok) throw new Error('AI worker unavailable.');
+      const cache = await caches.open(CACHE); await cache.put(event.request, response.clone());
+      return response;
+    }).catch(async () => (await caches.match(event.request)) || Response.error()));
   } else if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/reference/') || url.pathname.startsWith('/furigana/') || url.pathname === '/icon.svg') {
     event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(async response => {
       if (response.ok) { const cache = await caches.open(url.pathname.startsWith('/furigana/') ? DICTIONARIES : CACHE); await cache.put(event.request, response.clone()); }

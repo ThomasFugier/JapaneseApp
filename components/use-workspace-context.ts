@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { defaultReadingContext, sanitizeReadingContext, updateReadingContext, type ReadingContext } from '@/lib/library-view';
 import { isLessonId, type LessonId } from '@/lib/lessons';
 
-export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats' | 'reference';
+export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats' | 'reference' | 'discussion';
 export type InterfaceStyle = 'classic' | 'classroom';
 export type JapaneseFont = 'brush' | 'plain';
 export type PageTheme = 'plain' | 'waves' | 'sakura' | 'maple';
@@ -71,7 +71,7 @@ export function useWorkspaceContext() {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         const next = sanitizeReadingContext(saved.reading);
-        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' || saved.tab === 'reference' ? saved.tab : 'home';
+        const nextTab: WorkspaceTab = saved.tab === 'library' || saved.tab === 'review' || saved.tab === 'lessons' || saved.tab === 'writing' || saved.tab === 'stats' || saved.tab === 'reference' || saved.tab === 'discussion' ? saved.tab : 'home';
         lessonIdRef.current = isLessonId(saved.lessonId) ? saved.lessonId : null; setLessonIdState(lessonIdRef.current);
         const nextFont: JapaneseFont = saved.japaneseFont === 'plain' ? 'plain' : 'brush';
         activitySoundsRef.current = saved.activitySounds === true; setActivitySoundsState(activitySoundsRef.current);

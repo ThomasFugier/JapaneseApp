@@ -1,0 +1,273 @@
+'use client';
+
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
+import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
+import type { Snapshot } from '@/lib/model';
+import { CONVERSATION_LIMIT, conversationPrompt, hasJapaneseReply, recentConversation, type ConversationMessage } from '@/lib/conversation';
+import { loadConversation, saveConversation } from '@/lib/conversation-storage';
+import { JapaneseText } from './furigana';
+import { JapaneseChatInput } from './japanese-chat-input';
+import './conversation-chat.css';
+
+const models = [
+  { id: 'Qwen3-1.7B-q4f16_1-MLC', label: 'Léger · Qwen3 1.7B', size: 'environ 1 Go à télécharger · 2 Go de mémoire GPU' },
+  { id: 'Qwen3-4B-q4f16_1-MLC', label: 'Qualité · Qwen3 4B', size: 'environ 2,5 Go à télécharger · 3,5 Go de mémoire GPU' },
+];
+const message = (role: ConversationMessage['role'], content: string): ConversationMessage => ({ id: crypto.randomUUID(), role, content, createdAt: new Date().toISOString() });
+
+export function ConversationChat({ data, active, onOpen, displayTools }: { data: Snapshot; active: boolean; onOpen: () => void; displayTools?: ReactNode }) {
+  const [messages, setMessages] = useState<ConversationMessage[]>([]);
+  const history = useRef(messages);
+  const [hydrated, setHydrated] = useState(false);
+  const [supported, setSupported] = useState<boolean | null>(null);
+  const [modelId, setModelId] = useState(models[1].id);
+  const [state, setState] = useState<'idle' | 'loading' | 'ready'>('idle');
+  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState({ progress: 0, text: '' });
+  const [draft, setDraft] = useState('');
+  const [partial, setPartial] = useState('');
+  const [error, setError] = useState('');
+  const [storageError, setStorageError] = useState('');
+  const [clearConfirm, setClearConfirm] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [viewport, setViewport] = useState<{ height: number; offset: number; keyboard: boolean; top: number; bottom: number } | null>(null);
+  const settingsPanel = useRef<HTMLDivElement>(null);
+  const engine = useRef<WebWorkerMLCEngine | null>(null);
+  const worker = useRef<Worker | null>(null);
+  const epoch = useRef(0);
+  const mounted = useRef(false);
+  const locked = useRef(false);
+  const stopped = useRef(false);
+  const cancelOperation = useRef<((error: Error) => void) | null>(null);
+  const output = useRef<HTMLDivElement>(null);
+  const nearBottom = useRef(true);
+  const latestData = useRef(data); latestData.current = data;
+
+  useEffect(() => {
+    mounted.current = true;
+    setSupported(window.isSecureContext && 'gpu' in navigator);
+    try {
+      const savedDraft = localStorage.getItem('kotoba-conversation-draft-v1');
+      if (savedDraft) setDraft(savedDraft.slice(0, 1000));
+      const savedModel = localStorage.getItem('kotoba-conversation-model');
+      if (models.some(model => model.id === savedModel)) setModelId(savedModel!);
+    } catch { /* A blocked preference store does not prevent conversation. */ }
+    let live = true;
+    void loadConversation().then(saved => {
+      if (live) { history.current = saved; setMessages(saved); }
+    }).catch(() => { if (live) setStorageError('La mémoire locale est indisponible. Les échanges de cette session restent visibles.'); })
+      .finally(() => { if (live) setHydrated(true); });
+    return () => {
+      live = false; mounted.current = false; epoch.current++;
+      cancelOperation.current?.(new Error('cancelled'));
+      worker.current?.terminate(); worker.current = null; engine.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (nearBottom.current && output.current) output.current.scrollTop = output.current.scrollHeight;
+  }, [messages, partial, busy, active]);
+
+  useEffect(() => {
+    if (hydrated) { try { localStorage.setItem('kotoba-conversation-draft-v1', draft); } catch { /* Draft remains editable. */ } }
+  }, [draft, hydrated]);
+
+  useLayoutEffect(() => {
+    if (!active) { setSettingsOpen(false); return; }
+    const header = document.querySelector<HTMLElement>('.topbar');
+    const navigation = document.querySelector<HTMLElement>('.mobile-nav');
+    const resize = () => {
+      const view = window.visualViewport;
+      const keyboard = !!view && view.height < window.innerHeight - 150;
+      setViewport({ height: view?.height ?? window.innerHeight, offset: view?.offsetTop ?? 0, keyboard,
+        top: header?.getBoundingClientRect().height ?? 76,
+        bottom: keyboard ? 0 : navigation?.getBoundingClientRect().height ?? 0 });
+    };
+    resize();
+    const observer = new ResizeObserver(resize);
+    if (header) observer.observe(header);
+    if (navigation) observer.observe(navigation);
+    window.visualViewport?.addEventListener('resize', resize);
+    window.visualViewport?.addEventListener('scroll', resize);
+    window.addEventListener('resize', resize);
+    return () => { observer.disconnect(); window.visualViewport?.removeEventListener('resize', resize); window.visualViewport?.removeEventListener('scroll', resize); window.removeEventListener('resize', resize); };
+  }, [active]);
+
+  useEffect(() => {
+    if (!active || !hydrated || !supported || state !== 'idle' || locked.current) return;
+    let live = true;
+    void import('@mlc-ai/web-llm').then(async ({ hasModelInCache }) => {
+      if (await hasModelInCache(modelId) && live) void start();
+    }).catch(() => { /* An uncached model can still be started explicitly. */ });
+    return () => { live = false; };
+    // Starting follows entering Discussion or choosing a cached model, not pausing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, hydrated, supported, modelId]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+    settingsPanel.current?.querySelector<HTMLButtonElement>('button')?.focus();
+    const close = (event: PointerEvent) => {
+      if (!(event.target instanceof Element) || settingsPanel.current?.contains(event.target) || event.target.closest('[aria-controls="discussion-settings"]')) return;
+      setSettingsOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') { setSettingsOpen(false); document.querySelector<HTMLElement>('[aria-controls="discussion-settings"]')?.focus(); } };
+    document.addEventListener('pointerdown', close); document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', escape); };
+  }, [settingsOpen]);
+
+  async function persist(next: ConversationMessage[]) {
+    history.current = next.slice(-CONVERSATION_LIMIT);
+    if (mounted.current) setMessages(history.current);
+    try { await saveConversation(history.current); if (mounted.current) setStorageError(''); }
+    catch { if (mounted.current) setStorageError('Cet échange n’a pas pu être sauvegardé. Garde cette page ouverte pour le conserver.'); }
+  }
+
+  async function operation<T,>(task: () => Promise<T>, milliseconds: number): Promise<T> {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([task(), new Promise<never>((_, reject) => {
+        cancelOperation.current = reject;
+        timer = setTimeout(() => reject(new Error('Le modèle met trop de temps à répondre. Relance-le ou choisis le modèle léger.')), milliseconds);
+      })]);
+    } finally { clearTimeout(timer); cancelOperation.current = null; }
+  }
+
+  function release() {
+    epoch.current++;
+    worker.current?.terminate(); worker.current = null; engine.current = null;
+    if (mounted.current) setState('idle');
+  }
+
+  async function generate(current: ConversationMessage[], instruction?: string) {
+    const ai = engine.current;
+    if (!ai) return;
+    const request = epoch.current;
+    stopped.current = false; setBusy(true); setPartial(''); setError(''); nearBottom.current = true;
+    let answer = '';
+    try {
+      await operation(async () => {
+        const context = recentConversation(current);
+        const modelMessages = [
+            { role: 'system', content: conversationPrompt(latestData.current, current, new Date(), current.at(-1)?.content) },
+            ...context,
+            ...(instruction ? [{ role: 'user' as const, content: instruction }] : []),
+          ] as { role: 'system' | 'user' | 'assistant'; content: string }[];
+        const response = await ai.chat.completions.create({
+          messages: modelMessages,
+          stream: true, extra_body: { enable_thinking: false }, temperature: 0.65, top_p: 0.9,
+          max_tokens: 280, repetition_penalty: 1.08,
+        });
+        for await (const chunk of response) {
+          if (!mounted.current || request !== epoch.current) return;
+          answer += chunk.choices[0]?.delta.content ?? '';
+          setPartial(answer);
+        }
+        if (!stopped.current && answer.trim() && !hasJapaneseReply(answer)) {
+          setPartial('');
+          const revised = await ai.chat.completions.create({
+            messages: [...modelMessages, { role: 'assistant', content: answer }, { role: 'user', content: '今の返事を、やさしい日本語で書き直してください。説明を求めた場合はフランス語の説明もできますが、短い日本語の例文を必ず入れてください。' }],
+            stream: false, extra_body: { enable_thinking: false }, temperature: 0.4, max_tokens: 280,
+          });
+          answer = revised.choices[0]?.message.content ?? '';
+          if (!hasJapaneseReply(answer)) throw new Error('Le modèle n’a pas réussi à répondre en japonais. Essaie le modèle Qualité.');
+        }
+      }, 180000);
+      if (!mounted.current || request !== epoch.current) return;
+      const clean = answer.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+      if (clean) await persist([...current, message('assistant', clean)]);
+      else if (!stopped.current) throw new Error('Le modèle n’a pas produit de réponse. Tu peux réessayer.');
+    } catch (cause) {
+      if (mounted.current) {
+        setError(cause instanceof Error ? cause.message : 'La réponse a échoué. Relance le modèle pour réessayer.');
+        release();
+      }
+    } finally {
+      if (mounted.current) { setBusy(false); setPartial(''); }
+    }
+  }
+
+  async function start() {
+    if (locked.current || !hydrated || !supported) return;
+    const request = ++epoch.current;
+    locked.current = true; setError(''); setState('loading'); setProgress({ progress: 0, text: 'Préparation du modèle…' });
+    try {
+      await operation(async () => {
+        const { CreateWebWorkerMLCEngine } = await import('@mlc-ai/web-llm');
+        if (!mounted.current || request !== epoch.current) throw new Error('cancelled');
+        const nextWorker = new Worker('/ai/conversation.worker.js', { type: 'module' });
+        worker.current = nextWorker;
+        nextWorker.onerror = () => cancelOperation.current?.(new Error('Le moteur local a rencontré un problème. Vérifie la compatibilité WebGPU et essaie le modèle léger.'));
+        const ai = await CreateWebWorkerMLCEngine(nextWorker, modelId, {
+          initProgressCallback: report => { if (mounted.current) setProgress(report); },
+        });
+        if (!mounted.current || request !== epoch.current || worker.current !== nextWorker) { nextWorker.terminate(); throw new Error('cancelled'); }
+        engine.current = ai;
+      }, 900000);
+      if (!mounted.current) return;
+      setState('ready');
+      if (history.current.at(-1)?.role === 'user') await generate(history.current);
+      else if (!history.current.length || Date.now() - Date.parse(history.current.at(-1)!.createdAt) > 4 * 60 * 60 * 1000) await generate(history.current, history.current.length
+        ? '日本語で会話を再開してください。前の会話と今の時間帯を参考に、やさしい質問を一つしてください。私の今日の予定や天気はわかりません。'
+        : 'やさしい日本語だけで、短いあいさつと、今の時間帯に合う質問を一つ書いてください。私の予定や天気はわかりません。');
+    } catch (cause) {
+      if (mounted.current) {
+        if (!(cause instanceof Error && cause.message === 'cancelled')) setError(cause instanceof Error ? cause.message : 'Impossible de charger le modèle. Vérifie ta connexion et la mémoire disponible.');
+        release();
+      }
+    } finally { locked.current = false; }
+  }
+
+  async function send(text: string) {
+    if (locked.current || !engine.current || !text.trim()) return;
+    locked.current = true; setDraft(''); setClearConfirm(false);
+    try {
+      const next = [...history.current, message('user', text.trim().slice(0, 1000))];
+      await persist(next);
+      if (mounted.current) await generate(history.current);
+    } finally { locked.current = false; }
+  }
+
+  async function clear() {
+    if (locked.current) return;
+    locked.current = true;
+    try { await persist([]); setClearConfirm(false); setError(''); }
+    finally { locked.current = false; }
+  }
+
+  const selected = models.find(model => model.id === modelId)!;
+  if (!active) return <button type="button" className="discussion-preview" onClick={() => { nearBottom.current = true; onOpen(); }} aria-label="Ouvrir la discussion en japonais">
+    <span className="discussion-preview-heading"><span className="discussion-preview-avatar"><MessageCircle size={20} /></span><span><strong>Discussion</strong><small>Ton japonais, dans la vraie vie</small></span><ArrowRight size={18} /></span>
+    <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={item.content} /></span>) : <span className="discussion-preview-bubble is-assistant">Un moment pour discuter en japonais ?</span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
+    <span className="discussion-preview-footer">{state === 'loading' ? 'Préparation de la conversation…' : 'Ouvrir la conversation'}<span>日本語で話そう</span></span>
+  </button>;
+
+  const style = viewport ? { '--discussion-viewport': `${viewport.height}px`, '--discussion-offset': `${viewport.offset}px`, '--discussion-top': `${viewport.top}px`, '--discussion-bottom': `${viewport.bottom}px` } as CSSProperties : undefined;
+  return <section className={`discussion-view${viewport?.keyboard ? ' keyboard-open' : ''}`} style={style} aria-labelledby="discussion-title">
+    <header className="discussion-header"><span className="discussion-preview-avatar"><MessageCircle size={18} /></span><div><h2 id="discussion-title">Discussion</h2><span>{state === 'loading' ? 'Préparation…' : busy ? 'Écrit…' : state === 'ready' ? 'IA locale · prête à discuter' : 'Japonais · sur cet appareil'}</span></div><i className={state === 'ready' ? 'is-ready' : ''} aria-hidden="true" /></header>
+    <div ref={output} className="discussion-messages" role="log" aria-label="Conversation japonaise" aria-busy={busy} onScroll={event => { const el = event.currentTarget; nearBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 90; }}>
+      {!messages.length && !busy && <div className="discussion-empty"><span lang="ja">話そう</span><p>Un peu de japonais, simplement.</p><small>La conversation suit tes leçons et tes cartes.</small></div>}
+      {messages.map(item => <article key={item.id} className={`discussion-message is-${item.role}`} aria-label={item.role === 'assistant' ? 'Partenaire' : 'Toi'}><p lang="ja">{item.role === 'assistant' ? <JapaneseText text={item.content} /> : item.content}</p></article>)}
+      {busy && <article className="discussion-message is-assistant" aria-label="Partenaire">{partial ? <p lang="ja">{partial}</p> : <span className="discussion-dots" aria-label="Réfléchit">•••</span>}</article>}
+    </div>
+    <div className="discussion-bottom">
+      {error && <p className="discussion-warning" role="alert">{error}</p>}
+      {storageError && <p className="discussion-warning" role="alert">{storageError}</p>}
+      {state === 'loading' && <div className="discussion-loading"><LoaderCircle size={14} className="spin" /><span role="status">Chargement · {Math.round(Math.min(1, Math.max(0, progress.progress)) * 100)} %</span><progress max={1} value={Math.min(1, Math.max(0, progress.progress))} /><button className="icon-button" aria-label="Annuler le chargement" onClick={() => { cancelOperation.current?.(new Error('cancelled')); release(); }}><X size={15} /></button></div>}
+      {state === 'idle' && <div className="discussion-activate">{supported === false ? <span role="status">Un navigateur compatible WebGPU est nécessaire pour l’IA locale.</span> : <><button className="text-button" onClick={() => void start()} disabled={!hydrated || !supported}><Download size={14} />{messages.length ? 'Reprendre la discussion' : 'Activer la conversation'}</button><small>Premier téléchargement · {modelId === models[1].id ? '≈ 2,5 Go' : '≈ 1 Go'}</small></>}</div>}
+      {settingsOpen && <div ref={settingsPanel} id="discussion-settings" className="discussion-settings" role="dialog" aria-label="Réglages de discussion">
+        <div className="discussion-settings-heading"><h3>Réglages</h3><button className="icon-button" aria-label="Fermer les réglages" onClick={() => setSettingsOpen(false)}><X size={16} /></button></div>
+        <label htmlFor="conversation-model">Modèle IA<select id="conversation-model" value={modelId} disabled={state !== 'idle'} onChange={event => { setModelId(event.target.value); try { localStorage.setItem('kotoba-conversation-model', event.target.value); } catch { /* Keep selection for this session. */ } }}>{models.map(model => <option key={model.id} value={model.id}>{model.label}</option>)}</select></label>
+        <p>{selected.size}. Le cache est réutilisé lorsque le navigateur le conserve.</p>
+        {state === 'ready' && <button className="text-button" disabled={busy} onClick={release}>Mettre le modèle en pause</button>}
+        <div className="discussion-settings-tools">{displayTools}</div>
+        <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('Peux-tu expliquer ta dernière réponse en français, puis continuer en japonais ?'); }}>Aide en français</button></div>
+        <p>Le niveau est guidé par tes acquis ; l’IA peut se tromper. L’historique est conservé uniquement sur cet appareil.</p>
+        {messages.length > 0 && <button className="text-button" disabled={busy || state === 'loading'} onClick={() => setClearConfirm(value => !value)}><RotateCcw size={13} />Effacer l’historique</button>}
+        {clearConfirm && <div className="discussion-clear"><span>Effacer les échanges sur cet appareil ?</span><button className="text-button" onClick={() => setClearConfirm(false)}>Annuler</button><button className="text-button" onClick={() => void clear()}>Effacer</button></div>}
+      </div>}
+      <JapaneseChatInput data={data} value={draft} onChange={setDraft} onSend={text => void send(text)} onSettings={() => setSettingsOpen(value => !value)} settingsOpen={settingsOpen} busy={busy} ready={state === 'ready'} onStop={() => { stopped.current = true; engine.current?.interruptGenerate(); }} />
+    </div>
+  </section>;
+}

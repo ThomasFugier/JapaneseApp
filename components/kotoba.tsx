@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, X } from 'lucide-react';
+import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, MessageCircle, X } from 'lucide-react';
 import { useLibrary } from './use-library';
 import { useWorkspaceContext, type WorkspaceTab } from './use-workspace-context';
 import { LibraryView } from './library-view';
@@ -44,11 +44,12 @@ import './contextual-translation.css';
 import './classroom-motion.css';
 import './classroom-details.css';
 import { useActivitySound } from './use-activity-sound';
+import { ConversationChat } from './conversation-chat';
 
 type Tab = WorkspaceTab;
-const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'stats'];
-const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji' };
-const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages };
+const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'discussion', 'stats'];
+const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji', discussion: 'Discussion' };
+const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages, discussion: MessageCircle };
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 const active = <T extends { deletedAt?: string | null }>(items: T[]) => items.filter(item => !item.deletedAt);
 const countNotes = (data: Snapshot, id: string | null) => new Set(cardsForDeck(data, id).map(card => card.noteId)).size;
@@ -310,7 +311,7 @@ export default function Kotoba() {
 
   const backupState: BackupState = { saving: library.saving, syncing: library.syncing, localSaveError: library.localSaveError, syncError: library.syncError, connected: !!library.status?.authenticated, online: library.online, dirty: library.dirty, lastSyncedAt: library.lastSyncedAt, conflicts: library.conflicts.length };
 
-  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
+  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} ${tab === 'discussion' ? 'is-discussing' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
     {interfaceStyle === 'classic' && <PageBackground theme={pageTheme} />}
     <div className="workspace">
       <header className="topbar">
@@ -326,6 +327,7 @@ export default function Kotoba() {
       <main id="main-content" className={`main-content ${session ? 'session-main' : ''} ${tab === 'home' && interfaceStyle === 'classroom' ? 'is-activity-home' : ''}`} aria-label={labels[tab]}>
         {!session && <h1 className="sr-only">{labels[tab]}</h1>}
         {(tab === 'home' || tab === 'library') && <WorkspaceSearch home={tab === 'home'} value={tab === 'home' ? '' : reading.search} sort={reading.sort} onChange={searchLibrary} onSortChange={sort => changeReading({ sort })} actionsRef={setSearchActions} />}
+        <div className="conversation-host" hidden={tab !== 'home' && tab !== 'discussion'}><ConversationChat data={data} active={tab === 'discussion'} onOpen={() => navigate('discussion')} displayTools={<><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /></>} /></div>
         <div key={tab} className="workspace-view" data-view={tab}>
         {tab === 'home' && <>
           <div className="home-quick-actions"><button type="button" className="button primary" onClick={() => openNoteEditor('new')}><Plus size={18} />New card</button></div>

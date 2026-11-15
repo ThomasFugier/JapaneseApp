@@ -84,3 +84,15 @@ La validation automatisée teste le moteur, les fusions, les sessions et les err
 ## Dépendances
 
 Le moteur utilise FSRS via `ts-fsrs` v5 (algorithme FSRS-6, licence MIT), avec ses paramètres fournis par défaut. Next.js, React, IndexedDB (`idb`), `fflate`, Zod, WanaKana et Lucide sont utilisés sous leurs licences respectives. Les versions installées sont figées dans `package-lock.json`.
+
+## Conversation japonaise locale
+
+L’accueil affiche un aperçu blanc de la conversation, présenté comme des SMS. Un clic ouvre l’onglet Discussion, avec les messages en plein écran et les réglages discrets à côté du champ de saisie. La conversation est générée par Qwen3 via WebLLM, sans clé API ni service d’inférence payant. Le modèle est chargé uniquement à la demande et tourne dans un Web Worker avec WebGPU. Le mode léger utilise Qwen3 1.7B (environ 1 Go à télécharger, 2 Go de mémoire GPU) ; le mode qualité, proposé par défaut, utilise Qwen3 4B (environ 2,5 Go, 3,5 Go de mémoire GPU). Le choix est mémorisé sur cet appareil. Ces besoins restent indicatifs et dépendent du navigateur. Les poids et le moteur proviennent des hébergeurs configurés par WebLLM ; les messages, cartes et leçons ne leur sont pas envoyés.
+
+Les téléchargements sont réutilisés depuis le cache lorsque le navigateur les conserve. Le premier lancement nécessite Internet, un contexte sécurisé (HTTPS ou localhost), WebGPU et une mémoire GPU suffisante. Un appareil incompatible affiche une explication ; aucune réponse préécrite ne remplace le modèle.
+
+Le contexte est recalculé à chaque réponse depuis les leçons validées, un extrait borné des cartes actives (priorité au sujet et aux cartes étudiées), l’heure locale et les échanges récents. Le modèle est guidé pour conserver un japonais accessible ; cette consigne ne garantit pas une conformité grammaticale parfaite. Les réponses arrivent progressivement et peuvent être interrompues. Les aides « Plus simple » et « Aide en français » demandent une nouvelle réponse au même modèle.
+
+Les 120 derniers messages sont sauvegardés dans une base IndexedDB séparée, `kotoba-conversation`. Une partie récente et de courts extraits antérieurs sont transmis au modèle local ; il ne relit pas tout l’historique à chaque réponse. Cette mémoire reste sur cet appareil : elle n’est incluse ni dans la synchronisation GitHub, ni dans les exports de bibliothèque. Elle peut être effacée depuis le chat. Le moteur et les messages restent disponibles en passant de l’accueil à Discussion ; la mise en pause dans les réglages libère le moteur GPU. Un modèle déjà en cache reprend automatiquement à l’ouverture de Discussion.
+
+La saisie de Discussion utilise le moteur de Writing : conversion romaji → hiragana / katakana, mode latin, suggestions de la bibliothèque et remplacement du mot directement dans le champ. Entrée insère d’abord la suggestion sélectionnée, puis envoie le message ; Maj+Entrée ajoute une ligne. Le clavier japonais natif, le collage et l’annulation sont conservés. Le brouillon est mémorisé séparément sur cet appareil.
