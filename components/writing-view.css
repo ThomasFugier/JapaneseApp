@@ -52,3 +52,21 @@
   .writing-suggestion-meaning { font-size:11px; }
   .writing-suggestion-help { display:none; }
 }
+
+@media (max-width:640px) {
+  .app-shell .writing-view .writing-meta { margin-bottom:4px; line-height:14px; }
+  .app-shell .writing-view .writing-save-status { font-size:9px; }
+  .app-shell .writing-view .writing-toolbar { display:flex; flex-wrap:nowrap; justify-content:space-between; gap:4px; width:100%; padding:5px 6px; margin-bottom:10px; border-radius:12px; }
+  .app-shell .writing-view .writing-input-modes,.app-shell .writing-view .writing-font-sizes { flex:0 0 auto; gap:2px; padding:0; border:0; }
+  .app-shell .writing-view .writing-input-modes button,.app-shell .writing-view .writing-font-sizes button { min-width:36px; min-height:42px; padding:0 5px; }
+  .app-shell .writing-view .writing-suggestion-toggle { flex:0 0 42px; width:42px; min-height:42px; gap:0; padding:0; font-size:0; }
+  .app-shell .writing-view .writing-suggestion-toggle svg { width:18px; height:18px; }
+  .app-shell .writing-view .writing-download { flex:0 0 42px; width:42px; height:42px; min-width:42px; min-height:42px; }
+  .app-shell .writing-view .writing-paper { min-height:clamp(260px,45svh,400px); border-radius:16px; }
+  .app-shell .writing-view .writing-textarea { min-height:clamp(260px,45svh,400px); padding:22px 18px 48px 30px; }
+}
+
+@media (max-width:360px) {
+  .app-shell .writing-view .writing-toolbar { justify-content:flex-start; overflow-x:auto; }
+  .app-shell .writing-view .writing-input-modes,.app-shell .writing-view .writing-font-sizes { flex-shrink:0; }
+}

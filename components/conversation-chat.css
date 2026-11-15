@@ -6,7 +6,7 @@
 .discussion-preview-heading small { display:block; margin-top:2px; font-size:11px; color:#92929b; }
 .discussion-preview-heading>svg { margin-left:auto; color:#a2a2ab; }
 .discussion-preview-thread { display:flex; flex-direction:column; align-items:flex-start; gap:9px; margin:20px 0 18px; }
-.discussion-preview-bubble { max-width:85%; padding:10px 15px; border-radius:16px 16px 16px 4px; background:#f3f3f5; font-size:15px; line-height:1.75; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.discussion-preview-bubble { display:block; max-width:85%; padding:14px 15px; border-radius:16px 16px 16px 4px; background:#f3f3f5; font-size:15px; line-height:2.2; overflow-wrap:anywhere; overflow:visible; }
 .discussion-preview-bubble.is-user { align-self:flex-end; background:#edf2fd; color:#3b4c70; border-radius:16px 16px 4px 16px; }
 .discussion-preview-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#787881; font-size:11px; }
 .discussion-preview-footer>span { color:#aaaab2; }

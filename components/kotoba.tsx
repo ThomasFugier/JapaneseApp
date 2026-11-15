@@ -331,15 +331,18 @@ export default function Kotoba() {
       <main id="main-content" className={`main-content ${session ? 'session-main' : ''} ${tab === 'home' && interfaceStyle === 'classroom' ? 'is-activity-home' : ''}`} aria-label={labels[tab]}>
         {!session && <h1 className="sr-only">{labels[tab]}</h1>}
         {(tab === 'home' || tab === 'library') && <WorkspaceSearch home={tab === 'home'} value={tab === 'home' ? '' : reading.search} sort={reading.sort} onChange={searchLibrary} onSortChange={sort => changeReading({ sort })} actionsRef={setSearchActions} />}
-        <div className="conversation-host" hidden={tab !== 'home' && tab !== 'discussion'}><ConversationChat data={data} active={tab === 'discussion'} onOpen={() => navigate('discussion')} displayTools={<><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /></>} /></div>
-        <div key={tab} className="workspace-view" data-view={tab}>
-        {tab === 'home' && <>
-          <div className="home-quick-actions"><button type="button" className="button primary" onClick={() => openNoteEditor('new')}><Plus size={18} />New card</button></div>
-          {!notes.length && !library.status?.authenticated && <section className="home-cloud-connection"><GitHubConnection status={library.status} onDisconnect={library.disconnectGitHub} /></section>}
+        {tab === 'home' && <div className="home-overview">
           {interfaceStyle === 'classroom' ? <ClassroomHome ready={dueCount} cards={notes.length} decks={decks.length} canReview={!!allCards.length} onStart={() => startSession(null)} onOpen={page => navigate(page)} /> : <section className="overview-grid" aria-label="Overview">
             <div className="overview-review"><div className="overview-label"><Layers size={18} />Review directions</div><div className="overview-number">{dueCount}<span>ready</span></div><div className="review-breakdown"><ReviewDirectionCounts counts={counts} /></div><button className="button primary" disabled={!allCards.length} onClick={() => startSession(null)}>Start<ArrowRight size={17} /></button></div>
             <div className="overview-library"><div className="overview-label"><BookOpen size={18} />Library</div><div className="library-counts"><div><strong>{notes.length}</strong><span>card{notes.length !== 1 ? 's' : ''}</span></div><div><strong>{decks.length}</strong><span>deck{decks.length !== 1 ? 's' : ''}</span></div></div><button className="text-button" onClick={() => navigate('library')}>Open library<ArrowRight size={16} /></button></div>
           </section>}
+          <div className="home-quick-actions"><button type="button" className="button primary" onClick={() => openNoteEditor('new')}><Plus size={18} />Add card</button></div>
+        </div>}
+        <div key="conversation" className="conversation-host" hidden={tab !== 'home' && tab !== 'discussion'}><ConversationChat data={data} active={tab === 'discussion'} onOpen={() => navigate('discussion')} displayTools={<><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /></>} /></div>
+        {tab === 'home' && interfaceStyle === 'classroom' && <div className="activity-menu-footer"><button className="text-button" onClick={() => navigate('stats')}><ClassroomEmoji>📊</ClassroomEmoji>My progress <ArrowRight size={16}/></button></div>}
+        <div key={tab} className="workspace-view" data-view={tab}>
+        {tab === 'home' && <>
+          {!notes.length && !library.status?.authenticated && <section className="home-cloud-connection"><GitHubConnection status={library.status} onDisconnect={library.disconnectGitHub} /></section>}
           {interfaceStyle === 'classic' && <section className="home-decks"><div className="section-heading"><h2>My decks</h2><button className="text-button" onClick={() => navigate('library')}>View all<ArrowRight size={16} /></button></div><div className="deck-grid">{homeDecks.slice(0, 3).map(deck => <DeckTile key={deck.id} deck={deck} count={countNotes(data, deck.id)} subcount={decks.filter(item => item.parentId === deck.id).length} onClick={() => navigate('library', deck.id)} />)}{decks.length === 0 && <button className="empty-deck" onClick={() => { setTab('library'); setDeckModal('new'); }}><Plus />Create a deck</button>}</div></section>}
         </>}
 

@@ -21,6 +21,5 @@ export function ClassroomHome({ ready, cards, decks, canReview, onStart, onOpen 
       <article className="activity-card activity-lessons"><button className="activity-open" onClick={() => onOpen('lessons')}><ClassroomEmoji>🎓</ClassroomEmoji><span className="activity-copy"><strong>Lessons</strong><span>Grammar & conjugation</span></span><ArrowRight size={25}/></button></article>
       <article className="activity-card activity-library"><button className="activity-open" onClick={() => onOpen('library')}><ClassroomEmoji>📚</ClassroomEmoji><span className="activity-copy"><strong>My cards</strong><span>{cards} {cards === 1 ? 'card' : 'cards'} · {decks} {decks === 1 ? 'deck' : 'decks'}</span></span><ArrowRight size={25}/></button></article>
     </div>
-    <div className="activity-menu-footer"><button className="text-button" onClick={() => onOpen('stats')}><ClassroomEmoji>📊</ClassroomEmoji>My progress <ArrowRight size={16}/></button></div>
   </section>;
 }

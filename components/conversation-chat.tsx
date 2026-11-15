@@ -16,6 +16,11 @@ const models = [
 ];
 const message = (role: ConversationMessage['role'], content: string): ConversationMessage => ({ id: crypto.randomUUID(), role, content, createdAt: new Date().toISOString() });
 
+const previewText = (text: string) => {
+  const characters = Array.from(text);
+  return characters.length > 64 ? characters.slice(0, 64).join('') + '…' : text;
+};
+
 export function ConversationChat({ data, active, onOpen, displayTools }: { data: Snapshot; active: boolean; onOpen: () => void; displayTools?: ReactNode }) {
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const history = useRef(messages);
@@ -267,7 +272,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const cached = cache?.modelId === modelId && cache.available;
   if (!active) return <button type="button" className="discussion-preview" onClick={() => { nearBottom.current = true; onOpen(); }} aria-label="Ouvrir la discussion en japonais">
     <span className="discussion-preview-heading"><span className="discussion-preview-avatar"><MessageCircle size={20} /></span><span><strong>Discussion</strong><small>Ton japonais, dans la vraie vie</small></span><ArrowRight size={18} /></span>
-    <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={item.content} /></span>) : <span className="discussion-preview-bubble is-assistant" lang="ja"><JapaneseText text="日本語で話しませんか。" /></span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
+    <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={previewText(item.content)} /></span>) : <span className="discussion-preview-bubble is-assistant" lang="ja"><JapaneseText text="日本語で話しませんか。" /></span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
     <span className="discussion-preview-footer">{state === 'loading' ? 'Préparation de la conversation…' : 'Ouvrir la conversation'}<span>日本語で話そう</span></span>
   </button>;
 

@@ -136,3 +136,11 @@
  .theme-classroom.is-studying .flashcard.is-revealed { grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,.4fr) minmax(0,.6fr); }
  .theme-classroom.is-studying .flashcard.is-revealed .flashcard-answer { border-left:0; border-top:3px solid #cda568; }
 }
+
+.home-overview { width:100%; min-width:0; flex:0 0 auto; }
+.home-overview .home-quick-actions { margin-top:20px; }
+.is-activity-home>.conversation-host,.is-activity-home>.workspace-search,.is-activity-home>.activity-menu-footer,.is-activity-home>.workspace-view { flex-shrink:0; }
+.is-activity-home>.activity-menu-footer { margin:0 0 24px; }
+@media(max-width:640px) {
+ .app-shell .main-content.is-activity-home { justify-content:flex-start; }
+}
