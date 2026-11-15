@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { emptySnapshot } from '../lib/model';
 import { setLessonValidated } from '../lib/lesson-progress';
-import { conversationProfile, conversationPrompt, hasJapaneseReply, readConversation, recentConversation, type ConversationMessage } from '../lib/conversation';
+import { conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, readConversation, recentConversation, type ConversationMessage } from '../lib/conversation';
 
 const at = '2026-11-15T10:00:00.000Z';
 const turn = (role: ConversationMessage['role'], content: string, id = content): ConversationMessage => ({ id, role, content, createdAt: at });
@@ -74,8 +74,22 @@ test('malformed local history cannot become model messages', () => {
   assert.equal(readConversation(Array.from({ length: 130 }, (_, i) => turn('user', 'hello', String(i)))).length, 120);
 });
 
-test('a French-only model response is detected for AI rewriting', () => {
+test('French and mixed-language model replies require AI rewriting', () => {
   assert.equal(hasJapaneseReply('Bonjour ! Comment vas-tu ?'), false);
   assert.equal(hasJapaneseReply('こんにちは。猫が好きですか。'), true);
-  assert.equal(hasJapaneseReply('お茶 signifie thé.'), true);
+  assert.equal(hasJapaneseReply('お茶 signifie thé.'), false);
+  assert.equal(hasJapaneseReply('こんにちは。Bonjour !'), false);
+  assert.equal(hasJapaneseReply('こーひー（café）'), false);
+  assert.equal(hasJapaneseReply('日本。'), true);
+  assert.equal(hasJapaneseReply('コーヒーが好きです。☕'), true);
+  assert.equal(hasJapaneseReply('３時です。'), true);
+});
+
+test('outgoing messages reject foreign prose without blocking numbers or emoji', () => {
+  assert.equal(isJapaneseMessage('Bonjour !'), false);
+  assert.equal(isJapaneseMessage('ありがとう、merci !'), false);
+  assert.equal(isJapaneseMessage('ありがとう。😊'), true);
+  assert.equal(isJapaneseMessage('3'), true);
+  assert.equal(isJapaneseMessage('  '), false);
+  assert.equal(recentConversation([turn('assistant', 'こんにちは。')])[0].content, '日本語で話しましょう。');
 });

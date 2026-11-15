@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
-import { CONVERSATION_LIMIT, conversationPrompt, hasJapaneseReply, recentConversation, type ConversationMessage } from '@/lib/conversation';
+import { CONVERSATION_LIMIT, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, type ConversationMessage } from '@/lib/conversation';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
 import { JapaneseText } from './furigana';
 import { JapaneseChatInput } from './japanese-chat-input';
@@ -162,12 +162,12 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         for await (const chunk of response) {
           if (!mounted.current || request !== epoch.current) return;
           answer += chunk.choices[0]?.delta.content ?? '';
-          setPartial(answer);
+          setPartial(hasJapaneseReply(answer) ? answer : '');
         }
         if (!stopped.current && answer.trim() && !hasJapaneseReply(answer)) {
           setPartial('');
           const revised = await ai.chat.completions.create({
-            messages: [...modelMessages, { role: 'assistant', content: answer }, { role: 'user', content: '今の返事を、やさしい日本語で書き直してください。説明を求めた場合はフランス語の説明もできますが、短い日本語の例文を必ず入れてください。' }],
+            messages: [...modelMessages, { role: 'assistant', content: answer }, { role: 'user', content: '今の返事を、やさしい日本語だけで書き直してください。外国語、ローマ字、アルファベットは使わないでください。言葉の説明も日本語で書いてください。' }],
             stream: false, extra_body: { enable_thinking: false }, temperature: 0.4, max_tokens: 280,
           });
           answer = revised.choices[0]?.message.content ?? '';
@@ -176,7 +176,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       }, 180000);
       if (!mounted.current || request !== epoch.current) return;
       const clean = answer.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-      if (clean) await persist([...current, message('assistant', clean)]);
+      if (clean && hasJapaneseReply(clean)) await persist([...current, message('assistant', clean)]);
       else if (!stopped.current) throw new Error('Le modèle n’a pas produit de réponse. Tu peux réessayer.');
     } catch (cause) {
       if (mounted.current) {
@@ -221,6 +221,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
 
   async function send(text: string) {
     if (locked.current || !engine.current || !text.trim()) return;
+    if (!isJapaneseMessage(text)) { setError('Écris ton message en japonais avant de l’envoyer.'); return; }
     locked.current = true; setDraft(''); setClearConfirm(false);
     try {
       const next = [...history.current, message('user', text.trim().slice(0, 1000))];
@@ -239,7 +240,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const selected = models.find(model => model.id === modelId)!;
   if (!active) return <button type="button" className="discussion-preview" onClick={() => { nearBottom.current = true; onOpen(); }} aria-label="Ouvrir la discussion en japonais">
     <span className="discussion-preview-heading"><span className="discussion-preview-avatar"><MessageCircle size={20} /></span><span><strong>Discussion</strong><small>Ton japonais, dans la vraie vie</small></span><ArrowRight size={18} /></span>
-    <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={item.content} /></span>) : <span className="discussion-preview-bubble is-assistant">Un moment pour discuter en japonais ?</span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
+    <span className="discussion-preview-thread" aria-hidden="true">{messages.length ? messages.slice(-2).map(item => <span key={item.id} className={`discussion-preview-bubble is-${item.role}`} lang="ja"><JapaneseText text={item.content} /></span>) : <span className="discussion-preview-bubble is-assistant" lang="ja"><JapaneseText text="日本語で話しませんか。" /></span>}{busy && <span className="discussion-preview-bubble discussion-dots">•••</span>}</span>
     <span className="discussion-preview-footer">{state === 'loading' ? 'Préparation de la conversation…' : 'Ouvrir la conversation'}<span>日本語で話そう</span></span>
   </button>;
 
@@ -262,7 +263,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         <p>{selected.size}. Le cache est réutilisé lorsque le navigateur le conserve.</p>
         {state === 'ready' && <button className="text-button" disabled={busy} onClick={release}>Mettre le modèle en pause</button>}
         <div className="discussion-settings-tools">{displayTools}</div>
-        <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('Peux-tu expliquer ta dernière réponse en français, puis continuer en japonais ?'); }}>Aide en français</button></div>
+        <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('やさしい日本語で説明してください。'); }}>Expliquer simplement</button></div>
         <p>Le niveau est guidé par tes acquis ; l’IA peut se tromper. L’historique est conservé uniquement sur cet appareil.</p>
         {messages.length > 0 && <button className="text-button" disabled={busy || state === 'loading'} onClick={() => setClearConfirm(value => !value)}><RotateCcw size={13} />Effacer l’historique</button>}
         {clearConfirm && <div className="discussion-clear"><span>Effacer les échanges sur cet appareil ?</span><button className="text-button" onClick={() => setClearConfirm(false)}>Annuler</button><button className="text-button" onClick={() => void clear()}>Effacer</button></div>}

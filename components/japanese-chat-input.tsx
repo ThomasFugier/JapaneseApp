@@ -203,7 +203,7 @@ export function JapaneseChatInput({ data, value, onChange, onSend, onSettings, b
     </div>}
     <div className="chat-input-composer">
       <button type="button" className="chat-input-mode" aria-label={`Mode de saisie : ${mode === 'hiragana' ? 'hiragana' : mode === 'katakana' ? 'katakana' : 'latin'}. Changer le mode`} title="Changer le mode de saisie" onClick={cycleMode}><span lang={mode === 'latin' ? undefined : 'ja'}>{modeLabel[mode]}</span></button>
-      <textarea ref={editor} className="chat-input-textarea" value={value} rows={1} maxLength={1000} placeholder="日本語で話そう…" aria-label="Message en japonais ou en français" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${selected}` : undefined}
+      <textarea ref={editor} className="chat-input-textarea" value={value} rows={1} maxLength={1000} placeholder="日本語で話そう…" aria-label="Message en japonais" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-${selected}` : undefined}
         autoCorrect="off" autoCapitalize="off" spellCheck={false}
         onChange={event => changed(event.currentTarget, (event.nativeEvent as InputEvent).inputType || 'insertText')}
         onSelect={event => {
