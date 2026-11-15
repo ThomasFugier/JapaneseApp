@@ -141,6 +141,28 @@
 .home-overview .home-quick-actions { margin-top:20px; }
 .is-activity-home>.conversation-host,.is-activity-home>.workspace-search,.is-activity-home>.activity-menu-footer,.is-activity-home>.workspace-view { flex-shrink:0; }
 .is-activity-home>.activity-menu-footer { margin:0 0 24px; }
+.theme-classroom .is-activity-home .home-quick-actions { margin:18px 0 22px; }
+.theme-classroom .is-activity-home>.activity-menu-footer { display:block; margin:0; }
+.theme-classroom .is-activity-home .discussion-preview { margin-bottom:22px; }
+.theme-classroom .is-activity-home .home-secondary-action { display:flex; align-items:center; gap:15px; width:100%; min-width:0; min-height:78px; padding:14px 20px; border:1.5px solid #d4d9c1; border-bottom-width:3px; border-radius:20px; background:#fffef8; color:#435e4c; text-align:left; }
+.theme-classroom .is-activity-home .home-add-card { background:#eef2e4; border-color:#cbd5ba; }
+.theme-classroom .is-activity-home .home-secondary-icon { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; border-radius:13px; background:#e8eddb; }
+.theme-classroom .is-activity-home .home-add-card .home-secondary-icon { color:#fffef8; background:#29735b; }
+.theme-classroom .is-activity-home .home-secondary-icon .classroom-emoji { font-size:25px; line-height:1; }
+.theme-classroom .is-activity-home .home-secondary-copy { display:flex; flex:1; flex-direction:column; gap:4px; min-width:0; }
+.theme-classroom .is-activity-home .home-secondary-copy strong { font-size:16px; line-height:1.25; font-weight:700; }
+.theme-classroom .is-activity-home .home-secondary-copy small { color:#7b8673; font-size:12px; line-height:1.4; }
+.theme-classroom .is-activity-home .home-secondary-action>svg { flex-shrink:0; color:#718367; }
+.theme-classroom .is-activity-home .home-secondary-action:hover { border-color:#9daf8e; background:#e8eddb; }
+.theme-classroom .is-activity-home .home-secondary-action:focus-visible { outline:2px solid #29735b; outline-offset:4px; }
+@media(min-width:641px) {
+ .theme-classroom .main-content.is-activity-home { padding-bottom:96px; }
+}
 @media(max-width:640px) {
  .app-shell .main-content.is-activity-home { justify-content:flex-start; }
+ .theme-classroom .is-activity-home .home-quick-actions { margin:14px 0 18px; }
+ .theme-classroom .is-activity-home .discussion-preview { margin-bottom:18px; }
+ .theme-classroom .is-activity-home .home-secondary-action { min-height:74px; padding:13px 14px; gap:12px; border-radius:18px; }
+ .theme-classroom .is-activity-home .home-secondary-copy strong { font-size:15px; }
+ .theme-classroom .is-activity-home .home-secondary-copy small { font-size:11px; }
 }
