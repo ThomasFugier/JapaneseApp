@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { memo, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
@@ -25,6 +25,11 @@ const previewText = (text: string) => {
   return characters.length > 64 ? characters.slice(0, 64).join('') + '…' : text;
 };
 
+// Typing a draft must not render the whole transcript and its furigana again.
+const ConversationMessages = memo(function ConversationMessages({ messages }: { messages: ConversationMessage[] }) {
+  return <>{messages.map(item => <article key={item.id} className={`discussion-message is-${item.role}`} aria-label={item.role === 'assistant' ? 'Partenaire' : 'Toi'}><p lang="ja">{item.role === 'assistant' ? <JapaneseText text={item.content} /> : item.content}</p></article>)}</>;
+});
+
 export function ConversationChat({ data, active, onOpen, displayTools }: { data: Snapshot; active: boolean; onOpen: () => void; displayTools?: ReactNode }) {
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const history = useRef(messages);
@@ -37,6 +42,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ progress: 0, text: '' });
   const [draft, setDraft] = useState('');
+  const latestDraft = useRef(draft); latestDraft.current = draft;
   const [partial, setPartial] = useState('');
   const [error, setError] = useState('');
   const [storageError, setStorageError] = useState('');
@@ -96,8 +102,18 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   }, [messages, partial, busy, active]);
 
   useEffect(() => {
-    if (hydrated) { try { localStorage.setItem('kotoba-conversation-draft-v1', draft); } catch { /* Draft remains editable. */ } }
+    if (!hydrated) return;
+    const save = () => { try { localStorage.setItem('kotoba-conversation-draft-v1', draft); } catch { /* Draft remains editable. */ } };
+    const timer = setTimeout(save, 250);
+    return () => clearTimeout(timer);
   }, [draft, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const save = () => { try { localStorage.setItem('kotoba-conversation-draft-v1', latestDraft.current); } catch { /* Draft remains editable. */ } };
+    window.addEventListener('pagehide', save);
+    return () => { window.removeEventListener('pagehide', save); save(); };
+  }, [hydrated]);
 
   useLayoutEffect(() => {
     if (!active) { setSettingsOpen(false); return; }
@@ -308,7 +324,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     <header className="discussion-header"><span className="discussion-preview-avatar"><MessageCircle size={18} /></span><div><h2 id="discussion-title">Discussion</h2><span>{state === 'loading' ? 'Préparation…' : busy ? 'Écrit…' : state === 'ready' ? 'IA locale · prête à discuter' : 'Japonais · sur cet appareil'}</span></div><i className={state === 'ready' ? 'is-ready' : ''} aria-hidden="true" /></header>
     <div ref={output} className="discussion-messages" role="log" aria-label="Conversation japonaise" aria-busy={busy} onScroll={event => { const el = event.currentTarget; nearBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 90; }}>
       {!messages.length && !busy && <div className="discussion-empty"><span lang="ja">話そう</span><p>Un peu de japonais, simplement.</p><small>La conversation suit tes leçons et tes cartes.</small></div>}
-      {messages.map(item => <article key={item.id} className={`discussion-message is-${item.role}`} aria-label={item.role === 'assistant' ? 'Partenaire' : 'Toi'}><p lang="ja">{item.role === 'assistant' ? <JapaneseText text={item.content} /> : item.content}</p></article>)}
+      <ConversationMessages messages={messages} />
       {busy && <article className="discussion-message is-assistant" aria-label="Partenaire">{partial ? <p lang="ja">{partial}</p> : <span className="discussion-dots" aria-label="Réfléchit">•••</span>}</article>}
     </div>
     <div className="discussion-bottom">

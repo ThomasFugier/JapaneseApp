@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { useDeferredValue, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { ArrowUp, Settings2, Square } from 'lucide-react';
 import { applySuggestion, writingMatches } from '@/lib/writing';
 import { convertWritingInput, finishKanaInput, type KanaComposition } from '@/lib/kana-input';
@@ -87,9 +87,14 @@ export function JapaneseChatInput({ data, value, onChange, onSend, onSettings, b
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
   }, [value]);
 
-  const matching = useMemo(() => focused && !composing && !dismissed
-    ? writingMatches(data, value, selection.start, selection.end) : null,
-  [data, value, selection, focused, composing, dismissed]);
+  // Kana conversion and caret updates stay urgent; searching the saved library
+  // runs after the text has painted. Never insert a result for an older edit.
+  const search = useMemo(() => ({ data, value, start: selection.start, end: selection.end, enabled: focused && !composing && !dismissed }),
+    [data, value, selection.start, selection.end, focused, composing, dismissed]);
+  const deferredSearch = useDeferredValue(search);
+  const deferredMatching = useMemo(() => deferredSearch.enabled
+    ? writingMatches(deferredSearch.data, deferredSearch.value, deferredSearch.start, deferredSearch.end) : null, [deferredSearch]);
+  const matching = deferredSearch === search ? deferredMatching : null;
   const notes = matching?.notes ?? [];
   const open = notes.length > 0;
 

@@ -15,6 +15,21 @@ function collection(notes: Note[]): Snapshot {
   return data;
 }
 
+test('prepared suggestion fields refresh after edits to a cached note and its reading arrays', () => {
+  const entry = { ...note('word', '林檎', 'りんご', 'Pomme'), onReadings: ['リン'], kunReadings: ['りんご'] };
+  const data = collection([entry]);
+  assert.equal(writingSuggestions(data, 'ringo')[0]?.id, entry.id);
+  entry.japanese = '犬'; entry.reading = 'いぬ'; entry.meaning = 'Chien';
+  entry.onReadings[0] = 'ケン'; entry.kunReadings[0] = 'いぬ';
+  assert.equal(writingSuggestions(data, 'ringo').length, 0);
+  for (const query of ['いぬ', 'inu', 'chien', 'ken']) assert.equal(writingSuggestions(data, query)[0]?.id, entry.id);
+  entry.deletedAt = date;
+  assert.equal(writingSuggestions(data, 'inu').length, 0);
+  delete entry.deletedAt;
+  data.cards = [];
+  assert.equal(writingSuggestions(data, 'inu').length, 0);
+});
+
 test('romaji and partial input match saved kana and katakana readings', () => {
   const apple = note('apple', '林檎', 'りんご', 'Pomme');
   for (const query of ['ringo', 'RINGO', 'ri', 'rin', 'ring', 'りんご', 'リンゴ', 'ﾘﾝｺﾞ', 'pomme']) assert.ok(matchesNote(apple, query), query);

@@ -26,6 +26,24 @@ function savedReadings(note: SearchableNote): string[] {
     .flatMap(reading => reading.split(/[、,，;；/／・\s()[\]（）]+/)).filter(Boolean);
 }
 
+type WritingFields = { japanese: string[]; readings: string[]; meaning: string; fuzzy: string[] };
+const writingFields = new WeakMap<SearchableNote, { signature: string; fields: WritingFields }>();
+const writingCollator = new Intl.Collator('ja');
+
+function preparedWritingFields(note: SearchableNote): WritingFields {
+  // Reuse kana/romaji conversions across keystrokes. Check values too: imported
+  // entries and callers may update a note without replacing its object.
+  const signature = JSON.stringify([note.japanese, note.reading, note.meaning, note.onReadings, note.kunReadings]);
+  const cached = writingFields.get(note);
+  if (cached?.signature === signature) return cached.fields;
+  const japanese = phoneticAliases(note.japanese);
+  const readings = [...new Set(savedReadings(note).flatMap(phoneticAliases))];
+  const meaning = textKey(note.meaning);
+  const fields = { japanese, readings, meaning, fuzzy: [...new Set([...japanese, ...readings, meaning, ...meaning.split(/\s+/)])].filter(value => /^[a-z0-9]{4,80}$/.test(value)) };
+  writingFields.set(note, { signature, fields });
+  return fields;
+}
+
 export function noteSearchRank(note: SearchableNote, query: string): number {
   const key = textKey(query);
   if (!key) return 0;
@@ -81,10 +99,11 @@ function fuzzyRank(fields: string[], queries: string[]): number {
 
 /** Lower ranks win: exact/prefix <20, substring <100, fuzzy >=100. */
 export function writingSuggestionRank(note: SearchableNote, query: string): number {
-  const queries = phoneticAliases(query);
-  const japanese = phoneticAliases(note.japanese);
-  const readings = [...new Set(savedReadings(note).flatMap(phoneticAliases))];
-  const meaning = textKey(note.meaning);
+  return preparedWritingRank(note, phoneticAliases(query), textKey(query));
+}
+
+function preparedWritingRank(note: SearchableNote, queries: string[], key: string): number {
+  const { japanese, readings, meaning, fuzzy } = preparedWritingFields(note);
   let best = Infinity;
   const compare = (fields: string[], queryValues: string[], priority: number) => {
     for (const field of fields) for (const value of queryValues) {
@@ -95,8 +114,8 @@ export function writingSuggestionRank(note: SearchableNote, query: string): numb
   };
   compare(japanese, queries, 0);
   compare(readings, queries, 1);
-  compare([meaning], [textKey(query)], 2);
-  return Number.isFinite(best) ? best : fuzzyRank([...japanese, ...readings, meaning, ...meaning.split(/\s+/)], queries);
+  compare([meaning], [key], 2);
+  return Number.isFinite(best) ? best : fuzzyRank(fuzzy, queries);
 }
 
 /** Autocomplete uses saved entries only, never an external Japanese dictionary. */
@@ -104,13 +123,13 @@ export function writingSuggestions(data: Snapshot, query: string, limit = 8): No
   const key = textKey(query);
   if (!key || !Number.isFinite(limit) || limit <= 0) return [];
   const ids = new Set(cardsForDeck(data, null).map(card => card.noteId));
-  const collator = new Intl.Collator('ja');
+  const queries = phoneticAliases(key);
   return data.notes.filter(note => !note.deletedAt && ids.has(note.id))
-    .map(note => ({ note, rank: writingSuggestionRank(note, key) }))
+    .map(note => ({ note, rank: preparedWritingRank(note, queries, key) }))
     .filter(item => Number.isFinite(item.rank))
     .sort((a, b) => a.rank - b.rank
-      || collator.compare(a.note.reading || a.note.japanese, b.note.reading || b.note.japanese)
-      || collator.compare(a.note.japanese, b.note.japanese)
+      || writingCollator.compare(a.note.reading || a.note.japanese, b.note.reading || b.note.japanese)
+      || writingCollator.compare(a.note.japanese, b.note.japanese)
       || a.note.id.localeCompare(b.note.id))
     .slice(0, Math.min(50, Math.floor(limit)))
     .map(item => item.note);
