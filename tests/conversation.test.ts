@@ -2,10 +2,44 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { emptySnapshot } from '../lib/model';
 import { setLessonValidated } from '../lib/lesson-progress';
-import { cleanConversationReply, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, readConversation, recentConversation, type ConversationMessage } from '../lib/conversation';
+import { cleanConversationReply, conversationHelp, conversationHelpInstruction, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, readConversation, recentConversation, repeatsConversationReply, type ConversationMessage } from '../lib/conversation';
 
 const at = '2026-11-15T10:00:00.000Z';
 const turn = (role: ConversationMessage['role'], content: string, id = content): ConversationMessage => ({ id, role, content, createdAt: at });
+
+test('requests for understanding retain the actual phrase and escalate after another failed explanation', () => {
+  const history = [turn('assistant', 'おやつは食べましたか？'), turn('user', 'わかりません')];
+  assert.deepEqual(conversationHelp(history), { attempts: 1, previous: 'おやつは食べましたか？' });
+  history.push(turn('assistant', 'おやつは、小さい食べ物です。'), turn('user', 'すみません、まだ分かりません。'));
+  assert.equal(conversationHelp(history)?.attempts, 2);
+  assert.match(conversationHelpInstruction(history), /前の説明でも伝わりませんでした/);
+  assert.match(conversationHelpInstruction(history), /おやつは、小さい食べ物です/);
+  history.push(turn('assistant', 'いちごは好きですか？'), turn('user', 'はい、好きです。'));
+  assert.equal(conversationHelp(history), null);
+  history.push(turn('assistant', '甘いですね。'), turn('user', 'もっとやさしい日本語でお願いします。'));
+  assert.equal(conversationHelp(history)?.attempts, 1);
+});
+
+test('ordinary answers are not treated as requests to explain', () => {
+  for (const content of ['いちごが好きですか', '明日の天気はわかりません', '食べません', 'はい']) {
+    assert.equal(conversationHelp([turn('assistant', '明日は何をしますか？'), turn('user', content)]), null);
+  }
+  for (const content of ['わからない', 'よくわかりません', 'どういう意味？', 'もう一度お願いします', 'やさしい日本語で説明してください。']) {
+    assert.equal(conversationHelp([turn('assistant', 'おやつです。'), turn('user', content)])?.attempts, 1);
+  }
+});
+
+test('repeated replies and bare repeated questions trigger regeneration while explanations are allowed', () => {
+  const history = [turn('assistant', 'そうですね。おやつは食べましたか？'), turn('user', 'わかりません')];
+  assert.equal(repeatsConversationReply('そうですね！ おやつは食べましたか。', history), true);
+  assert.equal(repeatsConversationReply('おやつは食べましたか？', history), true);
+  assert.equal(repeatsConversationReply('そうなんですね。おやつは食べましたか？', history), true);
+  assert.equal(repeatsConversationReply('おやつは、ご飯とご飯の間に食べるものです。たとえば、いちごです。', history), false);
+  assert.equal(repeatsConversationReply('こんにちは。', []), false);
+  const prompt = conversationPrompt(emptySnapshot(), history);
+  assert.match(prompt, /説明の対象/);
+  assert.match(prompt, /質問なしでもいい/);
+});
 function fixture() {
   const data = emptySnapshot();
   for (const [id, japanese, meaning] of [['tea', 'お茶', 'thé'], ['train', '電車', 'train'], ['deleted', '猫', 'chat']]) {

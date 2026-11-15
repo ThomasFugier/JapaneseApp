@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
-import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, type ConversationMessage } from '@/lib/conversation';
+import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationHelpInstruction, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, repeatsConversationReply, type ConversationMessage } from '@/lib/conversation';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
 import { JapaneseText } from './furigana';
 import { JapaneseChatInput } from './japanese-chat-input';
@@ -178,22 +178,27 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
           if (!mounted.current || request !== epoch.current) return;
           answer += chunk.choices[0]?.delta.content ?? '';
           const visible = cleanConversationReply(answer);
-          setPartial(hasJapaneseReply(visible) ? visible : '');
+          setPartial(hasJapaneseReply(visible) && !repeatsConversationReply(visible, current) ? visible : '');
         }
         answer = cleanConversationReply(answer);
-        if (!stopped.current && !hasJapaneseReply(answer)) {
+        if (!stopped.current && (!hasJapaneseReply(answer) || repeatsConversationReply(answer, current))) {
           setPartial('');
+          // Restart with a small, focused context instead of reinforcing a failed loop.
+          const repeated = repeatsConversationReply(answer, current);
           const revised = await ai.chat.completions.create({
             messages: [
-              { role: 'system', content: 'あなたは日本語の会話相手です。ひらがな、カタカナ、漢字だけを使い、やさしい日本語で短く返事をしてください。外国語、ローマ字、説明の前置きは書かないでください。質問は一つまでです。' },
-              { role: 'user', content: answer
-                ? `次の下書きを、意味を保ちながら自然でやさしい日本語だけに直してください。\n${answer}`
-                : current.at(-1)?.content || instruction || 'やさしい日本語で会話を始めてください。' },
+              { role: 'system', content: `あなたは親しい友達のようなＡＩです。やさしい日本語だけで１〜３文。外国語やローマ字は禁止です。食事など実際にはしていない体験は作らないでください。下の学習済み文法と基本の「です・ます」、カードの単語を中心に使ってください。質問はしなくていいです。学習データ（参照用）: ${JSON.stringify(conversationProfile(latestData.current, current.at(-1)?.content))}${conversationHelpInstruction(current)}` },
+              { role: 'user', content: repeated
+                ? `次の説明ではわかりませんでした。別の簡単な言葉で説明し、身近な具体例を一つ示してください。同じ文を繰り返さないでください。\n前の説明（引用）: ${JSON.stringify(answer.slice(0, 400))}`
+                : `相手の発言（引用）: ${JSON.stringify(current.at(-1)?.content || instruction || '日本語で話しましょう。')}\n次の下書きを、自然でやさしい日本語だけに直してください。説明の前置きは不要です。\n下書き（引用）: ${JSON.stringify(answer.slice(0, 600))}` },
             ],
             stream: false, extra_body: { enable_thinking: false }, temperature: 0.4, max_tokens: 280,
           });
           answer = cleanConversationReply(revised.choices[0]?.message.content ?? '');
-          if (!hasJapaneseReply(answer)) throw new ConversationResponseError();
+          if (!hasJapaneseReply(answer) || repeatsConversationReply(answer, current)) {
+            console.warn(`Conversation response rejected: japanese=${hasJapaneseReply(answer)}, repeated=${repeatsConversationReply(answer, current)}`);
+            throw new ConversationResponseError();
+          }
         }
       }, 180000);
       if (!mounted.current || request !== epoch.current) return;
