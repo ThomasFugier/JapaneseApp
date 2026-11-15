@@ -58,7 +58,7 @@ html:has(.theme-classroom) { background:#fff5e3; }
 .theme-classroom .deck-tile:nth-child(3n) { border-top-color:#78c9d0; }
 .theme-classroom .deck-tile:hover { border-color:#a7b591; border-top-color:#819c6c; background:#fffef6; }
 .theme-classroom .tile-kanji { color:#59724d; }
-.theme-classroom .display-toolbar,.theme-classroom .ambience-bar { background:#fffef8; border-color:#d4dac1; border-radius:19px; box-shadow:none; }
+.theme-classroom .display-toolbar { background:#fffef8; border-color:#d4dac1; border-radius:19px; box-shadow:none; }
 .theme-classroom .display-toolbar button { border-radius:12px; }
 .theme-classroom .modal { border:2px solid #d7dcc3; border-radius:24px; background:#fffef8; color:#38483f; }
 .theme-classroom .modal h2 { color:#3b5945; }
@@ -93,8 +93,3 @@ html:has(.theme-classroom) { background:#fff5e3; }
   .theme-classroom.is-studying .topbar { display:none; }
 }
 @media (prefers-reduced-motion:reduce) { .theme-classroom .button { transition:none; } }
-
-.theme-classroom .ambience-panel { background:#fffef8; border-color:#d4dac1; color:#63745a; }
-.theme-classroom .ambience-choices>button[aria-pressed=true] { background:#e5edd6; border-color:#cbd9b7; color:#42634b; }
-.theme-classroom .ambience-play[aria-pressed=true] { background:#dbe8c9; color:#42634b; }
-@media(max-width:640px) { .theme-classroom .ambience-widget:not(.in-review) .ambience-bar { background:#fff5e3; border-color:#d8dcc4; box-shadow:none; } }

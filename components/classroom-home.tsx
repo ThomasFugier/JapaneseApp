@@ -14,7 +14,7 @@ export function ClassroomHome({ ready, cards, decks, canReview, onStart, onOpen 
   return <section className="activity-menu" aria-label="Learning activities">
     <div className="activity-grid">
       <article className="activity-card activity-review">
-        <button className="activity-open" onClick={() => onOpen('review')}><ClassroomEmoji>🎴</ClassroomEmoji><span className="activity-copy"><strong>Review</strong><span>Japanese ↔ English</span></span><ArrowRight size={25}/></button>
+        <button className="activity-open" onClick={() => onOpen('review')}><ClassroomEmoji>📇</ClassroomEmoji><span className="activity-copy"><strong>Review</strong><span>Japanese ↔ English</span></span><ArrowRight size={25}/></button>
         <div className="activity-footer"><span>{ready ? `${ready} directions ready` : 'Free practice'}</span><button className="text-button" disabled={!canReview} onClick={onStart}>Review all <ArrowRight size={16}/></button></div>
       </article>
       <article className="activity-card activity-writing"><button className="activity-open" onClick={() => onOpen('writing')}><ClassroomEmoji>✏️</ClassroomEmoji><span className="activity-copy"><strong>Write</strong><span>Kana & kanji notebook</span></span><ArrowRight size={25}/></button></article>

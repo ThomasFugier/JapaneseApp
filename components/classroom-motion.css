@@ -1,8 +1,7 @@
 /* Quiet motion: stable controls, brief content entrances, shared geometry only. */
 .app-shell { --motion-ease:cubic-bezier(.2,0,0,1); }
 .app-shell :is(.workspace-view,.flashcard-label,.modal-backdrop,.activity-card,.classroom-answer-feedback) { animation:none; }
-.app-shell :is(.modal,.note-side-panel,.entry-detail,.immersion-focus,.immersion-french,.immersion-message,.ambience-panel,.tag-suggestions,.flashcard-prompt,.flashcard-answer) { animation:appear .12s ease-out; }
-.app-shell .ambience-control.is-embedded .ambience-panel { animation:none; }
+.app-shell :is(.modal,.note-side-panel,.entry-detail,.immersion-focus,.immersion-french,.immersion-message,.tag-suggestions,.flashcard-prompt,.flashcard-answer) { animation:appear .12s ease-out; }
 .app-shell .review-page-flow { transition:none; }
 .theme-classroom .classroom-lesson-activity .lesson-section { animation:none; }
 .theme-classroom .activity-open>svg { transition:background-color .14s ease-out; }

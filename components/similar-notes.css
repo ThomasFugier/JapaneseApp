@@ -1,0 +1,29 @@
+.note-similar { min-width:0; border:1px solid var(--line); border-radius:14px; padding:12px; background:var(--soft); overflow-anchor:none; }
+.note-similar>header { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:10px; color:var(--muted); }
+.note-similar>header h3 { margin:0; color:var(--ink); font-size:12px; font-weight:600; }
+.note-similar>header>span { margin-left:auto; font-size:10px; }
+.note-similar ul { display:grid; gap:6px; list-style:none; padding:0; margin:0; max-height:280px; overflow:auto; overscroll-behavior:contain; }
+.note-similar-match { border:1px solid var(--line); border-radius:10px; background:var(--paper); }
+.note-similar-match.is-duplicate { border-color:var(--red); }
+.note-similar-match summary { display:flex; align-items:center; gap:8px; min-height:62px; padding:9px 10px; cursor:pointer; list-style:none; }
+.note-similar-match summary::-webkit-details-marker { display:none; }
+.note-similar-match summary:focus-visible { outline:2px solid var(--red); outline-offset:-2px; border-radius:9px; }
+.note-similar-match summary>svg { flex-shrink:0; color:var(--muted); }
+.note-similar-copy { flex:1; min-width:0; display:grid; gap:3px; }
+.note-similar-word { display:flex; align-items:baseline; flex-wrap:wrap; gap:3px 9px; min-width:0; }
+.note-similar-word strong { color:var(--ink); font-size:19px; font-weight:400; line-height:1.5; overflow-wrap:anywhere; }
+.note-similar-word small { color:var(--muted); font-size:12px; overflow-wrap:anywhere; }
+.note-similar-meaning { color:var(--muted); font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
+.note-similar-kind { flex-shrink:0; max-width:80px; font-size:10px; text-align:right; color:var(--muted); }
+.note-similar-match.is-duplicate .note-similar-kind { color:var(--red); font-weight:600; }
+.note-similar-detail { padding:0 10px 10px; border-top:1px solid var(--line); overflow-wrap:anywhere; }
+.note-similar-detail p { margin:8px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
+.note-similar-detail p[lang=ja] { color:var(--ink); font-size:16px; }
+.note-similar-hint { margin:8px 0 0; color:var(--muted); font-size:11px; line-height:1.5; }
+.theme-classroom .note-similar { background:#f0f3e7; border-color:var(--classroom-frame,#d4d9c1); }
+.theme-classroom .note-similar-match { background:#fffef8; }
+@media(max-width:440px) {
+ .note-similar { padding:10px; }
+ .note-similar>header>span { flex-basis:100%; margin-left:21px; }
+ .note-similar-kind { max-width:60px; font-size:9px; }
+}

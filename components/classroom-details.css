@@ -1,0 +1,41 @@
+/* Shared classroom geometry: one frame tone, depth only along the bottom. */
+.theme-classroom { --classroom-frame:#d4d9c1; --classroom-radius:22px; }
+.theme-classroom :is(.review-all,.overview-review,.classroom-board,.flashcard,.lesson-heading,.lesson-revisit) { border:2px solid #648b77; border-bottom-width:5px; border-radius:var(--classroom-radius); box-shadow:none; }
+.theme-classroom .review-all:hover:not(:disabled) { border-color:#789f8a; }
+.theme-classroom.is-studying .study-space .flashcard { border:2px solid #648b77; border-bottom-width:5px; border-radius:var(--classroom-radius); }
+.theme-classroom :is(.flashcard,.lesson-heading,.lesson-revisit) { overflow:hidden; }
+.theme-classroom .study-space .flashcard-answer,.theme-classroom.is-studying .study-space .flashcard-answer { border-top:2px solid #648b77; border-left:0; }
+.theme-classroom :is(.review-deck:nth-child(n),.library-dictionary,.library-decks,.statistics-panel,.lesson-tile,.writing-paper,.lesson-pattern,.lesson-reminder,.lesson-reference,.overview-library) { border:2px solid var(--classroom-frame); border-bottom-width:4px; border-radius:var(--classroom-radius); box-shadow:none; }
+.theme-classroom .home-decks .deck-tile:nth-child(n),.theme-classroom .statistics-summary>div:nth-child(n) { border:2px solid var(--classroom-frame); border-bottom-width:4px; border-radius:var(--classroom-radius); box-shadow:none; }
+.theme-classroom .library-workspace .library-decks.mobile-open { border:2px solid var(--classroom-frame); border-bottom-width:4px; border-radius:var(--classroom-radius); }
+.theme-classroom .activity-card { border-radius:var(--classroom-radius); border-width:2px; border-bottom-width:4px; }
+.theme-classroom .activity-open { border-radius:0; }
+.theme-classroom .activity-open:focus-visible { outline:3px solid currentColor; outline-offset:-6px; }
+.theme-classroom .activity-open>.classroom-emoji { border-radius:16px; }
+.theme-classroom .library-search-group { border:2px solid var(--classroom-frame); border-bottom-width:4px; border-radius:var(--classroom-radius); }
+.theme-classroom .library-search-group:focus-within { border-color:#6d977b; }
+.theme-classroom .classroom-notebook { border:2px solid currentColor; border-bottom-width:4px; border-radius:var(--classroom-radius); clip-path:none; }
+.theme-classroom .classroom-notebook:hover,.theme-classroom .home-decks .deck-tile:hover { outline:none; filter:brightness(.98); }
+.theme-classroom :is(.button,.review-all .button.primary,.classroom-board .button.primary,.study-space .reveal-button) { border-radius:14px; }
+.theme-classroom :is(.desktop-tabs>button,.mobile-nav>button) { flex-direction:column; flex-wrap:nowrap; align-items:center; justify-content:center; }
+.theme-classroom .desktop-tabs>button { gap:6px; }
+.theme-classroom .desktop-tabs .classroom-nav-icon { flex-shrink:0; }
+.theme-classroom :is(.desktop-tabs,.mobile-nav) .nav-count { position:absolute; top:6px; right:4px; min-width:22px; max-width:34px; padding:0 4px; border:2px solid #fffef8; border-radius:999px; background:#f0d47f; color:#59491f; font-size:10px; line-height:16px; font-weight:700; pointer-events:none; }
+.theme-classroom .classroom-nav-tile.classroom-kana-icon { font-family:var(--font-japanese-plain),'Yu Gothic',sans-serif; font-weight:400; color:#315e4c; }
+/* Inner curves account for the parent's border and padding. */
+.theme-classroom .display-toolbar { padding:5px; border:1px solid var(--classroom-frame); border-radius:20px; }
+.theme-classroom .display-toolbar .japanese-font-toggle { padding:3px; border:0; border-radius:14px; background:#eeefdf; }
+.theme-classroom .display-toolbar .japanese-font-toggle button { border-radius:11px; box-shadow:none; }
+.theme-classroom .japanese-font-toggle { border-radius:14px; }
+.theme-classroom .japanese-font-toggle button { border-radius:10px; }
+.theme-classroom .display-toolbar>.display-reading-aids { border-radius:14px; }
+.theme-classroom .review-all-icon { border-radius:14px; }
+.theme-classroom .note-side-panel { border-radius:var(--classroom-radius); overflow:hidden; }
+.theme-classroom :is(.button,.icon-button,.text-button,.rating-button,.lesson-tile,.review-deck,.deck-tile,.classroom-notebook):focus-visible { outline:3px solid #39765d; outline-offset:3px; }
+.theme-classroom :is(.desktop-tabs>button,.mobile-nav>button):focus-visible { outline:3px solid #39765d; outline-offset:-3px; }
+@media(max-width:640px) {
+ .theme-classroom { --classroom-radius:18px; }
+ .theme-classroom .mobile-nav .nav-count { top:0; right:0; min-width:18px; max-width:29px; padding:0 3px; font-size:8px; line-height:13px; }
+ .theme-classroom .mobile-nav .classroom-kana-icon { font-size:25px; }
+ .theme-classroom .note-side-panel { border-radius:18px 18px 0 0; }
+}

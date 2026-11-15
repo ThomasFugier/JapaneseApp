@@ -96,7 +96,6 @@
   .theme-classroom.is-studying .mobile-display-settings { display:grid; gap:12px; padding-bottom:20px; margin-bottom:22px; border-bottom:1px solid var(--line); }
   .theme-classroom.is-studying .mobile-display-settings h3 { margin:0; }
   .theme-classroom.is-studying .mobile-display-row { display:flex; align-items:center; justify-content:space-between; gap:16px; font-size:13px; }
-  .theme-classroom.is-studying .ambience-widget { bottom:12px; left:20px; }
 }
 @media(min-width:641px) and (max-width:900px) {
   .theme-classroom .activity-open { padding:24px 18px; gap:16px; min-height:160px; }

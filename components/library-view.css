@@ -150,3 +150,16 @@
   .bulk-actions .icon-button { width:36px; }
   .library-action-status,.library-action-error { left:16px; right:16px; bottom:calc(90px + env(safe-area-inset-bottom)); max-width:none; }
 }
+
+/* Card creation remains available outside the bulk editing controls. */
+.library-page .dictionary-top { flex-wrap:wrap; }
+.library-page .dictionary-top>div:first-child { flex:1 1 160px; }
+.library-page .dictionary-actions { flex-wrap:wrap; margin-left:auto; gap:6px; }
+.library-page .dictionary-actions .library-new-card { min-height:44px; padding:10px 14px; font-size:12px; font-weight:600; white-space:nowrap; }
+@media(max-width:640px) {
+ .library-page .dictionary-top>div:first-child { flex-basis:100%; }
+ .library-page .dictionary-actions { width:100%; }
+ .library-page .dictionary-actions .library-new-card { flex:1; }
+ .library-page .dictionary-actions .library-review { min-height:44px; }
+ .library-page .dictionary-top .edit-toggle { width:44px; height:44px; }
+}

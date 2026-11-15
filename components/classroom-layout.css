@@ -154,7 +154,7 @@
 .theme-classroom .review-all .button.primary,.theme-classroom .study-space .reveal-button { border-radius:3px; box-shadow:none; }
 .theme-classroom .rating-button { border-radius:18px; border-bottom-width:1px; box-shadow:none; }
 .theme-classroom .rating-button>span { font-weight:800; }
-.theme-classroom :is(.display-toolbar,.ambience-bar,.ambience-panel,.writing-toolbar) { border-radius:20px; box-shadow:none; }
+.theme-classroom :is(.display-toolbar,.writing-toolbar) { border-radius:20px; box-shadow:none; }
 .theme-classroom :is(.modal,.note-editor-sheet,.note-side-panel) { border-radius:5px; box-shadow:none; }
 .theme-classroom .lesson-contents { top:126px; }
 .theme-classroom .lesson-section { scroll-margin-top:216px; }

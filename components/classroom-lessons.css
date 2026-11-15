@@ -1,5 +1,5 @@
 .theme-classroom .lesson-chapter-number { display:block; color:#537660; font-size:12px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; margin-bottom:16px; }
-.theme-classroom .classroom-lesson-activity { max-width:940px; }
+.theme-classroom .classroom-lesson-activity { max-width:940px; overflow-anchor:none; }
 .theme-classroom .classroom-lesson-activity .lesson-heading { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:8px 28px; padding:24px 28px; margin-bottom:20px; }
 .theme-classroom .classroom-lesson-activity .lesson-category-label { grid-column:1; margin:0; color:#c7dfc6; font-size:12px; font-weight:700; }
 .theme-classroom .classroom-lesson-activity .lesson-heading h2 { grid-column:1; font-size:27px; line-height:1.25; }

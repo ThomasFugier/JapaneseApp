@@ -3,14 +3,14 @@
 import { Check } from 'lucide-react';
 import type { InterfaceStyle, WorkspaceTab } from './use-workspace-context';
 
-const icons: Record<WorkspaceTab, string> = { home: '🏡', review: '🎴', library: '📚', lessons: '🎓', writing: '✏️', stats: '📊', reference: '🔤' };
+const icons: Record<WorkspaceTab, string> = { home: '🏡', review: '📇', library: '📚', lessons: '🎓', writing: '✏️', stats: '📊', reference: 'あ' };
 
 export function ClassroomEmoji({ children }: { children: string }) {
   return <span className="classroom-emoji" aria-hidden="true">{children}</span>;
 }
 
 export function ClassroomNavIcon({ tab }: { tab: WorkspaceTab }) {
-  return <span className={`classroom-nav-icon classroom-nav-${tab}`} aria-hidden="true"><span className="classroom-nav-tile classroom-emoji">{icons[tab]}</span></span>;
+  return <span className={`classroom-nav-icon classroom-nav-${tab}`} aria-hidden="true"><span className={`classroom-nav-tile ${tab === 'reference' ? 'classroom-kana-icon' : 'classroom-emoji'}`} lang={tab === 'reference' ? 'ja' : undefined}>{icons[tab]}</span></span>;
 }
 
 function InterfacePreview({ classroom }: { classroom: boolean }) {

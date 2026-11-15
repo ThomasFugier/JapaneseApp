@@ -7,6 +7,8 @@ import { appendTag, registeredTags } from '@/lib/tags';
 import { JapaneseText } from './furigana';
 import { TagInput } from './tag-input';
 import { updateNoteContent } from '@/lib/note-edit';
+import { findDuplicateNote } from '@/lib/note-similarity';
+import { SimilarNotes } from './similar-notes';
 import { type Deck, type Note, type Snapshot, type StudyCard, validateSnapshot } from '@/lib/model';
 import './note-editor.css';
 import { classroomTransition } from './classroom-motion';
@@ -130,16 +132,23 @@ export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, content
     savedKey.current = JSON.stringify({ values: nextValues, tags: current.tags, deckIds: [...nextDecks].sort(), tagDraft: '' });
     setValues(nextValues); setTags([...current.tags]); setDeckIds(nextDecks); setTagDraft('');
   }, [data, note?.id, panel, dirty]);
-  function field(key: keyof typeof values) { return { value: values[key], onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setValues(previous => ({ ...previous, [key]: event.target.value })) }; }
+  function field(key: keyof typeof values) { return { value: values[key], onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setError(''); setValues(previous => ({ ...previous, [key]: event.target.value })); } }; }
+  function checkDuplicate(snapshot: Snapshot) {
+    if (note) return;
+    const duplicate = findDuplicateNote(snapshot, values);
+    if (duplicate) throw new Error('Already saved: ' + duplicate.japanese + ' — ' + duplicate.meaning + '. Use the existing card instead of creating a duplicate.');
+  }
   async function save(): Promise<boolean> {
     if (saving.current) return false;
     if (panel && !dirty) return true;
     if (form.current && !form.current.reportValidity()) return false;
     saving.current = true; setBusy(true); setError('');
     try {
+      checkDuplicate(data);
       const finalTags = appendTag(tags, tagDraft, availableTags);
       let savedNote: Note | null = null;
       await onSave(snapshot => {
+        checkDuplicate(snapshot);
         const now = new Date().toISOString(); const id = note?.id ?? crypto.randomUUID();
         const value: Note = { id, createdAt: note?.createdAt ?? note?.updatedAt ?? now, japanese: values.japanese.trim(), reading: values.reading.trim(), onReadings: [...new Set(values.onReadings.split(/[、,;・\s]+/u).filter(Boolean))], kunReadings: [...new Set(values.kunReadings.split(/[、,;・\s]+/u).filter(Boolean))], meaning: values.meaning.trim(), example: values.example.trim(), exampleTranslation: values.exampleTranslation.trim(), explanation: values.explanation.trim(), tags: finalTags, updatedAt: now };
         if (panel && note) {
@@ -189,15 +198,16 @@ export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, content
   const notesField = <label>{contentOnly ? 'Notes' : 'Explanation / notes'}<textarea rows={contentOnly ? 2 : 3} maxLength={8000} placeholder="Notes" {...field('explanation')} /></label>;
   const tagsField = <TagInput value={tags} onChange={setTags} draft={tagDraft} onDraftChange={setTagDraft} available={availableTags} disabled={busy} />;
   const controls = panel && navigation ? <div className="note-panel-navigation" aria-label="Editor navigation"><span>{navigation.index >= 0 ? `${navigation.index + 1} / ${navigation.total}` : 'Outside current results'}</span><div><button type="button" className="icon-button" aria-label="Previous card" title="Save and open previous card" disabled={busy || !navigation.onPrevious} onClick={() => void navigate(navigation.onPrevious)}><ArrowLeft size={17} /></button><button type="button" className="icon-button" aria-label="Next card" title="Save and open next card" disabled={busy || !navigation.onNext} onClick={() => void navigate(navigation.onNext)}><ArrowRight size={17} /></button></div></div> : null;
-  const title = note ? panel || contentOnly ? 'Edit card' : 'Edit note' : 'New note';
+  const title = note ? panel || contentOnly ? 'Edit card' : 'Edit note' : 'New card';
   const editor = <form ref={form} className={`editor-form${contentOnly ? ' quick-note-form' : ''}${panel ? ' panel-note-form' : ''}`} onSubmit={submit}>
     <fieldset className="note-form-fields" disabled={busy}>
     {wordFields}
-    {contentOnly ? <>{meaningField}{notesField}<details className="quick-note-more"><summary>More fields</summary><div className="quick-note-extra">{readingFields}{exampleFields}{tagsField}</div></details></> : <>{readingFields}{meaningField}{exampleFields}{notesField}{tagsField}</>}
+    {!note && <>{meaningField}<SimilarNotes data={data} japanese={values.japanese} reading={values.reading} meaning={values.meaning} /></>}
+    {contentOnly ? <>{note && meaningField}{notesField}<details className="quick-note-more"><summary>More fields</summary><div className="quick-note-extra">{readingFields}{exampleFields}{tagsField}</div></details></> : <>{readingFields}{note && meaningField}{exampleFields}{notesField}{tagsField}</>}
     {!contentOnly && <fieldset className="deck-checkboxes"><legend>Which decks?</legend>{data.decks.filter(deck => !deck.deletedAt).map(deck => <label key={deck.id}><input type="checkbox" checked={deckIds.includes(deck.id)} onChange={event => setDeckIds(previous => event.target.checked ? [...previous, deck.id] : previous.filter(id => id !== deck.id))} /><span className={`deck-dot ${deck.color}`} /><JapaneseText text={path(data, deck)} /></label>)}{!data.decks.some(deck => !deck.deletedAt) && <span className="muted">The note will be available in “All cards”.</span>}</fieldset>}
     </fieldset>
     {error && <p role="alert" className="form-error">{error}</p>}
-    <div className="modal-actions">{panel ? <><span className="note-panel-save-status" role="status">{busy ? 'Saving…' : dirty ? 'Unsaved changes' : saved ? 'Saved' : ''}</span>{dirty && <button type="button" className="text-button" disabled={busy} onClick={discard}>Discard</button>}<button type="button" className="button secondary" disabled={busy} onClick={onClose}>Close</button></> : <button type="button" className="button secondary" onClick={onClose}>Cancel</button>}<button type="submit" disabled={busy || (panel && !dirty)} className="button primary">{busy && <LoaderCircle size={16} className="spin" />}{note ? 'Save' : 'Add note'}</button></div>
+    <div className="modal-actions">{panel ? <><span className="note-panel-save-status" role="status">{busy ? 'Saving…' : dirty ? 'Unsaved changes' : saved ? 'Saved' : ''}</span>{dirty && <button type="button" className="text-button" disabled={busy} onClick={discard}>Discard</button>}<button type="button" className="button secondary" disabled={busy} onClick={onClose}>Close</button></> : <button type="button" className="button secondary" onClick={onClose}>Cancel</button>}<button type="submit" disabled={busy || (panel && !dirty)} className="button primary">{busy && <LoaderCircle size={16} className="spin" />}{note ? 'Save' : 'Add card'}</button></div>
   </form>;
   return panel && !smallScreen ? <NotePanel title={title} onClose={onClose} navigation={controls}>{editor}</NotePanel> : <Modal title={title} compact={contentOnly} sheet={panel} onClose={onClose}>{controls}{editor}</Modal>;
 }
