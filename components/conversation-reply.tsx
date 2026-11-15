@@ -95,7 +95,7 @@ export const ConversationReply = memo(function ConversationReply({ message, data
   useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
 
   let cursor = 0;
-  const rendered = words?.map((word, index) => {
+  const rendered = visible ? words?.map((word, index) => {
     const start = message.content.indexOf(word.text, cursor);
     if (start < cursor) return null;
     const before = message.content.slice(cursor, start);
@@ -103,12 +103,12 @@ export const ConversationReply = memo(function ConversationReply({ message, data
     return <span key={`${index}-${start}`}>{before}{japanese.test(word.text)
       ? <button type="button" className="conversation-word" aria-label={`${word.text}, voir le sens`} aria-haspopup="dialog" onMouseEnter={event => { cancelClose(); open(word, event.currentTarget); }} onMouseLeave={scheduleClose} onFocus={event => { cancelClose(); open(word, event.currentTarget); }} onBlur={event => { if (!popup.current?.contains(event.relatedTarget as Node)) scheduleClose(); }} onClick={event => open(word, event.currentTarget)}><JapaneseText text={word.text} reading={word.reading} /></button>
       : word.text}</span>;
-  });
+  }) : null;
   const duplicate = selected ? activeNotes.some(note => (note.japanese === selected.lemma || note.japanese === selected.text) && activeCards.has(note.id)) : false;
   const savedNote = selected && activeNotes.find(note => (note.japanese === selected.lemma || note.japanese === selected.text) && activeCards.has(note.id));
 
   return <>
-    <span ref={host}>{words ? <>{rendered}{message.content.slice(cursor)}</> : <><JapaneseText text={message.content} />{failed && <button type="button" className="conversation-annotation-retry" onClick={() => { setFailed(false); setAttempt(value => value + 1); }}>Réessayer l’analyse des mots</button>}</>}</span>
+    <span ref={host}>{words && visible ? <>{rendered}{message.content.slice(cursor)}</> : <><JapaneseText text={message.content} />{failed && <button type="button" className="conversation-annotation-retry" onClick={() => { setFailed(false); setAttempt(value => value + 1); }}>Réessayer l’analyse des mots</button>}</>}</span>
     {selected && typeof document !== 'undefined' && createPortal(<div ref={popup} role="dialog" aria-label={`Sens de ${selected.text}`} className="conversation-word-popup" style={{ left: position.left, top: position.top, maxHeight: position.maxHeight }} onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
       <div className="conversation-word-heading"><strong lang="ja"><JapaneseText text={selected.lemma || selected.text} /></strong><span lang="ja">{selected.dictionaryReading || selected.reading}</span>{selected.text !== selected.lemma && <span>Dans la phrase : <JapaneseText text={selected.text} reading={selected.reading} /></span>}</div>
       {selected.partOfSpeech && <small className="conversation-word-pos">{selected.partOfSpeech}</small>}
