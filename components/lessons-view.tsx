@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ExternalLink, Check, RotateCcw, Search, X } from 'lucide-react';
 import { lessons, type JapaneseLine, type LessonId } from '@/lib/lessons';
+import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import { JapaneseText, JapaneseSentence } from './furigana';
 import './lessons.css';
 import { LessonImmersion } from './lesson-immersion';
@@ -53,7 +54,7 @@ export function LessonsView({ lessonId, onSelect, validatedIds, onToggleValidate
   const lesson = lessons.find(item => item.id === lessonId);
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => { if (lessonId) heading.current?.focus({ preventScroll: true }); }, [lessonId]);
-  function select(id: LessonId | null, nextMode: 'course' | 'immersive' = 'course') { setCoursePage({ id, step: 0 }); setSuggestionOffset(0); setMode(nextMode); onSelect(id); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  function select(id: LessonId | null, nextMode: 'course' | 'immersive' = 'course') { setCoursePage({ id, step: 0 }); setSuggestionOffset(0); setMode(nextMode); onSelect(id); scrollWorkspaceTo(0); }
 
   function changeCourseStep(step: number, scrollToHeading = false) {
     const next = Math.max(0, Math.min(sections.length - 1, step));
@@ -117,7 +118,7 @@ export function LessonsView({ lessonId, onSelect, validatedIds, onToggleValidate
 
     <section className="lesson-section" hidden={classroom && courseStep !== 3} id={`lesson-${lesson.id}-reminders`} aria-labelledby="lesson-reminders-heading"><h3 id="lesson-reminders-heading" tabIndex={classroom ? -1 : undefined}><span>04</span>À retenir</h3><div className="lesson-reminders">{lesson.reminders.map(reminder => <div className="lesson-reminder" key={reminder.title}><h4><InlineJapanese text={reminder.title} /></h4><p><InlineJapanese text={reminder.explanation} /></p>{reminder.example && <div className="lesson-reminder-example"><p><Japanese {...reminder.example} /></p>{translationsVisible && <span>{reminder.example.translation}</span>}</div>}</div>)}</div></section>
 
-    {classroom && <nav className="classroom-lesson-pager" aria-label="Parcourir le cours"><button type="button" className="button secondary" disabled={courseStep === 0} onClick={() => changeCourseStep(courseStep - 1, true)}><ArrowLeft size={17} />Précédent</button><span aria-label={`Partie ${courseStep + 1} sur ${sections.length}`}>{courseStep + 1} / {sections.length}</span>{courseStep < sections.length - 1 ? <button type="button" className="button primary" onClick={() => changeCourseStep(courseStep + 1, true)}>Suivant <ArrowRight size={17} /></button> : <button type="button" className="button primary" onClick={() => { changeMode('immersive'); heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }}>Passer à l’immersion <ArrowRight size={17} /></button>}</nav>}
+    {classroom && <nav className="classroom-lesson-pager" aria-label="Parcourir le cours"><button type="button" className="button secondary" disabled={courseStep === 0} onClick={() => changeCourseStep(courseStep - 1, true)}><ArrowLeft size={17} />Précédent</button><span aria-label={`Partie ${courseStep + 1} sur ${sections.length}`}>{courseStep + 1} / {sections.length}</span>{courseStep < sections.length - 1 ? <button type="button" className="button primary" onClick={() => changeCourseStep(courseStep + 1, true)}>Suivant <ArrowRight size={17} /></button> : <button type="button" className="button primary" onClick={() => { changeMode('immersive'); heading.current?.focus({ preventScroll: true }); scrollWorkspaceTo(0); }}>Passer à l’immersion <ArrowRight size={17} /></button>}</nav>}
     {(!classroom || courseStep === sections.length - 1) && <div className="lesson-course-complete"><LessonReviewComplete key={lesson.id} onFinish={() => onFinishReview(lesson.id)} /></div>}
     </>}
     <footer className="lesson-footer"><button type="button" className="text-button" onClick={() => select(null)}><ArrowLeft size={15} />Toutes les leçons</button><div aria-label="Références de la leçon">{lesson.sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span>{source.title}</span><ExternalLink size={12} /></a>)}</div></footer>

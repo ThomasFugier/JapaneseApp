@@ -80,10 +80,12 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     if (!active) { setSettingsOpen(false); return; }
     const header = document.querySelector<HTMLElement>('.topbar');
     const navigation = document.querySelector<HTMLElement>('.mobile-nav');
+    const shell = document.querySelector<HTMLElement>('.app-shell');
     const resize = () => {
       const view = window.visualViewport;
       const keyboard = !!view && view.height < window.innerHeight - 150;
-      setViewport({ height: view?.height ?? window.innerHeight, offset: view?.offsetTop ?? 0, keyboard,
+      const fixedFrame = document.documentElement.classList.contains('stable-mobile-shell') ? shell?.getBoundingClientRect() : null;
+      setViewport({ height: fixedFrame?.height ?? view?.height ?? window.innerHeight, offset: fixedFrame?.top ?? view?.offsetTop ?? 0, keyboard,
         top: header?.getBoundingClientRect().height ?? 76,
         bottom: keyboard ? 0 : navigation?.getBoundingClientRect().height ?? 0 });
     };
@@ -91,6 +93,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     const observer = new ResizeObserver(resize);
     if (header) observer.observe(header);
     if (navigation) observer.observe(navigation);
+    if (shell) observer.observe(shell);
     window.visualViewport?.addEventListener('resize', resize);
     window.visualViewport?.addEventListener('scroll', resize);
     window.addEventListener('resize', resize);

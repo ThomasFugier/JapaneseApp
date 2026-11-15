@@ -45,6 +45,8 @@ import './classroom-motion.css';
 import './classroom-details.css';
 import { useActivitySound } from './use-activity-sound';
 import { ConversationChat } from './conversation-chat';
+import { useStableMobileShell } from './use-stable-mobile-shell';
+import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 
 type Tab = WorkspaceTab;
 const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'discussion', 'stats'];
@@ -57,7 +59,9 @@ const countNotes = (data: Snapshot, id: string | null) => new Set(cardsForDeck(d
 export default function Kotoba() {
   const library = useLibrary();
   const { data, ready, update, notice, setNotice, error, setError } = library;
+  const shellRef = useRef<HTMLDivElement>(null);
   const { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll } = useWorkspaceContext();
+  useStableMobileShell(shellRef, ready && hydrated);
   const { prepareSound, playSound } = useActivitySound(interfaceStyle === 'classroom' && activitySounds);
   const [answerFeedback, setAnswerFeedback] = useState<{ id: number; rating: number; label: string } | null>(null);
   useEffect(() => { if (!answerFeedback) return; const timer = setTimeout(() => setAnswerFeedback(null), 950); return () => clearTimeout(timer); }, [answerFeedback]);
@@ -131,7 +135,7 @@ export default function Kotoba() {
 
   // Reset after the study layout commits, before the browser paints it.
   useLayoutEffect(() => {
-    if (isStudying) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (isStudying) scrollWorkspaceTo(0);
   }, [isStudying]);
 
   useLayoutEffect(() => {
@@ -148,7 +152,7 @@ export default function Kotoba() {
     if ('deckId' in patch && editorGuard.current) { withSavedEditor(() => changeReading(patch)); return; }
     const reset = patch.scrollY === 0 || 'search' in patch || 'sort' in patch;
     setReading(reset ? { ...patch, scrollY: 0 } : patch);
-    if (reset) window.scrollTo({ top: 0, behavior: 'instant' });
+    if (reset) scrollWorkspaceTo(0);
   }
   function searchLibrary(value: string) {
     if (tab === 'home') {
@@ -156,7 +160,7 @@ export default function Kotoba() {
       setReading({ deckId: null, search: value, expanded: null, scrollY: 0 });
       setEditing(false);
       setTab('library');
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollWorkspaceTo(0);
     } else changeReading({ search: value, expanded: null });
   }
   function navigate(next: Tab, id?: string | null) {
@@ -167,7 +171,7 @@ export default function Kotoba() {
     if (id !== undefined) setReading({ deckId: id, search: '', expanded: null, scrollY: 0 });
     setTab(next);
     if (next === 'library' && tab === 'library') restoreReadingScroll();
-    else if (next !== 'library') window.scrollTo({ top: 0, behavior: 'instant' });
+    else if (next !== 'library') scrollWorkspaceTo(0);
     });
   }
   function startSession(id: string | null, practice = false) {
@@ -311,7 +315,7 @@ export default function Kotoba() {
 
   const backupState: BackupState = { saving: library.saving, syncing: library.syncing, localSaveError: library.localSaveError, syncError: library.syncError, connected: !!library.status?.authenticated, online: library.online, dirty: library.dirty, lastSyncedAt: library.lastSyncedAt, conflicts: library.conflicts.length };
 
-  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} ${tab === 'discussion' ? 'is-discussing' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
+  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div ref={shellRef} className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} ${tab === 'discussion' ? 'is-discussing' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
     {interfaceStyle === 'classic' && <PageBackground theme={pageTheme} />}
     <div className="workspace">
       <header className="topbar">

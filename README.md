@@ -98,3 +98,9 @@ Les 120 derniers messages sont sauvegardés dans une base IndexedDB séparée, `
 La saisie de Discussion utilise le moteur de Writing : conversion romaji → hiragana / katakana, mode latin, suggestions de la bibliothèque et remplacement du mot directement dans le champ. Entrée insère d’abord la suggestion sélectionnée, puis envoie le message ; Maj+Entrée ajoute une ligne. Le clavier japonais natif, le collage et l’annulation sont conservés. Le brouillon est mémorisé séparément sur cet appareil.
 
 Les balises internes de raisonnement de Qwen sont retirées avant le contrôle de langue et l’affichage. Une réponse rejetée conserve le moteur chargé et propose « Réessayer la réponse ». Le statut distingue le modèle déjà présent dans le cache du premier téléchargement.
+
+## Défilement mobile stable
+
+Sur mobile, le document est verrouillé et seul le contenu central défile dans un cadre basé sur la petite hauteur du viewport (100svh). L’en-tête et les onglets restent fixes ; la bibliothèque mémorise et restaure la position de ce défilement interne. Le clavier adapte la zone visible sans transformer les changements de barres du navigateur en défilement de page.
+
+Un site ne peut pas imposer la visibilité des barres de Safari ou Chrome. Pour les supprimer entièrement sur iPhone, ouvrir le site dans Safari, puis Partager → Sur l’écran d’accueil, activer « Ouvrir comme app web » et lancer la nouvelle icône. Le manifeste utilise déjà le mode standalone. Les contrôles de disposition en simulation mobile ne reproduisent pas les barres natives de Safari : leur comportement reste à vérifier sur un iPhone réel.

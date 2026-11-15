@@ -7,6 +7,7 @@ import { descendants } from '@/lib/engine';
 import type { LibraryAction } from '@/lib/library-actions';
 import { deckAncestors, LIBRARY_BATCH_SIZE, libraryDisplayCount, type ReadingContext } from '@/lib/library-view';
 import { buildLibraryIndex } from '@/lib/library-index';
+import { getWorkspaceScrollTop, scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import type { Deck, Note, Snapshot } from '@/lib/model';
 import { JapaneseText, useFuriganaEnabled } from './furigana';
 import { ContextualTranslation } from './contextual-translation';
@@ -80,11 +81,11 @@ export function LibraryView({ data, notes, searchPending, searchActions, context
     loadingPosition.current = null;
     if (visibleNotes.length <= previous.previousCount) return;
     entries.current?.querySelectorAll<HTMLButtonElement>('.entry-main')[previous.previousCount]?.focus({ preventScroll: true });
-    window.scrollTo({ top: previous.top, behavior: 'instant' });
+    scrollWorkspaceTo(previous.top);
   }, [visibleNotes.length, context.visibleCount]);
   function loadMore() {
     if (searchPending || visibleNotes.length >= notes.length) return;
-    loadingPosition.current = { top: window.scrollY, previousCount: visibleNotes.length };
+    loadingPosition.current = { top: getWorkspaceScrollTop(), previousCount: visibleNotes.length };
     onContextChange({ visibleCount: visibleNotes.length + LIBRARY_BATCH_SIZE });
   }
   useEffect(() => {
@@ -175,7 +176,7 @@ export function LibraryView({ data, notes, searchPending, searchActions, context
     setMobileDecksOpen(false);
     onContextChange({ deckId: id, search: '', expanded: null, scrollY: 0 });
     onEditingChange(false);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollWorkspaceTo(0);
   }
   function reveal(noteId: string) {
     setRevealed(previous => new Set(previous).add(noteId));

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { defaultReadingContext, sanitizeReadingContext, updateReadingContext, type ReadingContext } from '@/lib/library-view';
 import { isLessonId, type LessonId } from '@/lib/lessons';
+import { getWorkspaceScrollTop, isWorkspaceScrollEvent, scrollWorkspaceTo } from '@/lib/workspace-scroll';
 
 export type WorkspaceTab = 'home' | 'review' | 'library' | 'lessons' | 'writing' | 'stats' | 'reference' | 'discussion';
 export type InterfaceStyle = 'classic' | 'classroom';
@@ -53,7 +54,7 @@ export function useWorkspaceContext() {
   }, [save]);
   const captureReadingScroll = useCallback(() => {
     if (tabRef.current !== 'library') return;
-    readingRef.current = { ...readingRef.current, scrollY: window.scrollY };
+    readingRef.current = { ...readingRef.current, scrollY: getWorkspaceScrollTop() };
     save();
   }, [save]);
   const setTab = useCallback((next: WorkspaceTab) => {
@@ -63,7 +64,7 @@ export function useWorkspaceContext() {
   }, [captureReadingScroll, save]);
   const restoreReadingScroll = useCallback(() => {
     const target = readingRef.current.scrollY;
-    return requestAnimationFrame(() => window.scrollTo({ top: target, behavior: 'instant' }));
+    return requestAnimationFrame(() => scrollWorkspaceTo(target));
   }, []);
 
   useEffect(() => {
@@ -86,12 +87,12 @@ export function useWorkspaceContext() {
     } catch { /* A corrupt preference never blocks access to library data. */ }
     loaded.current = true; setHydrated(true);
     let timer: ReturnType<typeof setTimeout> | undefined;
-    const onScroll = () => { clearTimeout(timer); timer = setTimeout(captureReadingScroll, 150); };
+    const onScroll = (event: Event) => { if (!isWorkspaceScrollEvent(event)) return; clearTimeout(timer); timer = setTimeout(captureReadingScroll, 150); };
     const onHide = () => { if (document.visibilityState === 'hidden') captureReadingScroll(); };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
     window.addEventListener('pagehide', captureReadingScroll);
     document.addEventListener('visibilitychange', onHide);
-    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); window.removeEventListener('pagehide', captureReadingScroll); document.removeEventListener('visibilitychange', onHide); };
+    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll, true); window.removeEventListener('pagehide', captureReadingScroll); document.removeEventListener('visibilitychange', onHide); };
   }, [captureReadingScroll]);
 
   return { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll };

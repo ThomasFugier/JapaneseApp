@@ -312,11 +312,11 @@ export function WritingView({ data, japaneseFont }: { data: Snapshot; japaneseFo
     if (!open) return;
     const updatePosition = () => measureCaret();
     window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, { passive: true });
+    window.addEventListener('scroll', updatePosition, { capture: true, passive: true });
     window.visualViewport?.addEventListener('resize', updatePosition);
     window.visualViewport?.addEventListener('scroll', updatePosition);
     return () => {
-      window.removeEventListener('resize', updatePosition); window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', updatePosition); window.removeEventListener('scroll', updatePosition, true);
       window.visualViewport?.removeEventListener('resize', updatePosition); window.visualViewport?.removeEventListener('scroll', updatePosition);
     };
   }, [open, measureCaret]);
