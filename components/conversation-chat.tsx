@@ -6,14 +6,18 @@ import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
 import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationHelpInstruction, conversationProfile, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, repeatsConversationReply, type ConversationMessage } from '@/lib/conversation';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
+import { conversationModelForDevice, isMobileConversationDevice, LIGHT_CONVERSATION_MODEL, QUALITY_CONVERSATION_MODEL, MOBILE_CONVERSATION_MODEL_KEY, markConversationRunning, wasConversationInterrupted } from '@/lib/conversation-runtime';
 import { JapaneseText } from './furigana';
 import { JapaneseChatInput } from './japanese-chat-input';
 import './conversation-chat.css';
 
 const models = [
-  { id: 'Qwen3-1.7B-q4f16_1-MLC', label: 'Léger · Qwen3 1.7B', size: 'environ 1 Go à télécharger · 2 Go de mémoire GPU' },
-  { id: 'Qwen3-4B-q4f16_1-MLC', label: 'Qualité · Qwen3 4B', size: 'environ 2,5 Go à télécharger · 3,5 Go de mémoire GPU' },
+  { id: LIGHT_CONVERSATION_MODEL, label: 'Léger · Qwen3 1.7B', size: 'environ 1 Go à télécharger · 2 Go de mémoire GPU' },
+  { id: QUALITY_CONVERSATION_MODEL, label: 'Qualité · Qwen3 4B', size: 'environ 2,5 Go à télécharger · 3,5 Go de mémoire GPU' },
 ];
+function markRunning(running: boolean) {
+  try { markConversationRunning(window.sessionStorage, running); } catch { /* Session storage can be blocked. */ }
+}
 const message = (role: ConversationMessage['role'], content: string): ConversationMessage => ({ id: crypto.randomUUID(), role, content, createdAt: new Date().toISOString() });
 
 const previewText = (text: string) => {
@@ -27,6 +31,8 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   const [hydrated, setHydrated] = useState(false);
   const [supported, setSupported] = useState<boolean | null>(null);
   const [modelId, setModelId] = useState(models[1].id);
+  const [mobile, setMobile] = useState(false);
+  const [needsResume, setNeedsResume] = useState(false);
   const [state, setState] = useState<'idle' | 'loading' | 'ready'>('idle');
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ progress: 0, text: '' });
@@ -55,12 +61,24 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   useEffect(() => {
     mounted.current = true;
     setSupported(window.isSecureContext && 'gpu' in navigator);
+    const mobileDevice = isMobileConversationDevice(navigator);
+    setMobile(mobileDevice);
+    let interrupted = false;
+    try { interrupted = wasConversationInterrupted(window.sessionStorage); } catch { /* Keep manual recovery optional. */ }
+    if (interrupted) {
+      setNeedsResume(true);
+      setError('La préparation ou la réponse précédente a été interrompue. Le modèle léger est sélectionné. Reprends la discussion manuellement pour éviter une boucle de rechargements.');
+    }
+    let savedModel: string | null = null;
+    let mobileModel: string | null = null;
     try {
       const savedDraft = localStorage.getItem('kotoba-conversation-draft-v1');
       if (savedDraft) setDraft(savedDraft.slice(0, 1000));
-      const savedModel = localStorage.getItem('kotoba-conversation-model');
-      if (models.some(model => model.id === savedModel)) setModelId(savedModel!);
+      savedModel = localStorage.getItem('kotoba-conversation-model');
+      mobileModel = localStorage.getItem(MOBILE_CONVERSATION_MODEL_KEY);
+      if (interrupted && mobileDevice) localStorage.setItem(MOBILE_CONVERSATION_MODEL_KEY, LIGHT_CONVERSATION_MODEL);
     } catch { /* A blocked preference store does not prevent conversation. */ }
+    setModelId(conversationModelForDevice(mobileDevice, savedModel, mobileModel, interrupted));
     let live = true;
     void loadConversation().then(saved => {
       if (live) { history.current = saved; setMessages(saved); }
@@ -112,12 +130,12 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       const available = await hasModelInCache(modelId);
       if (!live) return;
       setCache({ modelId, available: available || !!engine.current });
-      if (available) void start();
+      if (available && !needsResume) void start();
     }).catch(() => { /* An uncached model can still be started explicitly. */ });
     return () => { live = false; };
     // Starting follows entering Discussion or choosing a cached model, not pausing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, hydrated, supported, modelId]);
+  }, [active, hydrated, supported, modelId, needsResume]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -149,6 +167,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   }
 
   function release() {
+    markRunning(false);
     epoch.current++;
     worker.current?.terminate(); worker.current = null; engine.current = null;
     if (mounted.current) setState('idle');
@@ -159,6 +178,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
     if (!ai) return;
     const request = epoch.current;
     lastInstruction.current = instruction; setCanRetry(false);
+    markRunning(true);
     stopped.current = false; setBusy(true); setPartial(''); setError(''); nearBottom.current = true;
     let answer = '';
     try {
@@ -212,6 +232,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
         else { setCanRetry(false); release(); }
       }
     } finally {
+      if (mounted.current && request === epoch.current) markRunning(false);
       if (mounted.current) { setBusy(false); setPartial(''); }
     }
   }
@@ -219,7 +240,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
   async function start() {
     if (locked.current || !hydrated || !supported) return;
     const request = ++epoch.current;
-    locked.current = true; setError(''); setState('loading'); setProgress({ progress: 0, text: 'Préparation du modèle…' });
+    locked.current = true; setNeedsResume(false); markRunning(true); setError(''); setState('loading'); setProgress({ progress: 0, text: 'Préparation du modèle…' });
     try {
       await operation(async () => {
         const { CreateWebWorkerMLCEngine } = await import('@mlc-ai/web-llm');
@@ -236,6 +257,7 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       if (!mounted.current) return;
       setCache({ modelId, available: true });
       setState('ready');
+      markRunning(false);
       if (history.current.at(-1)?.role === 'user') await generate(history.current);
       else if (!history.current.length || Date.now() - Date.parse(history.current.at(-1)!.createdAt) > 4 * 60 * 60 * 1000) await generate(history.current, history.current.length
         ? '日本語で会話を再開してください。前の会話と今の時間帯を参考に、やさしい質問を一つしてください。私の今日の予定や天気はわかりません。'
@@ -296,8 +318,9 @@ export function ConversationChat({ data, active, onOpen, displayTools }: { data:
       {state === 'idle' && <div className="discussion-activate">{supported === false ? <span role="status">Un navigateur compatible WebGPU est nécessaire pour l’IA locale.</span> : <><button className="text-button" onClick={() => void start()} disabled={!hydrated || !supported}><Download size={14} />{cached ? 'Charger le modèle téléchargé' : messages.length ? 'Reprendre la discussion' : 'Activer la conversation'}</button><small>{cached ? 'Modèle conservé sur cet appareil' : cache?.modelId !== modelId ? 'Vérification du cache…' : `Premier téléchargement · ${modelId === models[1].id ? '≈ 2,5 Go' : '≈ 1 Go'}`}</small></>}</div>}
       {settingsOpen && <div ref={settingsPanel} id="discussion-settings" className="discussion-settings" role="dialog" aria-label="Réglages de discussion">
         <div className="discussion-settings-heading"><h3>Réglages</h3><button className="icon-button" aria-label="Fermer les réglages" onClick={() => setSettingsOpen(false)}><X size={16} /></button></div>
-        <label htmlFor="conversation-model">Modèle IA<select id="conversation-model" value={modelId} disabled={state !== 'idle'} onChange={event => { setModelId(event.target.value); try { localStorage.setItem('kotoba-conversation-model', event.target.value); } catch { /* Keep selection for this session. */ } }}>{models.map(model => <option key={model.id} value={model.id}>{model.label}</option>)}</select></label>
+        <label htmlFor="conversation-model">Modèle IA<select id="conversation-model" value={modelId} disabled={state !== 'idle'} onChange={event => { setModelId(event.target.value); try { localStorage.setItem(mobile ? MOBILE_CONVERSATION_MODEL_KEY : 'kotoba-conversation-model', event.target.value); } catch { /* Keep selection for this session. */ } }}>{models.map(model => <option key={model.id} value={model.id}>{model.label}</option>)}</select></label>
         <p>{selected.size}. Le cache est réutilisé lorsque le navigateur le conserve.</p>
+        {mobile && <p>Le modèle léger est recommandé sur téléphone. Le modèle Qualité peut provoquer la fermeture de l’onglet par manque de mémoire.</p>}
         {state === 'ready' && <button className="text-button" disabled={busy} onClick={release}>Mettre le modèle en pause</button>}
         <div className="discussion-settings-tools">{displayTools}</div>
         <div className="discussion-settings-actions"><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('もっとやさしい日本語でお願いします。'); }}>Plus simple</button><button className="text-button" disabled={busy || state !== 'ready' || !messages.length} onClick={() => { setSettingsOpen(false); void send('やさしい日本語で説明してください。'); }}>Expliquer simplement</button></div>
