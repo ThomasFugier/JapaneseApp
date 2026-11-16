@@ -1,7 +1,5 @@
 node_modules/
 .npm-cache/
-.dictionary-cache/
-public/conversation-dictionary/v1/
 .next/
 .env*
 !.env.example
@@ -10,4 +8,3 @@ coverage/
 
 public/furigana/kuromoji-0.1.2/
 
-/public/ai/conversation.worker.js*

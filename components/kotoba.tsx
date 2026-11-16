@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, MessageCircle, X } from 'lucide-react';
+import { ArrowDownToLine, ArrowLeft, ArrowRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Cloud, CloudOff, Folder, Github, Home, Layers, LoaderCircle, Pencil, Plus, Search, Settings2, Trash2, Undo2, Upload, PenLine, BarChart3, GraduationCap, X } from 'lucide-react';
 import { useLibrary } from './use-library';
 import { useWorkspaceContext, type WorkspaceTab } from './use-workspace-context';
 import { LibraryView } from './library-view';
@@ -28,7 +28,7 @@ import { type Deck, type Note, type Snapshot, validateSnapshot } from '@/lib/mod
 import { advanceReviewSession, continueAfterReviewDeletion, createReviewSession, rewindReviewSession, type ReviewSession as Session } from '@/lib/review-session';
 import { deleteReviewNote, restoreReviewNote, type ReviewDeletion } from '@/lib/review-delete';
 import { downloadBackup, downloadCsv, parseImport } from '@/lib/portability';
-import { DeckEditor, NoteEditor, Modal, type NoteNavigationGuard, type NotePrefill } from './editors';
+import { DeckEditor, NoteEditor, Modal, type NoteNavigationGuard } from './editors';
 import './review-delete.css';
 import { InterfaceStylePicker, ClassroomNavIcon, ClassroomEmoji } from './classroom-interface';
 import './classroom-shell.css';
@@ -44,14 +44,13 @@ import './contextual-translation.css';
 import './classroom-motion.css';
 import './classroom-details.css';
 import { useActivitySound } from './use-activity-sound';
-import { ConversationChat } from './conversation-chat';
 import { useStableMobileShell } from './use-stable-mobile-shell';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 
 type Tab = WorkspaceTab;
-const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'discussion', 'stats'];
-const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji', discussion: 'Discussion' };
-const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages, discussion: MessageCircle };
+const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'stats'];
+const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji' };
+const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages };
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 const active = <T extends { deletedAt?: string | null }>(items: T[]) => items.filter(item => !item.deletedAt);
 const countNotes = (data: Snapshot, id: string | null) => new Set(cardsForDeck(data, id).map(card => card.noteId)).size;
@@ -70,7 +69,6 @@ export default function Kotoba() {
   const [editing, setEditing] = useState(false);
   const [searchActions, setSearchActions] = useState<HTMLDivElement | null>(null);
   const [noteModal, setNoteModal] = useState<Note | 'new' | null>(null);
-  const [notePrefill, setNotePrefill] = useState<NotePrefill | undefined>(undefined);
   const [deckModal, setDeckModal] = useState<Deck | 'new' | null>(null);
   const [settings, setSettings] = useState(false);
   const [translationToolbar, setTranslationToolbar] = useState<HTMLSpanElement | null>(null);
@@ -112,7 +110,7 @@ export default function Kotoba() {
     if (!editorGuard.current) { action(); return; }
     void finishEditor().then(ok => { if (ok) action(); });
   }
-  function openNoteEditor(note: Note | 'new') { withSavedEditor(() => { setNotePrefill(undefined); setNoteModal(note); }); }
+  function openNoteEditor(note: Note | 'new') { withSavedEditor(() => { setNoteModal(note); }); }
   async function applyLibraryAction(ids: string[], action: LibraryAction) {
     if (!await finishEditor()) throw new Error('Finish or discard the current edit first.');
     await update(snapshot => bulkLibraryAction(snapshot, ids, action));
@@ -316,7 +314,7 @@ export default function Kotoba() {
 
   const backupState: BackupState = { saving: library.saving, syncing: library.syncing, localSaveError: library.localSaveError, syncError: library.syncError, connected: !!library.status?.authenticated, online: library.online, dirty: library.dirty, lastSyncedAt: library.lastSyncedAt, conflicts: library.conflicts.length };
 
-  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div ref={shellRef} className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} ${tab === 'discussion' ? 'is-discussing' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
+  return <TranslationTargets.Provider value={[translationToolbar, translationSettings]}><FuriganaProvider enabled={furiganaEnabled} notes={data.notes}><div ref={shellRef} className={`app-shell ${interfaceStyle === 'classroom' ? 'theme-classroom' : ''} ${furiganaEnabled ? 'has-furigana' : ''} ${isStudying ? 'is-studying' : ''} has-display-tools ${japaneseFont === 'plain' ? 'plain-japanese' : ''}`}>
     {interfaceStyle === 'classic' && <PageBackground theme={pageTheme} />}
     <div className="workspace">
       <header className="topbar">
@@ -341,7 +339,6 @@ export default function Kotoba() {
             ? <button type="button" className="home-secondary-action home-add-card" aria-label="Add card" onClick={() => openNoteEditor('new')}><span className="home-secondary-icon"><Plus size={22} /></span><span className="home-secondary-copy"><strong>Add card</strong><small>A new word for your collection</small></span><ArrowRight size={19} /></button>
             : <button type="button" className="button primary" onClick={() => openNoteEditor('new')}><Plus size={18} />Add card</button>}</div>
         </div>}
-        <div key="conversation" className="conversation-host" hidden={tab !== 'home' && tab !== 'discussion'}><ConversationChat data={data} onAddCard={draft => withSavedEditor(() => { setNotePrefill(draft); setNoteModal('new'); })} active={tab === 'discussion'} onOpen={() => navigate('discussion')} displayTools={<><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /></>} /></div>
         {tab === 'home' && interfaceStyle === 'classroom' && <div className="activity-menu-footer"><button type="button" className="home-secondary-action home-progress" aria-label="My progress" onClick={() => navigate('stats')}><span className="home-secondary-icon"><ClassroomEmoji>📊</ClassroomEmoji></span><span className="home-secondary-copy"><strong>My progress</strong><small>See how far you’ve come</small></span><ArrowRight size={19}/></button></div>}
         <div key={tab} className="workspace-view" data-view={tab}>
         {tab === 'home' && <>
@@ -366,7 +363,7 @@ export default function Kotoba() {
     <aside className="display-toolbar" aria-label="Display tools"><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /><span className="translation-control-slot" ref={setTranslationToolbar} /></aside>
     <nav className="mobile-nav" aria-label="Mobile navigation">{navigationTabs.map(item => { const Icon = icons[item]; return <button key={item} className={tab === item ? 'selected' : ''} onClick={() => navigate(item)} aria-label={item === 'review' ? `Review, ${dueCount} directions ready` : undefined} aria-current={tab === item ? 'page' : undefined}>{interfaceStyle === 'classroom' ? <ClassroomNavIcon tab={item} /> : <Icon size={21} />}<span>{labels[item]}</span>{interfaceStyle === 'classroom' && item === 'review' && dueCount > 0 && <span className="nav-count" aria-hidden="true" title={`${dueCount} review directions ready`}>{dueCount > 99 ? '99+' : dueCount}</span>}</button>; })}</nav>
     {notice && <div className="toast" role="status"><CheckCheck size={18} /><span>{notice}</span></div>}
-    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} initialValues={noteModal === 'new' ? notePrefill : undefined} defaultDeckId={tab === 'home' || tab === 'discussion' ? null : deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
+    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={tab === 'home' ? null : deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
     {deckModal && <DeckEditor data={data} deck={deckModal === 'new' ? null : deckModal} defaultParentId={deckId} onClose={() => setDeckModal(null)} onSave={async fn => { await update(fn); setDeckModal(null); setNotice('Deck saved.'); }} />}
     {settings && <Modal title="Settings" focusInput={false} onClose={() => setSettings(false)}><InterfaceStylePicker value={interfaceStyle} onChange={setInterfaceStyle} />{interfaceStyle === 'classroom' && <label className="activity-sound-setting"><span>Activity sounds</span><input type="checkbox" role="switch" checked={activitySounds} onChange={event => setActivitySounds(event.target.checked)} /></label>}{interfaceStyle === 'classic' && <PageThemePicker value={pageTheme} onChange={setPageTheme} />}<ReviewSettingsEditor settings={data.reviewSettings} onSave={async reviewSettings => { await update(snapshot => validateSnapshot({ ...snapshot, reviewSettings })); if (session) setSettings(false); }} /><section className="mobile-display-settings" aria-label="Display settings"><h3>Display</h3><div className="mobile-display-row"><span>Japanese font</span><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /></div><div className="mobile-display-row"><span>Reading aids</span><div className="display-reading-aids"><FuriganaToggle onChange={setFuriganaEnabled} /><span className="translation-control-slot" ref={setTranslationSettings} /></div></div></section><BackupSummary state={backupState} /><GitHubConnection status={library.status} onDisconnect={library.disconnectGitHub} />{library.status?.authenticated && <div className="settings-buttons"><button className="button primary" onClick={() => void library.sync()} disabled={library.syncing}>{library.syncing ? <LoaderCircle size={17} className="spin" /> : <Cloud size={17} />}Sync</button></div>}<hr /><h3>Export my data</h3><p className="muted">The ZIP preserves decks, notes, cards, and the full review history.</p><div className="settings-buttons"><button className="button secondary" onClick={() => { try { downloadBackup(data); setNotice('ZIP backup downloaded.'); } catch (cause) { setError(String(cause)); } }}><ArrowDownToLine size={17} />Full backup</button><button className="button ghost" onClick={() => downloadCsv(data)}>CSV content</button></div><hr /><h3>Restore a backup</h3><p className="muted">Open a Japanese export in ZIP or JSON format. A preview will appear before any changes.</p><button className="button secondary" onClick={() => inputFile.current?.click()}><Upload size={16} />Choose a file</button><input type="file" accept=".zip,.json,application/zip,application/json" ref={inputFile} hidden onChange={async event => { const file = event.target.files?.[0]; event.target.value = ''; if (!file) return; try { setImporting(await parseImport(file)); } catch (cause) { setError(cause instanceof Error ? cause.message : 'Unable to read file.'); } }} /><div className="settings-footnote"><CircleHelp size={16} /><span>After an online visit, you can use this site offline in the same browser. Your progress syncs and merges automatically when the site is open and the connection returns.</span></div><p className="dictionary-credits"><a href="/furigana/NOTICE.txt" target="_blank" rel="noreferrer">Dictionary credits</a></p></Modal>}
     {importing && <Modal title="Restore this library?" onClose={() => setImporting(null)}><p>The file contains <b>{active(importing.decks).length} deck{active(importing.decks).length !== 1 ? 's' : ''}</b>, <b>{active(importing.notes).length} note{active(importing.notes).length !== 1 ? 's' : ''}</b> and <b>{importing.reviews.length} review{importing.reviews.length !== 1 ? 's' : ''}</b>.</p><p className="muted">Current content will be replaced. Your existing review history will be kept. A backup of the current library will be downloaded before restoration.</p><div className="modal-actions"><button className="button secondary" onClick={() => setImporting(null)}>Cancel</button><button className="button primary" onClick={() => void restoreImport()}>Restore</button></div></Modal>}

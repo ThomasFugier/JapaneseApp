@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && node scripts/prepare-conversation-dictionary.mjs && next dev --hostname 0.0.0.0",
-    "build": "node scripts/prepare-furigana.mjs && node scripts/prepare-conversation.mjs && node scripts/prepare-conversation-dictionary.mjs && next build",
+    "dev": "node scripts/prepare-furigana.mjs && next dev --hostname 0.0.0.0",
+    "build": "node scripts/prepare-furigana.mjs && next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
-    "@mlc-ai/web-llm": "^0.2.88",
     "fflate": "^0.8.2",
     "idb": "^8.0.3",
     "lucide-react": "^0.468.0",
@@ -25,7 +24,6 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "esbuild": "^0.28.2",
     "kuromoji": "0.1.2",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"

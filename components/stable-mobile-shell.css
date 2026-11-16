@@ -9,5 +9,4 @@ html.stable-mobile-shell body { position:fixed; inset:0; width:100%; height:100%
 .stable-mobile-shell .app-shell.is-studying .mobile-nav { display:none; }
 .stable-mobile-shell .app-shell .toast { position:absolute; }
 .stable-mobile-shell .app-shell[data-mobile-keyboard] .mobile-nav { display:none; }
-.stable-mobile-shell .app-shell.is-discussing .main-content { overflow:hidden; }
 .stable-mobile-shell .library-bulk-toolbar { top:0; }
