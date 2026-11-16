@@ -2,30 +2,45 @@
 .deck-picker-label { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .deck-picker-label label { font-size:12px; font-weight:500; color:#5f5f6a; }
 .deck-picker-label>span { color:var(--muted); font-size:10px; }
-.deck-picker-control { display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-height:46px; padding:7px 9px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
-.deck-picker-control:focus-within { outline:2px solid var(--red); outline-offset:2px; }
+.deck-picker-selection { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
 .deck-picker-chip { display:inline-flex; align-items:center; gap:6px; min-width:0; max-width:100%; padding:2px 3px 2px 9px; border-radius:8px; background:var(--soft); color:var(--ink); font-size:11px; }
 .deck-picker-chip>span:nth-child(2) { min-width:0; overflow-wrap:anywhere; }
 .deck-picker-chip .deck-dot { flex-shrink:0; margin:0; }
 .deck-picker-chip button { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:28px; height:28px; border-radius:6px; color:var(--muted); }
 .deck-picker-chip button:hover { color:var(--red); background:var(--red-soft); }
-.deck-picker-entry { display:flex; flex:1 1 160px; align-items:center; gap:8px; min-width:0; }
+.deck-picker-browser { overflow:hidden; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+.deck-picker-breadcrumbs { display:flex; flex-wrap:wrap; align-items:center; gap:2px; padding:6px 8px; border-bottom:1px solid var(--line); }
+.deck-picker-breadcrumbs>span { display:flex; align-items:center; gap:2px; min-width:0; }
+.deck-picker-breadcrumbs button { min-height:32px; padding:5px 6px; border-radius:6px; text-align:left; font-size:11px; color:var(--muted); overflow-wrap:anywhere; }
+.deck-picker-breadcrumbs button[aria-current] { color:var(--ink); font-weight:600; }
+.deck-picker-breadcrumbs button:hover { background:var(--soft); }
+.deck-picker-up { display:grid; place-items:center; flex-shrink:0; min-width:32px; }
+.deck-picker-entry { display:flex; align-items:center; gap:8px; min-width:0; margin:6px 8px; padding:0 8px; border:1px solid var(--line); border-radius:8px; }
+.deck-picker-entry:focus-within { outline:2px solid var(--red); outline-offset:1px; }
 .deck-picker-entry>svg { flex-shrink:0; color:var(--muted); }
-.editor-form .deck-picker-control input.deck-picker-query { flex:1; width:100%; min-width:0; min-height:32px; margin:0; padding:4px 0; border:0; border-radius:0; outline:none; background:transparent; color:var(--ink); font-size:13px; }
+.editor-form .deck-picker-entry input.deck-picker-query { flex:1; width:100%; min-width:0; min-height:36px; margin:0; padding:5px 0; border:0; border-radius:0; outline:none; background:transparent; color:var(--ink); font-size:12px; }
 .deck-picker-clear { display:grid; place-items:center; flex-shrink:0; min-width:32px; min-height:32px; color:var(--muted); border-radius:6px; }
-.deck-picker-options { display:grid; gap:2px; max-height:240px; overflow:auto; overscroll-behavior:contain; margin-top:6px; padding:4px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
-.deck-picker-options button { display:flex; align-items:flex-start; gap:9px; min-height:44px; min-width:0; width:100%; padding:9px 10px; border-radius:8px; text-align:left; color:var(--ink); }
-.deck-picker-options button>.deck-dot { flex-shrink:0; margin:7px 0 0; }
-.deck-picker-options button>span:last-child { display:grid; gap:3px; min-width:0; }
-.deck-picker-options strong { font-size:12px; font-weight:500; overflow-wrap:anywhere; }
-.deck-picker-options small { color:var(--muted); font-size:10px; line-height:1.5; overflow-wrap:anywhere; }
-.deck-picker-options button:hover,.deck-picker-options button.active { background:var(--red-soft); color:var(--red); }
+.deck-picker-options { max-height:220px; overflow:auto; overscroll-behavior:contain; padding:4px; }
+.deck-picker-row { display:flex; align-items:stretch; min-width:0; border-radius:8px; }
+.deck-picker-row:hover { background:var(--soft); }
+.deck-picker .deck-picker-check { display:flex; flex:0 0 36px; align-items:center; justify-content:center; margin:0; cursor:pointer; }
+.deck-picker input[type=checkbox] { flex-shrink:0; width:16px; height:16px; margin:0; accent-color:var(--red); }
+.deck-picker-folder { display:flex; flex:1; align-items:center; gap:9px; min-width:0; min-height:44px; padding:8px 10px 8px 2px; border-radius:8px; text-align:left; color:var(--ink); }
+.deck-picker-folder>span { display:grid; flex:1; gap:3px; min-width:0; }
+.deck-picker-folder>svg { flex-shrink:0; color:var(--muted); }
+.deck-picker-folder strong { font-size:12px; font-weight:500; overflow-wrap:anywhere; }
+.deck-picker-folder small { color:var(--muted); font-size:10px; line-height:1.5; overflow-wrap:anywhere; }
+.deck-picker-current { display:flex; align-items:center; gap:9px; min-height:42px; margin:0 8px; padding:7px 8px; border-bottom:1px solid var(--line); font-size:12px; cursor:pointer; overflow-wrap:anywhere; }
+.deck-picker-current strong { font-weight:600; }
 .deck-picker-hint,.deck-picker-status { margin:7px 0 0; color:var(--muted); font-size:11px; line-height:1.5; }
-.theme-classroom .deck-picker-control,.theme-classroom .deck-picker-options { background:#fffef8; border-color:var(--classroom-frame,#d4d9c1); }
-.theme-classroom .deck-picker-options button.active,.theme-classroom .deck-picker-options button:hover { background:#e2efdb; color:#29735b; }
-.theme-classroom .deck-picker-control:focus-within { outline-color:#39765d; }
+.deck-picker-status { padding:8px 10px 12px; margin:0; }
+.theme-classroom .deck-picker-browser { background:#fffef8; border-color:var(--classroom-frame,#d4d9c1); }
+.theme-classroom .deck-picker-row:hover { background:#e2efdb; }
+.theme-classroom .deck-picker-entry:focus-within { outline-color:#39765d; }
 @media(max-width:640px) {
- .editor-form .deck-picker-control input.deck-picker-query { min-height:38px; font-size:16px; }
+ .editor-form .deck-picker-entry input.deck-picker-query { min-height:40px; font-size:16px; }
  .deck-picker-chip button { width:36px; height:36px; }
- .deck-picker-clear { min-height:38px; }
+ .deck-picker-breadcrumbs button { min-height:38px; }
+ .deck-picker-folder { min-height:48px; }
+ .deck-picker .deck-picker-check { flex-basis:40px; }
 }

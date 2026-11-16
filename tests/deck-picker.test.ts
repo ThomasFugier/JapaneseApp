@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { Deck } from '../lib/model';
-import { deckOptions, suggestDecks } from '../lib/deck-picker';
+import { browseDecks, deckOptions, suggestDecks } from '../lib/deck-picker';
 
 const deck = (id: string, name: string, parentId: string | null = null): Deck => ({ id, name, parentId, color: 'sage', description: '', updatedAt: '2026-11-15T10:00:00.000Z' });
 
@@ -35,4 +35,28 @@ test('path construction tolerates missing/deleted parents and cycles without cha
   assert.equal(options.find(option => option.id === 'orphan')?.path, 'Orphan');
   assert.equal(options.length, 4);
   assert.equal(JSON.stringify(data), before);
+});
+
+test('folder browsing exposes only immediate children and builds a breadcrumb path', () => {
+  const options = deckOptions([deck('vocab', 'Vocabulary'), deck('job', 'Job', 'vocab'), deck('office', 'Office', 'job'), deck('travel', 'Travel', 'vocab'), deck('grammar', 'Grammar')]);
+  assert.deepEqual(browseDecks(options, null, '').map(option => option.id), ['grammar', 'vocab']);
+  assert.deepEqual(browseDecks(options, 'vocab', '').map(option => option.id), ['job', 'travel']);
+  assert.deepEqual(browseDecks(options, 'job', '').map(option => option.id), ['office']);
+  assert.deepEqual(browseDecks(options, 'office', ''), []);
+  assert.deepEqual(options.find(option => option.id === 'office')?.ancestorIds, ['vocab', 'job']);
+  assert.equal(options.find(option => option.id === 'office')?.parentId, 'job');
+});
+
+test('search stays within the open folder and finds nested descendants', () => {
+  const options = deckOptions([deck('vocab', 'Vocabulary'), deck('job', 'Job', 'vocab'), deck('office', 'Office', 'job'), deck('other', 'Other'), deck('outside', 'Office', 'other')]);
+  assert.deepEqual(browseDecks(options, 'vocab', 'ofice').map(option => option.id), ['office']);
+  assert.equal(browseDecks(options, null, 'office').length, 2);
+  assert.deepEqual(browseDecks(options, 'job', 'other'), []);
+  assert.deepEqual(browseDecks(options, 'missing', '').map(option => option.id), ['other', 'vocab']);
+});
+
+test('all immediate children and matching search results remain reachable', () => {
+  const options = deckOptions([deck('root', 'Root'), ...Array.from({ length: 30 }, (_, i) => deck('child' + i, 'Child ' + i, 'root'))]);
+  assert.equal(browseDecks(options, 'root', '').length, 30);
+  assert.equal(browseDecks(options, 'root', 'child').length, 30);
 });

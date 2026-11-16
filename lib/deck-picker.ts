@@ -2,7 +2,7 @@ import type { Deck } from './model';
 import { editDistance } from './japanese-search';
 import { tagKey } from './tags';
 
-export type DeckOption = { id: string; name: string; path: string; color: Deck['color'] };
+export type DeckOption = { id: string; name: string; path: string; parentId: string | null; ancestorIds: string[]; color: Deck['color'] };
 const order = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 const searchKey = (value: string) => tagKey(value).replace(/\s*[/／]\s*/gu, ' ');
 
@@ -10,14 +10,15 @@ export function deckOptions(decks: readonly Deck[]): DeckOption[] {
   const byId = new Map(decks.map(deck => [deck.id, deck]));
   return decks.filter(deck => !deck.deletedAt).map(deck => {
     const names: string[] = [];
+    const ids: string[] = [];
     const seen = new Set<string>();
     let current: Deck | undefined = deck;
     while (current && !seen.has(current.id)) {
       seen.add(current.id);
-      if (!current.deletedAt) names.unshift(current.name);
+      if (!current.deletedAt) { names.unshift(current.name); ids.unshift(current.id); }
       current = current.parentId ? byId.get(current.parentId) : undefined;
     }
-    return { id: deck.id, name: deck.name, path: names.join(' / '), color: deck.color };
+    return { id: deck.id, name: deck.name, path: names.join(' / '), parentId: ids.at(-2) ?? null, ancestorIds: ids.slice(0, -1), color: deck.color };
   }).sort((a, b) => order.compare(a.path, b.path) || a.id.localeCompare(b.id));
 }
 
@@ -40,5 +41,14 @@ export function suggestDecks(options: readonly DeckOption[], selectedIds: readon
     }
     return Number.isFinite(rank) ? [{ option, rank }] : [];
   }).sort((a, b) => a.rank - b.rank || order.compare(a.option.path, b.option.path) || a.option.id.localeCompare(b.option.id))
-    .slice(0, Math.min(8, Math.floor(limit))).map(item => item.option);
+    .slice(0, Math.floor(limit)).map(item => item.option);
+}
+
+/** Search recursively inside the current folder, or list its immediate children. */
+export function browseDecks(options: readonly DeckOption[], folderId: string | null, query: string): DeckOption[] {
+  const current = folderId && options.some(option => option.id === folderId) ? folderId : null;
+  if (!query.trim()) return options.filter(option => option.parentId === current)
+    .sort((a, b) => order.compare(a.name, b.name) || a.id.localeCompare(b.id));
+  const scope = current ? options.filter(option => option.ancestorIds.includes(current)) : options;
+  return suggestDecks(scope, [], query, scope.length);
 }
