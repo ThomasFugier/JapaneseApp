@@ -18,7 +18,7 @@ const noteSchema = z.object({
 });
 const cardSchema = z.object({
   id, noteId: id, direction: z.enum(['ja-fr', 'fr-ja']),
-  deckIds: z.array(id).max(100), updatedAt: date, deletedAt,
+  deckIds: z.array(id).max(100), showReading: z.boolean().optional(), updatedAt: date, deletedAt,
 });
 const reviewSchema = z.object({
   id, cardId: id, rating: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),

@@ -175,7 +175,7 @@ export function NoteEditor({ data, note, defaultDeckId, onClose, onSave, content
         for (const direction of ['ja-fr', 'fr-ja'] as const) {
           const old = cards.find(card => card.noteId === id && card.direction === direction && !card.deletedAt)
             ?? cards.find(card => card.noteId === id && card.direction === direction);
-          const card: StudyCard = { id: old?.id ?? `${id}:${direction}`, noteId: id, direction, deckIds, updatedAt: now, deletedAt: null };
+          const card: StudyCard = { ...old, id: old?.id ?? `${id}:${direction}`, noteId: id, direction, deckIds, updatedAt: now, deletedAt: null };
           if (old) cards[cards.indexOf(old)] = card; else cards.push(card);
         }
         return validateSnapshot({ ...snapshot, notes: note ? snapshot.notes.map(item => item.id === id ? value : item) : [...snapshot.notes, value], cards });

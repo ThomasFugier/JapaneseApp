@@ -25,7 +25,7 @@ La bibliothèque synchronisée est un fichier UTF-8 `library.json`. L’export Z
 
 - `decks` : `id`, `name`, `description`, `parentId` (identifiant ou `null`), `color` (`sage`, `amber`, `rose`, `sky`), `updatedAt`, `deletedAt` facultatif.
 - `notes` : `id`, `createdAt` facultatif (date d’ajout), `japanese`, `reading`, `onReadings` et `kunReadings` facultatifs (tableaux de lectures), `meaning`, `example`, `exampleTranslation`, `explanation`, `tags` (tableau), `updatedAt`, `deletedAt` facultatif.
-- `cards` : `id`, `noteId`, `direction` (`ja-fr` ou `fr-ja`), `deckIds` (tableau), `updatedAt`, `deletedAt` facultatif.
+- `cards` : `id`, `noteId`, `direction` (`ja-fr` ou `fr-ja`), `deckIds` (tableau), `showReading` facultatif (booléen : afficher la lecture au recto ; absent = masquée), `updatedAt`, `deletedAt` facultatif.
 - `reviews` : `id`, `cardId`, `rating` (1 à 4), `reviewedAt`, `dueAt` facultatif (échéance personnalisée immuable).
 - `reviewUndos` : `id`, `reviewId` (révision annulée), `undoneAt`.
 

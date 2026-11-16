@@ -1,13 +1,13 @@
 import { cardsForDeck, dueCards, practiceCards } from './engine';
 import type { Snapshot } from './model';
 
-export type ReviewSession = { deckId: string | null; ids: string[]; index: number; revealed: boolean; readingRevealed?: boolean; practice: boolean; freeOnly?: boolean; answers: { reviewId: string | null; index: number }[] };
+export type ReviewSession = { deckId: string | null; ids: string[]; index: number; revealed: boolean; practice: boolean; freeOnly?: boolean; answers: { reviewId: string | null; index: number }[] };
 
 export function createReviewSession(data: Snapshot, deckId: string | null, freeOnly = false, now = new Date()): ReviewSession | null {
   const due = freeOnly ? [] : dueCards(data, deckId, now);
   const practice = !due.length;
   const queue = practice ? practiceCards(data, deckId) : due;
-  return queue.length ? { deckId, ids: queue.map(card => card.id), index: 0, revealed: false, readingRevealed: false, practice, freeOnly, answers: [] } : null;
+  return queue.length ? { deckId, ids: queue.map(card => card.id), index: 0, revealed: false, practice, freeOnly, answers: [] } : null;
 }
 
 export function advanceReviewSession(session: ReviewSession, data: Snapshot, reviewId: string | null, now = new Date()): ReviewSession {
@@ -17,7 +17,7 @@ export function advanceReviewSession(session: ReviewSession, data: Snapshot, rev
   const due = freeOnly ? [] : dueCards(data, session.deckId, now, completed);
   const practice = !due.length;
   const queue = practice ? practiceCards(data, session.deckId, completed, session.practice ? session.ids.slice(index) : []) : due;
-  return { ...session, ids: [...completed, ...queue.map(card => card.id)], index, revealed: false, readingRevealed: false, practice, freeOnly, answers: [...session.answers, { reviewId, index: session.index }] };
+  return { ...session, ids: [...completed, ...queue.map(card => card.id)], index, revealed: false, practice, freeOnly, answers: [...session.answers, { reviewId, index: session.index }] };
 }
 
 export function continueAfterReviewDeletion(session: ReviewSession, data: Snapshot, now = new Date()): ReviewSession {
@@ -29,10 +29,10 @@ export function continueAfterReviewDeletion(session: ReviewSession, data: Snapsh
   const queue = practice ? practiceCards(data, session.deckId, completed, pending) : due;
   const activeIds = new Set(cardsForDeck(data, null).map(card => card.id));
   const answers = session.answers.filter(answer => activeIds.has(session.ids[answer.index]));
-  return { ...session, ids: [...completed, ...queue.map(card => card.id)], index: completed.length, revealed: false, readingRevealed: false, practice, freeOnly, answers };
+  return { ...session, ids: [...completed, ...queue.map(card => card.id)], index: completed.length, revealed: false, practice, freeOnly, answers };
 }
 
 export function rewindReviewSession(session: ReviewSession): ReviewSession {
   const previous = session.answers.at(-1);
-  return previous ? { ...session, index: previous.index, revealed: true, readingRevealed: false, practice: previous.reviewId === null, answers: session.answers.slice(0, -1) } : session;
+  return previous ? { ...session, index: previous.index, revealed: true, practice: previous.reviewId === null, answers: session.answers.slice(0, -1) } : session;
 }
