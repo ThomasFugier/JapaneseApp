@@ -4,7 +4,8 @@ import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState, type C
 import { ArrowRight, Download, LoaderCircle, MessageCircle, RotateCcw, X } from 'lucide-react';
 import type { WebWorkerMLCEngine } from '@mlc-ai/web-llm';
 import type { Snapshot } from '@/lib/model';
-import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationHelpInstruction, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, repeatsConversationReply, type ConversationMessage } from '@/lib/conversation';
+import { CONVERSATION_LIMIT, cleanConversationReply, ConversationResponseError, conversationPrompt, hasJapaneseReply, isJapaneseMessage, recentConversation, type ConversationMessage } from '@/lib/conversation';
+import { reviewConversationReply } from '@/lib/conversation-review';
 import { loadConversation, saveConversation } from '@/lib/conversation-storage';
 import { conversationModelForDevice, isMobileConversationDevice, LIGHT_CONVERSATION_MODEL, QUALITY_CONVERSATION_MODEL, MOBILE_CONVERSATION_MODEL_KEY, markConversationRunning, wasConversationInterrupted } from '@/lib/conversation-runtime';
 import { JapaneseText } from './furigana';
@@ -215,42 +216,30 @@ export function ConversationChat({ data, active, onOpen, displayTools, onAddCard
           ] as { role: 'system' | 'user' | 'assistant'; content: string }[];
         const response = await ai.chat.completions.create({
           messages: modelMessages,
-          stream: true, extra_body: { enable_thinking: false }, temperature: 0.65, top_p: 0.9,
+          stream: true, extra_body: { enable_thinking: false }, temperature: 0.3, top_p: 0.9,
           max_tokens: 280, repetition_penalty: 1.08,
         });
         for await (const chunk of response) {
           if (!mounted.current || request !== epoch.current) return;
           answer += chunk.choices[0]?.delta.content ?? '';
-          const visible = cleanConversationReply(answer);
-          setPartial(hasJapaneseReply(visible) && !repeatsConversationReply(visible, current) ? visible : '');
+          // Keep the draft hidden until the separate proofreading pass completes.
         }
-        answer = cleanConversationReply(answer);
-        if (!stopped.current && (!hasJapaneseReply(answer) || repeatsConversationReply(answer, current))) {
-          setPartial('');
-          // Restart with a small, focused context instead of reinforcing a failed loop.
-          const repeated = repeatsConversationReply(answer, current);
+        if (!mounted.current || request !== epoch.current || stopped.current) return;
+        answer = await reviewConversationReply(cleanConversationReply(answer), current, async messages => {
           const revised = await ai.chat.completions.create({
-            messages: [
-              { role: 'system', content: `あなたは親しい友達のようなＡＩです。やさしい日本語だけで１〜３文。外国語やローマ字は禁止です。食事など実際にはしていない体験は作らないでください。短い文と日常的な言葉で、相手の質問に直接答えてください。質問はしなくていいです。${conversationHelpInstruction(current)}` },
-              { role: 'user', content: repeated
-                ? `次の説明ではわかりませんでした。別の簡単な言葉で説明し、身近な具体例を一つ示してください。同じ文を繰り返さないでください。\n前の説明（引用）: ${JSON.stringify(answer.slice(0, 400))}`
-                : `相手の発言（引用）: ${JSON.stringify(current.at(-1)?.content || instruction || '日本語で話しましょう。')}\n次の下書きを、自然でやさしい日本語だけに直してください。説明の前置きは不要です。\n下書き（引用）: ${JSON.stringify(answer.slice(0, 600))}` },
-            ],
-            stream: false, extra_body: { enable_thinking: false }, temperature: 0.4, max_tokens: 280,
+            messages, stream: false, extra_body: { enable_thinking: false },
+            temperature: 0.1, max_tokens: 280, repetition_penalty: 1.08,
           });
-          answer = cleanConversationReply(revised.choices[0]?.message.content ?? '');
-          if (!hasJapaneseReply(answer) || repeatsConversationReply(answer, current)) {
-            console.warn(`Conversation response rejected: japanese=${hasJapaneseReply(answer)}, repeated=${repeatsConversationReply(answer, current)}`);
-            throw new ConversationResponseError();
-          }
-        }
+          if (revised.choices[0]?.finish_reason === 'length') throw new ConversationResponseError();
+          return revised.choices[0]?.message.content ?? '';
+        }, instruction);
       }, 180000);
-      if (!mounted.current || request !== epoch.current) return;
+      if (!mounted.current || request !== epoch.current || stopped.current) return;
       const clean = cleanConversationReply(answer);
       if (clean && hasJapaneseReply(clean)) await persist([...current, message('assistant', clean)]);
       else if (!stopped.current) throw new ConversationResponseError();
     } catch (cause) {
-      if (mounted.current && request === epoch.current) {
+      if (mounted.current && request === epoch.current && !stopped.current) {
         setError(cause instanceof Error ? cause.message : 'La réponse a échoué. Relance le modèle pour réessayer.');
         if (cause instanceof ConversationResponseError) setCanRetry(true);
         else { setCanRetry(false); release(); }

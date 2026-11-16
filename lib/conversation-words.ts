@@ -1,3 +1,5 @@
+import { contextualReadings } from './contextual-readings';
+
 export type ConversationWord = {
   text: string;
   lemma: string;
@@ -22,7 +24,7 @@ export function readConversationWords(value: unknown, text: string): Conversatio
       || !['fr', 'en', null].includes(word.language) || !['JMdict', null].includes(word.source)) return;
     words.push({ text: word.text, lemma: word.lemma, reading: word.reading, dictionaryReading: word.dictionaryReading, partOfSpeech: word.partOfSpeech, definitions: [...word.definitions], language: word.language, source: word.source });
   }
-  return words.map(word => word.text).join('') === text ? words : undefined;
+  return words.map(word => word.text).join('') === text ? contextualReadings(words) : undefined;
 }
 
 export function conversationCardDraft(word: ConversationWord, sentence: string): ConversationCardDraft {

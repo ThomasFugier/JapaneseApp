@@ -1,4 +1,5 @@
 import type { FuriganaPart } from './furigana';
+import { contextualReadings } from './contextual-readings';
 
 export type ReadingToken = { text: string; reading?: string; lemma?: string; partOfSpeech?: string; alignment?: FuriganaPart[] };
 type Pending = { resolve: (tokens: ReadingToken[]) => void; reject: (error: Error) => void; timer: ReturnType<typeof setTimeout> };
@@ -32,7 +33,7 @@ function requestTokens(text: string, reading: string | undefined, wordsOnly: boo
           if (!item) return;
           pending.delete(id); clearTimeout(item.timer);
           if (error) item.reject(new Error(error));
-          else item.resolve(tokens);
+          else item.resolve(contextualReadings(tokens));
         };
         worker.onerror = () => fail(new Error('The Japanese dictionary could not be loaded.'));
       }
