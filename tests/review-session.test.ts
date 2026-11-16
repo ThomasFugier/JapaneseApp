@@ -1,11 +1,27 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { dueCards, effectiveReviews, scheduleForCard } from '../lib/engine';
-import { advanceReviewSession, createReviewSession, rewindReviewSession, type ReviewSession } from '../lib/review-session';
+import { advanceReviewSession, continueAfterReviewDeletion, createReviewSession, rewindReviewSession, type ReviewSession } from '../lib/review-session';
 import { seedSnapshot } from '../lib/seed';
 
 const now = new Date('2026-11-09T10:00:00.000Z');
 const session = (ids: string[]): ReviewSession => ({ deckId: null, ids, index: 0, revealed: true, practice: false, answers: [] });
+
+test('reading hints reset between cards without changing review history or revealing answers', () => {
+  const data = seedSnapshot(), before = structuredClone(data);
+  const initial = createReviewSession(data, null, true, now)!;
+  assert.equal(initial.readingRevealed, false);
+  const hinted = { ...initial, readingRevealed: true };
+  assert.equal(hinted.revealed, false);
+  const next = advanceReviewSession(hinted, data, null, now);
+  assert.equal(next.readingRevealed, false);
+  assert.equal(next.revealed, false);
+  assert.equal(continueAfterReviewDeletion(hinted, data, now).readingRevealed, false);
+  const rewound = rewindReviewSession({ ...next, readingRevealed: true });
+  assert.equal(rewound.readingRevealed, false);
+  assert.equal(rewound.revealed, true);
+  assert.deepEqual(data, before);
+});
 
 test('a successful Easy answer leaves the remaining session until its next due date', () => {
   const data = seedSnapshot();
