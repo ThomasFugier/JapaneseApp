@@ -23,6 +23,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
   const preview = stories.find(story => story.id === previewId) ?? stories[0];
+  const visibleIds = stories.map(story => story.id).join('|');
 
   function syncEdges() {
     const element = viewport.current;
@@ -41,7 +42,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
     observer.observe(element);
     if (track.current) observer.observe(track.current);
     return () => observer.disconnect();
-  }, [stories]);
+  }, [visibleIds]);
 
   function startDrag(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== 'mouse' || event.button !== 0 || !event.isPrimary) return;
@@ -83,6 +84,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
 
   function previewBook(story: Story, button: HTMLButtonElement) {
     setPreviewId(story.id);
+    if (drag.current) return;
     requestAnimationFrame(() => {
       if (button.isConnected && document.activeElement === button) button.scrollIntoView({ block: 'nearest', inline: 'center', behavior: scrollBehavior() });
     });
@@ -114,7 +116,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
               className={`story-volume story-volume-size-${index % 5}${preview.id === story.id ? ' is-preview' : ''}`}
               style={{ '--title-length': Array.from(story.title).length } as CSSProperties}
               aria-label={`Lire ${story.subtitle}`}
-              onPointerEnter={() => { if (!drag.current?.moved) setPreviewId(story.id); }}
+              onPointerMove={event => { if (event.pointerType === 'mouse' && !drag.current?.moved && preview.id !== story.id) setPreviewId(story.id); }}
               onFocus={event => previewBook(story, event.currentTarget)} onClick={event => onOpen(story, event.currentTarget)}>
               <span className={`story-spine story-cover-${story.theme}`} aria-hidden="true">
                 <span className="story-spine-cap"><BookOpen size={15} strokeWidth={1.2} /></span>
