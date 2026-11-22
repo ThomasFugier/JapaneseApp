@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, BookOpen, Bookmark, Cat, Check, CloudRain, Mail, Moon, Search, TrainFront, Waves, X } from 'lucide-react';
 import { FuriganaToggle, useFuriganaEnabled } from './furigana';
@@ -8,6 +8,7 @@ import { splitFurigana } from '@/lib/furigana';
 import { sanitizeStoryProgress, storyTitleWords, type Story, type StoryProgress, type StoryWord } from '@/lib/stories';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import { StoriesBookshelf } from './stories-bookshelf';
+import type { JapaneseFont } from './use-workspace-context';
 import './stories.css';
 
 const KEY = 'kotoba-stories-v1';
@@ -33,7 +34,7 @@ function Cover({ story }: { story: Story }) {
 }
 
 type Selection = { word: StoryWord; anchor: HTMLButtonElement; key: string };
-function Definition({ selection, onClose }: { selection: Selection; onClose: () => void }) {
+function Definition({ selection, textStyle, onClose }: { selection: Selection; textStyle: CSSProperties; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ left: 12, top: 12 });
@@ -74,7 +75,7 @@ function Definition({ selection, onClose }: { selection: Selection; onClose: () 
       document.removeEventListener('keydown', keydown);
     };
   }, [selection, onClose]);
-  return createPortal(<div ref={panel} id="story-definition" role="dialog" aria-label={`Définition de ${selection.word.text}`} className="story-definition" style={position} lang="fr">
+  return createPortal(<div ref={panel} id="story-definition" role="dialog" aria-label={`Définition de ${selection.word.text}`} className="story-definition" style={{ ...position, ...textStyle }} lang="fr">
     <button ref={closeButton} className="icon-button story-definition-close" aria-label="Fermer la définition" onClick={() => { onClose(); selection.anchor.focus({ preventScroll: true }); }}><X size={17} /></button>
     <strong lang="ja">{selection.word.text}</strong>
     <span className="story-definition-reading" lang="ja">{selection.word.reading}</span>
@@ -82,26 +83,40 @@ function Definition({ selection, onClose }: { selection: Selection; onClose: () 
   </div>, document.body);
 }
 
-export function StoriesView({ stories, onFuriganaChange }: { stories: readonly Story[]; onFuriganaChange: (enabled: boolean) => void }) {
+export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaChange }: { stories: readonly Story[]; japaneseFont: JapaneseFont; onFontChange: (font: JapaneseFont) => void; onFuriganaChange: (enabled: boolean) => void }) {
   const [progress, setProgress] = useState<StoryProgress>({ currentId: null, readIds: [] });
   const [hydrated, setHydrated] = useState(false);
   const [reading, setReading] = useState(false);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'N5' | 'N4' | 'unread'>('all');
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [fontSize, setFontSize] = useState(20);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const settingsRef = useRef<HTMLDetailsElement>(null);
   const shelfFocus = useRef<string | null>(null);
   const enabled = useFuriganaEnabled();
+  const textStyle = { '--story-text-scale': fontSize / 20 } as CSSProperties;
   useEffect(() => {
-    try { setProgress(sanitizeStoryProgress(JSON.parse(localStorage.getItem(KEY) || 'null'), stories)); } catch { /* Optional local reading history. */ }
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+      setProgress(sanitizeStoryProgress(saved, stories));
+      if (Number.isInteger(saved?.fontSize) && saved.fontSize >= 16 && saved.fontSize <= 28) setFontSize(saved.fontSize);
+    } catch { /* Optional local reading history. */ }
     setHydrated(true);
   }, [stories]);
   useEffect(() => {
-    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch { /* Reading remains available without storage. */ }
-  }, [progress, hydrated]);
+    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify({ ...progress, fontSize })); } catch { /* Reading remains available without storage. */ }
+  }, [progress, fontSize, hydrated]);
   useLayoutEffect(() => {
     if (reading) titleRef.current?.focus({ preventScroll: true });
   }, [reading, progress.currentId]);
+  useEffect(() => {
+    function closeSettings(event: PointerEvent) {
+      if (settingsRef.current && event.target instanceof Node && !settingsRef.current.contains(event.target)) settingsRef.current.open = false;
+    }
+    document.addEventListener('pointerdown', closeSettings);
+    return () => document.removeEventListener('pointerdown', closeSettings);
+  }, []);
 
   const current = stories.find(story => story.id === progress.currentId);
   const normalized = query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
@@ -128,8 +143,27 @@ export function StoriesView({ stories, onFuriganaChange }: { stories: readonly S
 
   if (reading && current) {
     const isRead = progress.readIds.includes(current.id);
-    return <section className="stories-reader" aria-label={current.subtitle} lang="fr">
-      <div className="story-reader-toolbar"><button className="story-back" aria-label="Retour à la bibliothèque" onClick={back}><ArrowLeft size={20} /><span>Bibliothèque</span></button><FuriganaToggle onChange={onFuriganaChange} /></div>
+    return <section className="stories-reader" aria-label={current.subtitle} lang="fr" style={textStyle}>
+      <div className="story-reader-toolbar">
+        <button className="story-back" aria-label="Retour à la bibliothèque" onClick={back}><ArrowLeft size={20} /><span>Bibliothèque</span></button>
+        <div className="story-reader-tools">
+          <details ref={settingsRef} className="story-type-settings" onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}>
+            <summary aria-label="Police et taille du texte" onClick={() => setSelection(null)}>Aa</summary>
+            <div className="story-type-panel">
+              <div className="story-size-control" role="group" aria-label="Taille du texte">
+                <button aria-label="Réduire la taille du texte" disabled={fontSize <= 16} onClick={() => setFontSize(size => Math.max(16, size - 2))}>A−</button>
+                <output aria-live="polite">{fontSize} px</output>
+                <button aria-label="Augmenter la taille du texte" disabled={fontSize >= 28} onClick={() => setFontSize(size => Math.min(28, size + 2))}>A+</button>
+              </div>
+              <div className="story-font-control" role="group" aria-label="Police du texte">
+                <button aria-pressed={japaneseFont === 'plain'} onClick={() => onFontChange('plain')}><span className="story-font-plain" lang="ja">あ</span>Moderne</button>
+                <button aria-pressed={japaneseFont === 'brush'} onClick={() => onFontChange('brush')}><span className="story-font-brush" lang="ja">あ</span>Manuscrite</button>
+              </div>
+            </div>
+          </details>
+          <FuriganaToggle onChange={onFuriganaChange} />
+        </div>
+      </div>
       <article className={`story-page${enabled ? ' with-readings' : ''}`}>
         <header className="story-page-heading">
           <h2 ref={titleRef} tabIndex={-1} lang="ja">{storyTitleWords(current).map((word, index) => renderWord(word, `title-${index}`))}</h2>
@@ -137,7 +171,7 @@ export function StoriesView({ stories, onFuriganaChange }: { stories: readonly S
         <div className="story-prose" lang="ja">{current.paragraphs.map((paragraph, p) => <p key={p}>{paragraph.map((word, w) => renderWord(word, `body-${p}-${w}`))}</p>)}</div>
         <footer className="story-page-footer"><button className={`story-read-button${isRead ? ' is-read' : ''}`} aria-pressed={isRead} onClick={() => toggleRead(current.id)}><Check size={17} />{isRead ? 'Histoire lue' : 'Marquer comme lue'}</button></footer>
       </article>
-      {selection && <Definition selection={selection} onClose={() => setSelection(null)} />}
+      {selection && <Definition selection={selection} textStyle={textStyle} onClose={() => setSelection(null)} />}
     </section>;
   }
 

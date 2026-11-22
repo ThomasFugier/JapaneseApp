@@ -363,7 +363,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
         </>}
 
         {tab === 'reference' && <ReferenceView />}
-        {tab === 'stories' && <StoriesView stories={stories} onFuriganaChange={setFuriganaEnabled} />}
+        {tab === 'stories' && <StoriesView stories={stories} japaneseFont={japaneseFont} onFontChange={setJapaneseFont} onFuriganaChange={setFuriganaEnabled} />}
         {tab === 'writing' && <WritingView data={data} japaneseFont={japaneseFont} />}
         {tab === 'lessons' && <LessonsView classroom={interfaceStyle === 'classroom'} progress={data.lessonProgress} onFinishReview={id => { prepareSound(); return update(snapshot => markLessonReviewed(snapshot, id)).then(() => playSound()); }} lessonId={lessonId} onSelect={setLessonId} validatedIds={validatedLessonIds(data)} onToggleValidated={id => { const checked = !validatedLessonIds(data).includes(id); void update(snapshot => setLessonValidated(snapshot, id, checked)).catch(() => { /* Local save errors are shown by useLibrary. */ }); }} />}
         {tab === 'stats' && <StatisticsView data={data} now={new Date(clock)} onReview={id => startSession(id)} onOpenLibrary={() => navigate('library')} onOpenCard={note => { navigate('library'); setReading({ deckId: null, search: note.japanese, expanded: note.id, scrollY: 0 }); }} onEditCard={setNoteModal} />}
