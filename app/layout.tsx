@@ -8,6 +8,7 @@ const japaneseFont = localFont({
   style: 'normal',
   display: 'swap',
   variable: '--font-japanese',
+  preload: false,
   adjustFontFallback: false,
 });
 
@@ -17,7 +18,7 @@ const japanesePlainFont = localFont({
   style: 'normal',
   display: 'swap',
   variable: '--font-japanese-plain',
-  preload: false,
+  preload: true,
   adjustFontFallback: false,
 });
 
