@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
-import { BookOpen, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Story } from '@/lib/stories';
 import './stories-bookshelf.css';
 
@@ -97,7 +97,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
   if (!preview) return null;
   return <div className="stories-desktop-bookshelf">
     <div className={`story-bookcase${dragging ? ' is-dragging' : ''}`}>
-      <div ref={viewport} className="story-shelf-viewport" aria-label="Étagère des histoires" onScroll={syncEdges} onKeyDown={moveFocus}
+      <div ref={viewport} className="story-shelf-viewport" aria-label="Sélection d’histoires" onScroll={syncEdges} onKeyDown={moveFocus}
         onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={finishDrag}
         onPointerCancel={event => { suppressClick.current = false; finishDrag(event); }}
         onLostPointerCapture={finishDrag}
@@ -118,7 +118,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
               onPointerMove={event => { if (event.pointerType === 'mouse' && !drag.current?.moved && preview.id !== story.id) setPreviewId(story.id); }}
               onFocus={event => previewBook(story, event.currentTarget)} onClick={event => onOpen(story, event.currentTarget)}>
               <span className={`story-spine story-cover-${story.theme}`} aria-hidden="true">
-                <span className="story-spine-cap"><BookOpen size={15} strokeWidth={1.2} /></span>
+                <span className="story-spine-cap">{String(index + 1).padStart(2, '0')}</span>
                 <span className="story-spine-title" lang="ja">{story.title}</span>
                 <span className="story-spine-level">{isRead ? <Check size={14} /> : story.level}</span>
               </span>
@@ -126,11 +126,11 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
           })}
         </div>
       </div>
-      <div className="story-shelf-ledge" aria-hidden="true" />
     </div>
     <div className="story-shelf-caption">
       <div className="story-shelf-preview" aria-live="off"><span className="story-shelf-level">{preview.level}</span><div><strong>{preview.subtitle}</strong><p>{preview.description}</p></div></div>
-      <div className="story-shelf-controls" role="group" aria-label="Parcourir l’étagère">
+      <div className="story-shelf-controls" role="group" aria-label="Parcourir les livres">
+        <span className="story-shelf-position">{String(stories.indexOf(preview) + 1).padStart(2, '0')}<span> / {stories.length}</span></span>
         <button type="button" aria-label="Livres précédents" disabled={edges.start} onClick={() => browse(-1)}><ChevronLeft size={20} /></button>
         <button type="button" aria-label="Livres suivants" disabled={edges.end} onClick={() => browse(1)}><ChevronRight size={20} /></button>
       </div>
