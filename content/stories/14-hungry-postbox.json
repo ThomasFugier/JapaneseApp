@@ -1,0 +1,311 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "hungry-postbox",
+  "title": "ポストのおなか",
+  "reading": "ぽすとのおなか",
+  "subtitle": "Le ventre de la boîte aux lettres",
+  "level": "N5",
+  "theme": "letter",
+  "description": "Mina dépose une carte et s’interroge sur cette grande boîte rouge.",
+  "paragraphs": [
+    [
+      {
+        "text": "ミナ",
+        "reading": "みな",
+        "meaning": "Mina, une petite fille dans cette histoire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "祖母",
+        "reading": "そぼ",
+        "meaning": "Ma grand-mère ; la grand-mère du personnage."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "絵はがき",
+        "reading": "えはがき",
+        "meaning": "Une carte postale illustrée."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "書きました",
+        "reading": "かきました",
+        "meaning": "A écrit ; passé poli de 書く."
+      },
+      "。",
+      {
+        "text": "赤い",
+        "reading": "あかい",
+        "meaning": "Rouge."
+      },
+      {
+        "text": "ポスト",
+        "reading": "ぽすと",
+        "meaning": "Une boîte aux lettres de la poste."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "入れて",
+        "reading": "いれて",
+        "meaning": "En mettant ; forme en て de 入れる."
+      },
+      "、",
+      {
+        "text": "じっと",
+        "reading": "じっと",
+        "meaning": "Fixement ; sans bouger."
+      },
+      {
+        "text": "見ています",
+        "reading": "みています",
+        "meaning": "Regarde ; forme polie de 見ている."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne ; quelqu’un."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "いる",
+        "reading": "いる",
+        "meaning": "Être présent ; il y a (être vivant)."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Particule familière qui demande une explication à la fin d’une question."
+      },
+      "？",
+      "」",
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père ; le père de la narratrice ou du personnage."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      "「",
+      {
+        "text": "いない",
+        "reading": "いない",
+        "meaning": "Il n’y a personne ; négatif familier de いる."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      {
+        "text": "あとで",
+        "reading": "あとで",
+        "meaning": "Plus tard ; après."
+      },
+      {
+        "text": "集めに",
+        "reading": "あつめに",
+        "meaning": "Pour rassembler / collecter ; but d’un déplacement, de 集める."
+      },
+      {
+        "text": "来る",
+        "reading": "くる",
+        "meaning": "Venir."
+      },
+      {
+        "text": "んだ",
+        "reading": "んだ",
+        "meaning": "Forme familière qui explique une situation."
+      },
+      "。",
+      "」"
+    ],
+    [
+      "「",
+      {
+        "text": "じゃあ",
+        "reading": "じゃあ",
+        "meaning": "Alors ; dans ce cas (familier)."
+      },
+      "、",
+      {
+        "text": "今",
+        "reading": "いま",
+        "meaning": "Maintenant."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "おなか",
+        "reading": "おなか",
+        "meaning": "Le ventre."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "いっぱい",
+        "reading": "いっぱい",
+        "meaning": "Plein ; rempli."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "Être ; forme familière de です."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      "」",
+      {
+        "text": "ミナ",
+        "reading": "みな",
+        "meaning": "Mina, une petite fille dans cette histoire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "ポスト",
+        "reading": "ぽすと",
+        "meaning": "Une boîte aux lettres de la poste."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "そっと",
+        "reading": "そっと",
+        "meaning": "Doucement ; délicatement."
+      },
+      {
+        "text": "触りました",
+        "reading": "さわりました",
+        "meaning": "A touché ; passé poli de 触る."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "帰る",
+        "reading": "かえる",
+        "meaning": "Rentrer ; retourner chez soi."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      "、",
+      {
+        "text": "もう一度",
+        "reading": "もういちど",
+        "meaning": "Encore une fois."
+      },
+      {
+        "text": "ポスト",
+        "reading": "ぽすと",
+        "meaning": "Une boîte aux lettres de la poste."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "手",
+        "reading": "て",
+        "meaning": "Une main ; les mains."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "振りました",
+        "reading": "ふりました",
+        "meaning": "A secoué ; passé poli de 振る. 首を振る : secouer la tête."
+      },
+      "。"
+    ]
+  ]
+}

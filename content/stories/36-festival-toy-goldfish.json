@@ -1,0 +1,353 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "festival-toy-goldfish",
+  "title": "赤い金魚",
+  "reading": "あかいきんぎょ",
+  "subtitle": "Le poisson rouge du festival",
+  "level": "N5",
+  "theme": "sea",
+  "description": "Même un poisson en jouet a droit à un petit rituel avant de dormir.",
+  "paragraphs": [
+    [
+      {
+        "text": "夏祭り",
+        "reading": "なつまつり",
+        "meaning": "Une fête d’été japonaise."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      "、",
+      {
+        "text": "妹",
+        "reading": "いもうと",
+        "meaning": "Ma petite sœur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "赤い",
+        "reading": "あかい",
+        "meaning": "Rouge."
+      },
+      {
+        "text": "金魚",
+        "reading": "きんぎょ",
+        "meaning": "Un poisson rouge."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "おもちゃ",
+        "reading": "おもちゃ",
+        "meaning": "Un jouet."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "もらいました",
+        "reading": "もらいました",
+        "meaning": "A reçu ; passé poli de もらう."
+      },
+      "。",
+      {
+        "text": "水",
+        "reading": "みず",
+        "meaning": "De l’eau."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      "、",
+      {
+        "text": "ゆっくり",
+        "reading": "ゆっくり",
+        "meaning": "Lentement ; tranquillement."
+      },
+      {
+        "text": "動きます",
+        "reading": "うごきます",
+        "meaning": "Bouge ; se déplace. De 動く."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "帰って",
+        "reading": "かえって",
+        "meaning": "Après être rentré ; forme en て de 帰る."
+      },
+      "、",
+      {
+        "text": "妹",
+        "reading": "いもうと",
+        "meaning": "Ma petite sœur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "入れ物",
+        "reading": "いれもの",
+        "meaning": "Un récipient ; un petit contenant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "水",
+        "reading": "みず",
+        "meaning": "De l’eau."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "入れました",
+        "reading": "いれました",
+        "meaning": "A mis à l’intérieur ; passé poli de 入れる."
+      },
+      "。",
+      {
+        "text": "金魚",
+        "reading": "きんぎょ",
+        "meaning": "Un poisson rouge."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "入れました",
+        "reading": "いれました",
+        "meaning": "A mis à l’intérieur ; passé poli de 入れる."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "ごはん",
+        "reading": "ごはん",
+        "meaning": "Le repas ; la nourriture, ici."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "？",
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "Ai demandé ; passé poli de 聞く."
+      },
+      "。",
+      {
+        "text": "妹",
+        "reading": "いもうと",
+        "meaning": "Ma petite sœur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "考えて",
+        "reading": "かんがえて",
+        "meaning": "Après avoir réfléchi ; forme en て de 考える."
+      },
+      "、",
+      {
+        "text": "首",
+        "reading": "くび",
+        "meaning": "Le cou ; ici, la tête dans 首を振る."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "振りました",
+        "reading": "ふりました",
+        "meaning": "A secoué ; de 振る. 首を振る : faire non de la tête."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "子",
+        "reading": "こ",
+        "meaning": "Un enfant ; ici, le petit personnage de neige."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "おもちゃ",
+        "reading": "おもちゃ",
+        "meaning": "Un jouet."
+      },
+      {
+        "text": "だから",
+        "reading": "だから",
+        "meaning": "Parce que c’est… ; indique la raison."
+      },
+      "、",
+      {
+        "text": "いらない",
+        "reading": "いらない",
+        "meaning": "N’est pas nécessaire ; on n’en a plus besoin."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "おやすみ",
+        "reading": "おやすみ",
+        "meaning": "Bonne nuit ; forme familière."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "言う",
+        "reading": "いう",
+        "meaning": "Dire."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Fin de phrase explicative et familière : « c’est ce que je fais »."
+      },
+      "。",
+      "」",
+      {
+        "text": "妹",
+        "reading": "いもうと",
+        "meaning": "Ma petite sœur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "金魚",
+        "reading": "きんぎょ",
+        "meaning": "Un poisson rouge."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; la place voisine."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "座りました",
+        "reading": "すわりました",
+        "meaning": "S’est assis ; passé poli de 座る."
+      },
+      "。"
+    ]
+  ]
+}

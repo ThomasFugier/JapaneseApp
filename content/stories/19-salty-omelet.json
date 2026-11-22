@@ -1,0 +1,302 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "salty-omelet",
+  "title": "失敗のおかず",
+  "reading": "しっぱいのおかず",
+  "subtitle": "Une erreur au menu",
+  "level": "N4",
+  "theme": "cat",
+  "description": "Au cours de cuisine, le déjeuner change de direction.",
+  "paragraphs": [
+    [
+      {
+        "text": "料理",
+        "reading": "りょうり",
+        "meaning": "La cuisine ; la préparation des plats."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "時間",
+        "reading": "じかん",
+        "meaning": "Un moment ; une heure. 料理の時間 : le cours de cuisine."
+      },
+      "、",
+      {
+        "text": "卵",
+        "reading": "たまご",
+        "meaning": "Un œuf."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "粉",
+        "reading": "こな",
+        "meaning": "Une poudre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "入れました",
+        "reading": "いれました",
+        "meaning": "Ai mis ; passé poli de 入れる."
+      },
+      "。",
+      {
+        "text": "砂糖",
+        "reading": "さとう",
+        "meaning": "Du sucre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "つもり",
+        "reading": "つもり",
+        "meaning": "L’intention ; ici, l’idée que c’était du sucre."
+      },
+      {
+        "text": "でしたが",
+        "reading": "でしたが",
+        "meaning": "C’était… mais ; passé poli de です suivi de が."
+      },
+      "、",
+      {
+        "text": "袋",
+        "reading": "ふくろ",
+        "meaning": "Un sachet ; un sac."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "「",
+      {
+        "text": "塩",
+        "reading": "しお",
+        "meaning": "Du sel."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "書いてあります",
+        "reading": "かいてあります",
+        "meaning": "C’est écrit ; de 書く, avec l’état résultant en てある."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "失敗した",
+        "reading": "しっぱいした",
+        "meaning": "J’ai raté ! ; passé familier de 失敗する (échouer)."
+      },
+      "！",
+      "」",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "言う",
+        "reading": "いう",
+        "meaning": "Dire."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Quand ; à la suite de cette action."
+      },
+      "、",
+      {
+        "text": "先生",
+        "reading": "せんせい",
+        "meaning": "Un professeur ; une professeure."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      "「",
+      {
+        "text": "じゃあ",
+        "reading": "じゃあ",
+        "meaning": "Alors ; dans ce cas (familier)."
+      },
+      "、",
+      {
+        "text": "甘い",
+        "reading": "あまい",
+        "meaning": "Sucré ; doux."
+      },
+      {
+        "text": "卵焼き",
+        "reading": "たまごやき",
+        "meaning": "Une omelette japonaise roulée."
+      },
+      {
+        "text": "じゃなくて",
+        "reading": "じゃなくて",
+        "meaning": "Au lieu de… ; sans que ce soit… (familier)."
+      },
+      "、",
+      {
+        "text": "おかず",
+        "reading": "おかず",
+        "meaning": "Un plat d’accompagnement du riz ; ici, un plat salé."
+      },
+      {
+        "text": "にしよう",
+        "reading": "にしよう",
+        "meaning": "Faisons-en… ; décidons de… Forme volitive de にする."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "牛乳",
+        "reading": "ぎゅうにゅう",
+        "meaning": "Du lait de vache."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "足して",
+        "reading": "たして",
+        "meaning": "En ajoutant ; forme en て de 足す."
+      },
+      "、",
+      {
+        "text": "パン",
+        "reading": "ぱん",
+        "meaning": "Du pain."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "一緒に",
+        "reading": "いっしょに",
+        "meaning": "Ensemble."
+      },
+      {
+        "text": "食べました",
+        "reading": "たべました",
+        "meaning": "Avons mangé ; passé poli de 食べる."
+      },
+      "。",
+      {
+        "text": "友達",
+        "reading": "ともだち",
+        "meaning": "Un ami ; une amie."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "「",
+      {
+        "text": "明日",
+        "reading": "あした",
+        "meaning": "Demain."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "失敗",
+        "reading": "しっぱい",
+        "meaning": "Un échec ; une erreur."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "いい",
+        "reading": "いい",
+        "meaning": "Bon ; bien."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。"
+    ]
+  ]
+}

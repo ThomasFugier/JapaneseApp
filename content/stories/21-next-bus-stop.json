@@ -1,0 +1,299 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "next-bus-stop",
+  "title": "次のバス停",
+  "reading": "つぎのばすてい",
+  "subtitle": "Au prochain arrêt",
+  "level": "N5",
+  "theme": "train",
+  "description": "Un siège offert devient une petite conversation.",
+  "paragraphs": [
+    [
+      {
+        "text": "バス",
+        "reading": "ばす",
+        "meaning": "Un bus."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "おばあさん",
+        "reading": "おばあさん",
+        "meaning": "Une dame âgée ; une grand-mère."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "乗ってきました",
+        "reading": "のってきました",
+        "meaning": "Est monté(e) à bord ; de 乗る avec てくる."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "立って",
+        "reading": "たって",
+        "meaning": "En me levant ; forme en て de 立つ."
+      },
+      "、",
+      "「",
+      {
+        "text": "どうぞ",
+        "reading": "どうぞ",
+        "meaning": "Je t’en prie ; vas-y."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "おばあさん",
+        "reading": "おばあさん",
+        "meaning": "Une dame âgée ; une grand-mère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "座りません",
+        "reading": "すわりません",
+        "meaning": "Ne s’assied pas ; négatif poli de 座る."
+      },
+      "。",
+      "「",
+      {
+        "text": "次",
+        "reading": "つぎ",
+        "meaning": "Le suivant ; la prochaine fois."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "降りる",
+        "reading": "おりる",
+        "meaning": "Descendre d’un véhicule."
+      },
+      {
+        "text": "んですよ",
+        "reading": "んですよ",
+        "meaning": "Explique poliment une situation à l’interlocuteur."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "次",
+        "reading": "つぎ",
+        "meaning": "Le suivant ; la prochaine fois."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "バス停",
+        "reading": "ばすてい",
+        "meaning": "Un arrêt de bus."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "降ります",
+        "reading": "おります",
+        "meaning": "Descends ; forme polie de 降りる."
+      },
+      "。",
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "À deux ; indique que les deux personnes font cette action ensemble."
+      },
+      {
+        "text": "ドア",
+        "reading": "どあ",
+        "meaning": "Une porte."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "立ちました",
+        "reading": "たちました",
+        "meaning": "Nous sommes restés debout ; passé poli de 立つ."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "いい",
+        "reading": "いい",
+        "meaning": "Bon ; bien."
+      },
+      {
+        "text": "天気",
+        "reading": "てんき",
+        "meaning": "Le temps qu’il fait ; la météo."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      "」",
+      "「",
+      {
+        "text": "はい",
+        "reading": "はい",
+        "meaning": "Oui."
+      },
+      "。",
+      "」",
+      {
+        "text": "席",
+        "reading": "せき",
+        "meaning": "Une place ; un siège."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "誰も",
+        "reading": "だれも",
+        "meaning": "Personne (avec un verbe négatif)."
+      },
+      {
+        "text": "座っていません",
+        "reading": "すわっていません",
+        "meaning": "N’est assis ; négatif poli de 座っている."
+      },
+      "。",
+      {
+        "text": "私たち",
+        "reading": "わたしたち",
+        "meaning": "Nous."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "話して",
+        "reading": "はなして",
+        "meaning": "En parlant ; forme en て de 話す."
+      },
+      {
+        "text": "から",
+        "reading": "から",
+        "meaning": "Après avoir… (après une forme en て)."
+      },
+      {
+        "text": "降りました",
+        "reading": "おりました",
+        "meaning": "Sommes descendus ; passé poli de 降りる."
+      },
+      "。"
+    ]
+  ]
+}

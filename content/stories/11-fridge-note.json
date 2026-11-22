@@ -1,0 +1,263 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "fridge-note",
+  "title": "冷蔵庫の手紙",
+  "reading": "れいぞうこのてがみ",
+  "subtitle": "Les mots du réfrigérateur",
+  "level": "N5",
+  "theme": "letter",
+  "description": "Deux sœurs discutent sans se croiser, autour d’un dessert.",
+  "paragraphs": [
+    [
+      {
+        "text": "冷蔵庫",
+        "reading": "れいぞうこ",
+        "meaning": "Un réfrigérateur."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "プリン",
+        "reading": "ぷりん",
+        "meaning": "Un flan ou une crème dessert au caramel."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une unité (compteur général)."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; passé poli de ある."
+      },
+      "。",
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "上",
+        "reading": "うえ",
+        "meaning": "Le dessus ; au-dessus."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      "、",
+      {
+        "text": "姉",
+        "reading": "あね",
+        "meaning": "Ma grande sœur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "メモ",
+        "reading": "めも",
+        "meaning": "Un petit mot ; une note."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; passé poli de ある."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "夜",
+        "reading": "よる",
+        "meaning": "La nuit ; le soir."
+      },
+      "、",
+      {
+        "text": "一緒に",
+        "reading": "いっしょに",
+        "meaning": "Ensemble."
+      },
+      {
+        "text": "食べよう",
+        "reading": "たべよう",
+        "meaning": "Mangeons ; forme volitive familière de 食べる."
+      },
+      "。",
+      "」",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "ドア",
+        "reading": "どあ",
+        "meaning": "Une porte."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "閉めました",
+        "reading": "しめました",
+        "meaning": "Ai fermé ; passé poli de 閉める."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "夜",
+        "reading": "よる",
+        "meaning": "La nuit ; le soir."
+      },
+      "、",
+      {
+        "text": "プリン",
+        "reading": "ぷりん",
+        "meaning": "Un flan ou une crème dessert au caramel."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ありません",
+        "reading": "ありません",
+        "meaning": "Il n’y a pas ; ne pas avoir."
+      },
+      "。",
+      {
+        "text": "今度",
+        "reading": "こんど",
+        "meaning": "Cette fois-ci ; à présent, ici."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "メモ",
+        "reading": "めも",
+        "meaning": "Un petit mot ; une note."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; passé poli de ある."
+      },
+      "。",
+      "「",
+      {
+        "text": "ごめん",
+        "reading": "ごめん",
+        "meaning": "Pardon ; désolé (familier)."
+      },
+      "。",
+      {
+        "text": "明日",
+        "reading": "あした",
+        "meaning": "Demain."
+      },
+      "、",
+      {
+        "text": "二つ",
+        "reading": "ふたつ",
+        "meaning": "Deux (compteur général)."
+      },
+      {
+        "text": "買います",
+        "reading": "かいます",
+        "meaning": "Achèterai ; forme polie de 買う."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "下",
+        "reading": "した",
+        "meaning": "Le dessous ; en dessous."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "書きました",
+        "reading": "かきました",
+        "meaning": "A écrit ; passé poli de 書く."
+      },
+      "。",
+      "「",
+      {
+        "text": "三つ",
+        "reading": "みっつ",
+        "meaning": "Trois (compteur général)."
+      },
+      {
+        "text": "お願いします",
+        "reading": "おねがいします",
+        "meaning": "S’il vous plaît ; je vous le demande."
+      },
+      "。",
+      "」"
+    ]
+  ]
+}

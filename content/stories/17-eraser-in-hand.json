@@ -1,0 +1,328 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "eraser-in-hand",
+  "title": "消しゴムはどこ",
+  "reading": "けしごむはどこ",
+  "subtitle": "La gomme introuvable",
+  "level": "N5",
+  "theme": "letter",
+  "description": "Une recherche très sérieuse dans une salle de classe.",
+  "paragraphs": [
+    [
+      {
+        "text": "休み時間",
+        "reading": "やすみじかん",
+        "meaning": "La récréation ; une pause entre les cours."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "消しゴム",
+        "reading": "けしごむ",
+        "meaning": "Une gomme pour effacer le crayon."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ありません",
+        "reading": "ありません",
+        "meaning": "Il n’y a pas ; ne pas avoir."
+      },
+      "。",
+      {
+        "text": "机",
+        "reading": "つくえ",
+        "meaning": "Un bureau ; une table de travail."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "下",
+        "reading": "した",
+        "meaning": "Dessous ; en bas."
+      },
+      "、",
+      {
+        "text": "かばん",
+        "reading": "かばん",
+        "meaning": "Un sac ; un cartable."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      "、",
+      {
+        "text": "ポケット",
+        "reading": "ぽけっと",
+        "meaning": "Une poche."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "見ました",
+        "reading": "みました",
+        "meaning": "Ai regardé ; passé poli de 見る."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "どこ",
+        "reading": "どこ",
+        "meaning": "Où."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "ある",
+        "reading": "ある",
+        "meaning": "Se trouver ; il y a (une chose)."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Particule finale d’une question familière."
+      },
+      "？",
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "友達",
+        "reading": "ともだち",
+        "meaning": "Un ami ; une amie."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "A demandé ; passé poli de 聞く."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "「",
+      {
+        "text": "ないよ",
+        "reading": "ないよ",
+        "meaning": "Il n’y en a pas ; je ne le trouve pas (familier)."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "言って",
+        "reading": "いって",
+        "meaning": "En disant ; forme en て de 言う."
+      },
+      "、",
+      {
+        "text": "手",
+        "reading": "て",
+        "meaning": "Une main."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "上げました",
+        "reading": "あげました",
+        "meaning": "Ai levé ; passé poli de 上げる."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "友達",
+        "reading": "ともだち",
+        "meaning": "Un ami ; une amie."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "左手",
+        "reading": "ひだりて",
+        "meaning": "La main gauche."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "見ています",
+        "reading": "みています",
+        "meaning": "Regarde ; forme polie de 見ている."
+      },
+      "。",
+      {
+        "text": "そこ",
+        "reading": "そこ",
+        "meaning": "Là ; à cet endroit."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      "、",
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "消しゴム",
+        "reading": "けしごむ",
+        "meaning": "Une gomme pour effacer le crayon."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; se trouvait. Passé poli de ある."
+      },
+      "。",
+      "「",
+      {
+        "text": "あった",
+        "reading": "あった",
+        "meaning": "Trouvé ! ; il était là. Passé familier de ある."
+      },
+      "！",
+      "」",
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "À deux ; indique que les deux personnes font cette action ensemble."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      {
+        "text": "探す",
+        "reading": "さがす",
+        "meaning": "Chercher."
+      },
+      {
+        "text": "時",
+        "reading": "とき",
+        "meaning": "Le moment ; quand."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "消しゴム",
+        "reading": "けしごむ",
+        "meaning": "Une gomme pour effacer le crayon."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "一緒",
+        "reading": "いっしょ",
+        "meaning": "Ensemble ; en compagnie de quelqu’un."
+      },
+      {
+        "text": "でした",
+        "reading": "でした",
+        "meaning": "C’était ; passé poli de です."
+      },
+      "。"
+    ]
+  ]
+}

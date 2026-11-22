@@ -1,0 +1,330 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "dinner-without-electricity",
+  "title": "電気のない夜",
+  "reading": "でんきのないよる",
+  "subtitle": "Un dîner sans électricité",
+  "level": "N4",
+  "theme": "moon",
+  "description": "Une coupure de courant laisse enfin de la place aux histoires de la journée.",
+  "paragraphs": [
+    [
+      {
+        "text": "夕飯",
+        "reading": "ゆうはん",
+        "meaning": "Le dîner ; le repas du soir."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "時",
+        "reading": "とき",
+        "meaning": "Le moment ; quand."
+      },
+      "、",
+      {
+        "text": "急に",
+        "reading": "きゅうに",
+        "meaning": "Soudain ; brusquement."
+      },
+      {
+        "text": "電気",
+        "reading": "でんき",
+        "meaning": "L’électricité ; la lumière électrique."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "消えました",
+        "reading": "きえました",
+        "meaning": "S’est éteint ; passé poli de 消える."
+      },
+      "。",
+      {
+        "text": "テレビ",
+        "reading": "てれび",
+        "meaning": "La télévision."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "エアコン",
+        "reading": "えあこん",
+        "meaning": "Un climatiseur."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "静か",
+        "reading": "しずか",
+        "meaning": "Calme ; silencieux."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "なりました",
+        "reading": "なりました",
+        "meaning": "Est devenu ; passé poli de なる."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "ライト",
+        "reading": "らいと",
+        "meaning": "Une lampe ; une petite lumière."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "持ってきました",
+        "reading": "もってきました",
+        "meaning": "A apporté ; de 持ってくる."
+      },
+      "。",
+      {
+        "text": "みんな",
+        "reading": "みんな",
+        "meaning": "Tout le monde ; tous ensemble."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Tous ensemble ; indique une action faite en groupe."
+      },
+      {
+        "text": "テーブル",
+        "reading": "てーぶる",
+        "meaning": "Une table."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "真ん中",
+        "reading": "まんなか",
+        "meaning": "Le milieu ; le centre."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "置きました",
+        "reading": "おきました",
+        "meaning": "Ai posé ; passé poli de 置く."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "いつも",
+        "reading": "いつも",
+        "meaning": "D’habitude ; toujours."
+      },
+      {
+        "text": "より",
+        "reading": "より",
+        "meaning": "Que ; marque ici une comparaison."
+      },
+      {
+        "text": "顔",
+        "reading": "かお",
+        "meaning": "Un visage ; une tête."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "近く",
+        "reading": "ちかく",
+        "meaning": "De près ; à proximité."
+      },
+      {
+        "text": "見えます",
+        "reading": "みえます",
+        "meaning": "Est visible ; se voit."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "学校",
+        "reading": "がっこう",
+        "meaning": "Une école."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "話",
+        "reading": "はなし",
+        "meaning": "Une histoire ; une conversation ; ce que l’on raconte."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "しました",
+        "reading": "しました",
+        "meaning": "Ai fait ; passé poli de する. 話をする : parler."
+      },
+      "。",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "話",
+        "reading": "はなし",
+        "meaning": "Une histoire ; une conversation ; ce que l’on raconte."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "始めました",
+        "reading": "はじめました",
+        "meaning": "A commencé ; passé poli de 始める."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "電気",
+        "reading": "でんき",
+        "meaning": "L’électricité ; la lumière électrique."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "すぐ",
+        "reading": "すぐ",
+        "meaning": "Tout de suite ; rapidement."
+      },
+      {
+        "text": "戻りました",
+        "reading": "もどりました",
+        "meaning": "Est revenu ; passé poli de 戻る."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "テレビ",
+        "reading": "てれび",
+        "meaning": "La télévision."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "つけませんでした",
+        "reading": "つけませんでした",
+        "meaning": "N’avons pas allumé ; passé négatif poli de つける."
+      },
+      "。",
+      {
+        "text": "話",
+        "reading": "はなし",
+        "meaning": "Une histoire ; une conversation ; ce que l’on raconte."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "まだ",
+        "reading": "まだ",
+        "meaning": "Encore ; toujours."
+      },
+      {
+        "text": "終わっていません",
+        "reading": "おわっていません",
+        "meaning": "N’est pas encore terminé ; de 終わる."
+      },
+      "。"
+    ]
+  ]
+}

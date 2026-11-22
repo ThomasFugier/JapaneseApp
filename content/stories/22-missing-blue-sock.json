@@ -1,0 +1,338 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "missing-blue-sock",
+  "title": "青い靴下",
+  "reading": "あおいくつした",
+  "subtitle": "La chaussette bleue",
+  "level": "N4",
+  "theme": "rain",
+  "description": "Une petite enquête entre les machines de la laverie.",
+  "paragraphs": [
+    [
+      {
+        "text": "洗濯",
+        "reading": "せんたく",
+        "meaning": "La lessive ; le lavage des vêtements."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "終わった",
+        "reading": "おわった",
+        "meaning": "Est terminé ; passé familier de 終わる."
+      },
+      {
+        "text": "のに",
+        "reading": "のに",
+        "meaning": "Bien que ; alors que."
+      },
+      "、",
+      {
+        "text": "靴下",
+        "reading": "くつした",
+        "meaning": "Une chaussette ; des chaussettes."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "片方",
+        "reading": "かたほう",
+        "meaning": "Un seul côté ; ici, une seule chaussette d’une paire."
+      },
+      {
+        "text": "しか",
+        "reading": "しか",
+        "meaning": "Seulement ; ne… que (avec un verbe négatif)."
+      },
+      {
+        "text": "ありません",
+        "reading": "ありません",
+        "meaning": "Il n’y a pas ; ne pas avoir."
+      },
+      "。",
+      {
+        "text": "青い",
+        "reading": "あおい",
+        "meaning": "Bleu ; bleue."
+      },
+      {
+        "text": "靴下",
+        "reading": "くつした",
+        "meaning": "Une chaussette ; des chaussettes."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une chose."
+      },
+      "、",
+      {
+        "text": "機械",
+        "reading": "きかい",
+        "meaning": "Une machine."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "待っています",
+        "reading": "まっています",
+        "meaning": "Attend ; forme polie de 待っている."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; voisin."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "おじさん",
+        "reading": "おじさん",
+        "meaning": "Un monsieur d’âge mûr ; un oncle."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "A demandé ; passé poli de 聞く."
+      },
+      "。",
+      "「",
+      {
+        "text": "もう一つ",
+        "reading": "もうひとつ",
+        "meaning": "Un autre ; un de plus."
+      },
+      "、",
+      {
+        "text": "見ませんでした",
+        "reading": "みませんでした",
+        "meaning": "N’avez pas vu ; passé négatif poli de 見る."
+      },
+      {
+        "text": "か",
+        "reading": "か",
+        "meaning": "Particule qui marque une question."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "おじさん",
+        "reading": "おじさん",
+        "meaning": "Un monsieur d’âge mûr ; un oncle."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "自分",
+        "reading": "じぶん",
+        "meaning": "Lui-même ; ici, ses propres chaussettes."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "赤い",
+        "reading": "あかい",
+        "meaning": "Rouge."
+      },
+      {
+        "text": "靴下",
+        "reading": "くつした",
+        "meaning": "Une chaussette ; des chaussettes."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "見せました",
+        "reading": "みせました",
+        "meaning": "A montré ; passé poli de 見せる."
+      },
+      "。",
+      {
+        "text": "私たち",
+        "reading": "わたしたち",
+        "meaning": "Nous."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "À deux ; indique que les deux personnes font cette action ensemble."
+      },
+      {
+        "text": "笑って",
+        "reading": "わらって",
+        "meaning": "En riant ; forme en て de 笑う."
+      },
+      "、",
+      {
+        "text": "もう一度",
+        "reading": "もういちど",
+        "meaning": "Encore une fois."
+      },
+      {
+        "text": "探しました",
+        "reading": "さがしました",
+        "meaning": "Ai cherché ; passé poli de 探す."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "タオル",
+        "reading": "たおる",
+        "meaning": "Une serviette."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "広げる",
+        "reading": "ひろげる",
+        "meaning": "Déplier ; étendre."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Quand ; à la suite de cette action."
+      },
+      "、",
+      {
+        "text": "青い",
+        "reading": "あおい",
+        "meaning": "Bleu ; bleue."
+      },
+      {
+        "text": "靴下",
+        "reading": "くつした",
+        "meaning": "Une chaussette ; des chaussettes."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "落ちました",
+        "reading": "おちました",
+        "meaning": "Est tombé ; passé poli de 落ちる."
+      },
+      "。",
+      {
+        "text": "ずっと",
+        "reading": "ずっと",
+        "meaning": "Tout ce temps ; depuis le début."
+      },
+      {
+        "text": "タオル",
+        "reading": "たおる",
+        "meaning": "Une serviette."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "寝ていた",
+        "reading": "ねていた",
+        "meaning": "Dormait ; passé familier de 寝ている."
+      },
+      {
+        "text": "んですね",
+        "reading": "んですね",
+        "meaning": "Marque une explication que l’on vient de comprendre."
+      },
+      "。"
+    ]
+  ]
+}

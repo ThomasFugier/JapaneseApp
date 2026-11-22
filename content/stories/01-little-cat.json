@@ -1,0 +1,316 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "little-cat",
+  "title": "小さな友達",
+  "reading": "ちいさなともだち",
+  "subtitle": "Un petit ami",
+  "level": "N5",
+  "theme": "cat",
+  "description": "Un chat, une rencontre et un matin un peu différent.",
+  "paragraphs": [
+    [
+      {
+        "text": "今朝",
+        "reading": "けさ",
+        "meaning": "Ce matin."
+      },
+      "、",
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "いました",
+        "reading": "いました",
+        "meaning": "Il y avait (être vivant), passé poli de いる."
+      },
+      "。",
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Être ; forme polie de fin de phrase."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "水",
+        "reading": "みず",
+        "meaning": "De l’eau."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "あげました",
+        "reading": "あげました",
+        "meaning": "Ai donné ; passé poli de あげる."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "水",
+        "reading": "みず",
+        "meaning": "De l’eau."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "飲みました",
+        "reading": "のみました",
+        "meaning": "A bu ; passé poli de 飲む (boire)."
+      },
+      "。",
+      {
+        "text": "それから",
+        "reading": "それから",
+        "meaning": "Ensuite ; après cela."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "一緒に",
+        "reading": "いっしょに",
+        "meaning": "Ensemble."
+      },
+      {
+        "text": "歩きました",
+        "reading": "あるきました",
+        "meaning": "Ai marché ; passé poli de 歩く."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "駅",
+        "reading": "えき",
+        "meaning": "Une gare."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      "、",
+      {
+        "text": "女の子",
+        "reading": "おんなのこ",
+        "meaning": "Une fille."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "待っていました",
+        "reading": "まっていました",
+        "meaning": "Attendait ; forme passée de 待っている."
+      },
+      "。",
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "見て",
+        "reading": "みて",
+        "meaning": "Voyant ; forme en て de 見る (voir)."
+      },
+      "、",
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      "「",
+      {
+        "text": "ハル",
+        "reading": "はる",
+        "meaning": "Haru, nom du chat dans cette histoire."
+      },
+      "！",
+      {
+        "text": "ありがとう",
+        "reading": "ありがとう",
+        "meaning": "Merci."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "名前",
+        "reading": "なまえ",
+        "meaning": "Un nom ; un prénom."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "ハル",
+        "reading": "はる",
+        "meaning": "Haru, nom du chat dans cette histoire."
+      },
+      {
+        "text": "でした",
+        "reading": "でした",
+        "meaning": "C’était ; passé poli de です."
+      },
+      "。",
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "友達",
+        "reading": "ともだち",
+        "meaning": "Un ami ; une amie."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "できました",
+        "reading": "できました",
+        "meaning": "S’est fait ; est apparu. 友達ができる : se faire un ami."
+      },
+      "。"
+    ]
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "sea-train",
+  "title": "海への電車",
+  "reading": "うみへのでんしゃ",
+  "subtitle": "Le train vers la mer",
+  "level": "N4",
+  "theme": "train",
+  "description": "Une rencontre transforme un simple trajet en voyage.",
+  "paragraphs": [
+    [
+      {
+        "text": "日曜日",
+        "reading": "にちようび",
+        "meaning": "Dimanche."
+      },
+      "、",
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "へ",
+        "reading": "へ",
+        "meaning": "Indique la direction (se prononce « e »)."
+      },
+      {
+        "text": "行く",
+        "reading": "いく",
+        "meaning": "Aller."
+      },
+      {
+        "text": "電車",
+        "reading": "でんしゃ",
+        "meaning": "Un train (électrique)."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "乗りました",
+        "reading": "のりました",
+        "meaning": "Ai pris (un transport) ; passé poli de 乗る."
+      },
+      "。",
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; voisin."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "おじいさん",
+        "reading": "おじいさん",
+        "meaning": "Un monsieur âgé ; un grand-père."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "座っていました",
+        "reading": "すわっていました",
+        "meaning": "Était assis ; de 座る (s’asseoir)."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "先",
+        "reading": "さき",
+        "meaning": "Plus loin ; devant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      "、",
+      {
+        "text": "きれいな",
+        "reading": "きれいな",
+        "meaning": "Beau ; joli (devant un nom)."
+      },
+      {
+        "text": "場所",
+        "reading": "ばしょ",
+        "meaning": "Un endroit ; un lieu."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "あります",
+        "reading": "あります",
+        "meaning": "Il y a (chose) ; posséder."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      "」",
+      {
+        "text": "おじいさん",
+        "reading": "おじいさん",
+        "meaning": "Un monsieur âgé ; un grand-père."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "教えてくれました",
+        "reading": "おしえてくれました",
+        "meaning": "M’a indiqué / appris ; de 教える avec くれる (pour moi)."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "次",
+        "reading": "つぎ",
+        "meaning": "Le suivant ; la prochaine fois."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "駅",
+        "reading": "えき",
+        "meaning": "Une gare."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "降りる",
+        "reading": "おりる",
+        "meaning": "Descendre (d’un transport)."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      "、",
+      {
+        "text": "青い",
+        "reading": "あおい",
+        "meaning": "Bleu ; bleue."
+      },
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "広がっていました",
+        "reading": "ひろがっていました",
+        "meaning": "S’étendait ; de 広がる."
+      },
+      "。",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "町",
+        "reading": "まち",
+        "meaning": "Une ville ; un quartier."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "見えました",
+        "reading": "みえました",
+        "meaning": "Était visible ; ai pu voir. De 見える."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "ゆっくり",
+        "reading": "ゆっくり",
+        "meaning": "Lentement ; tranquillement."
+      },
+      {
+        "text": "歩きました",
+        "reading": "あるきました",
+        "meaning": "Ai marché ; passé poli de 歩く."
+      },
+      "。",
+      {
+        "text": "地図",
+        "reading": "ちず",
+        "meaning": "Une carte géographique ; un plan."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "ない",
+        "reading": "ない",
+        "meaning": "Il n’y a pas ; absent. Forme neutre négative de ある."
+      },
+      {
+        "text": "旅",
+        "reading": "たび",
+        "meaning": "Un voyage."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "見つけました",
+        "reading": "みつけました",
+        "meaning": "Ai trouvé ; passé poli de 見つける."
+      },
+      "。"
+    ]
+  ]
+}

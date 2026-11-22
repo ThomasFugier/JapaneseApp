@@ -1,0 +1,315 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "rain-concert",
+  "title": "雨のコンサート",
+  "reading": "あめのこんさーと",
+  "subtitle": "Le concert de la pluie",
+  "level": "N5",
+  "theme": "rain",
+  "description": "Mina et son père n’entendent pas tout à fait la même pluie.",
+  "paragraphs": [
+    [
+      {
+        "text": "朝",
+        "reading": "あさ",
+        "meaning": "Le matin."
+      },
+      {
+        "text": "から",
+        "reading": "から",
+        "meaning": "Depuis ; à partir de."
+      },
+      {
+        "text": "雨",
+        "reading": "あめ",
+        "meaning": "La pluie."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Être ; forme polie de fin de phrase."
+      },
+      "。",
+      {
+        "text": "ミナ",
+        "reading": "みな",
+        "meaning": "Mina, une petite fille dans cette histoire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "窓",
+        "reading": "まど",
+        "meaning": "Une fenêtre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "座って",
+        "reading": "すわって",
+        "meaning": "S’asseyant ; forme en て de 座る."
+      },
+      "、",
+      {
+        "text": "外",
+        "reading": "そと",
+        "meaning": "Dehors ; l’extérieur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "音",
+        "reading": "おと",
+        "meaning": "Un son ; un bruit."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "聞いていました",
+        "reading": "きいていました",
+        "meaning": "Écoutait ; passé de 聞いている."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "雨",
+        "reading": "あめ",
+        "meaning": "La pluie."
+      },
+      "、",
+      {
+        "text": "うるさい",
+        "reading": "うるさい",
+        "meaning": "Bruyant ; qui fait trop de bruit."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      "」",
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père ; le père de la narratrice ou du personnage."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。",
+      {
+        "text": "ミナ",
+        "reading": "みな",
+        "meaning": "Mina, une petite fille dans cette histoire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "首",
+        "reading": "くび",
+        "meaning": "Le cou ; ici, la tête dans l’expression 首を振る."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "振りました",
+        "reading": "ふりました",
+        "meaning": "A secoué ; passé poli de 振る. 首を振る : secouer la tête."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "屋根",
+        "reading": "やね",
+        "meaning": "Un toit."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "トントン",
+        "reading": "とんとん",
+        "meaning": "Toc-toc ; bruit léger de petits coups répétés."
+      },
+      "。",
+      {
+        "text": "葉っぱ",
+        "reading": "はっぱ",
+        "meaning": "Une feuille d’arbre ou de plante (courant)."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "パラパラ",
+        "reading": "ぱらぱら",
+        "meaning": "Petit bruit de gouttes ou de choses légères qui tombent."
+      },
+      "。",
+      {
+        "text": "みんな",
+        "reading": "みんな",
+        "meaning": "Tous ; tout le monde."
+      },
+      {
+        "text": "違う",
+        "reading": "ちがう",
+        "meaning": "Différent ; ne pas être le même."
+      },
+      {
+        "text": "音",
+        "reading": "おと",
+        "meaning": "Un son ; un bruit."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "Être ; forme familière de です."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père ; le père de la narratrice ou du personnage."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; voisin."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "座りました",
+        "reading": "すわりました",
+        "meaning": "Me suis assis ; passé poli de 座る."
+      },
+      "。",
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "雨",
+        "reading": "あめ",
+        "meaning": "La pluie."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "音楽",
+        "reading": "おんがく",
+        "meaning": "La musique."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "Avons écouté ; passé poli de 聞く."
+      },
+      "。",
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "チケット",
+        "reading": "ちけっと",
+        "meaning": "Un billet ; une place pour un spectacle."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "いりません",
+        "reading": "いりません",
+        "meaning": "Ne coûte / ne nécessite pas ; négatif poli de 要る (avoir besoin)."
+      },
+      "。"
+    ]
+  ]
+}

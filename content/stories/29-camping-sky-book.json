@@ -1,0 +1,347 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "camping-sky-book",
+  "title": "明かりを消して",
+  "reading": "あかりをけして",
+  "subtitle": "Éteins la lampe",
+  "level": "N4",
+  "theme": "moon",
+  "description": "Au camping, un livre attend pendant que le ciel raconte autre chose.",
+  "paragraphs": [
+    [
+      {
+        "text": "山",
+        "reading": "やま",
+        "meaning": "Une montagne."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "夜",
+        "reading": "よる",
+        "meaning": "La nuit ; le soir."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "静か",
+        "reading": "しずか",
+        "meaning": "Calme ; silencieux."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "C’est ; marque une fin de phrase polie."
+      },
+      "。",
+      {
+        "text": "テント",
+        "reading": "てんと",
+        "meaning": "Une tente."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "本",
+        "reading": "ほん",
+        "meaning": "Un livre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "読んでいました",
+        "reading": "よんでいました",
+        "meaning": "Étais en train de lire ; de 読む."
+      },
+      "。",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "ランプ",
+        "reading": "らんぷ",
+        "meaning": "Une lampe."
+      },
+      {
+        "text": "だけ",
+        "reading": "だけ",
+        "meaning": "Seulement ; uniquement."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "明るく",
+        "reading": "あかるく",
+        "meaning": "De façon lumineuse ; forme adverbiale de 明るい."
+      },
+      {
+        "text": "光っています",
+        "reading": "ひかっています",
+        "meaning": "Brille ; est allumé, ici. De 光る."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "ちょっと",
+        "reading": "ちょっと",
+        "meaning": "Un instant ; un petit peu."
+      },
+      {
+        "text": "消してみて",
+        "reading": "けしてみて",
+        "meaning": "Essaie d’éteindre ; de 消す avec てみる."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "Ai dit ; passé poli de 言う."
+      },
+      "。",
+      {
+        "text": "暗い",
+        "reading": "くらい",
+        "meaning": "Sombre ; dans le noir."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Transforme 暗い en un nom : « le fait d’être dans le noir »."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "怖い",
+        "reading": "こわい",
+        "meaning": "Effrayant ; qui fait peur."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "C’est ; marque une fin de phrase polie."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "上",
+        "reading": "うえ",
+        "meaning": "Le dessus ; au-dessus."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見る",
+        "reading": "みる",
+        "meaning": "Regarder ; voir."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Quand… ; introduit ici ce que l’on découvre en regardant."
+      },
+      "、",
+      {
+        "text": "空",
+        "reading": "そら",
+        "meaning": "Le ciel."
+      },
+      {
+        "text": "いっぱい",
+        "reading": "いっぱい",
+        "meaning": "Plein ; en grande quantité."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "星",
+        "reading": "ほし",
+        "meaning": "Une étoile."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; se trouvait, pour une chose."
+      },
+      "。",
+      "「",
+      {
+        "text": "ランプ",
+        "reading": "らんぷ",
+        "meaning": "Une lampe."
+      },
+      "、",
+      {
+        "text": "もう",
+        "reading": "もう",
+        "meaning": "Déjà ; désormais."
+      },
+      {
+        "text": "いらない",
+        "reading": "いらない",
+        "meaning": "N’est pas nécessaire ; on n’en a plus besoin."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "本",
+        "reading": "ほん",
+        "meaning": "Un livre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "閉じて",
+        "reading": "とじて",
+        "meaning": "Fermant ; forme en て de 閉じる."
+      },
+      "、",
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; la place voisine."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "座りました",
+        "reading": "すわりました",
+        "meaning": "S’est assis ; passé poli de 座る."
+      },
+      "。",
+      {
+        "text": "今夜",
+        "reading": "こんや",
+        "meaning": "Ce soir ; cette nuit."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "、",
+      {
+        "text": "空",
+        "reading": "そら",
+        "meaning": "Le ciel."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "読みます",
+        "reading": "よみます",
+        "meaning": "Lis ; vais lire. Forme polie de 読む."
+      },
+      "。"
+    ]
+  ]
+}

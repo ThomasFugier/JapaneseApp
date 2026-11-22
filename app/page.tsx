@@ -1,2 +1,3 @@
 import Kotoba from '@/components/kotoba';
-export default function Page() { return <Kotoba />; }
+import { stories } from '@/lib/story-catalog';
+export default function Page() { return <Kotoba stories={stories} />; }

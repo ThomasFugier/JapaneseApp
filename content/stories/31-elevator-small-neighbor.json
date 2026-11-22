@@ -1,0 +1,318 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "elevator-small-neighbor",
+  "title": "小さなお隣さん",
+  "reading": "ちいさなおとなりさん",
+  "subtitle": "Un petit voisin",
+  "level": "N5",
+  "theme": "train",
+  "description": "Un silence dans l’ascenseur se transforme en rendez-vous du matin.",
+  "paragraphs": [
+    [
+      {
+        "text": "朝",
+        "reading": "あさ",
+        "meaning": "Le matin."
+      },
+      "、",
+      {
+        "text": "同じ",
+        "reading": "おなじ",
+        "meaning": "Le même ; identique."
+      },
+      {
+        "text": "アパート",
+        "reading": "あぱーと",
+        "meaning": "Un petit immeuble d’habitation ; un appartement."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "エレベーター",
+        "reading": "えれべーたー",
+        "meaning": "Un ascenseur."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "乗りました",
+        "reading": "のりました",
+        "meaning": "Ai pris un moyen de transport ; suis monté dedans."
+      },
+      "。",
+      {
+        "text": "まだ",
+        "reading": "まだ",
+        "meaning": "Encore ; toujours."
+      },
+      {
+        "text": "名前",
+        "reading": "なまえ",
+        "meaning": "Un nom ; un prénom."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "知りません",
+        "reading": "しりません",
+        "meaning": "Ne connais pas ; forme négative polie de 知る."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "かばん",
+        "reading": "かばん",
+        "meaning": "Un sac."
+      },
+      {
+        "text": "から",
+        "reading": "から",
+        "meaning": "Depuis ; à partir de."
+      },
+      "、",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "犬",
+        "reading": "いぬ",
+        "meaning": "Un chien."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "顔",
+        "reading": "かお",
+        "meaning": "Un visage ; une tête."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "出ました",
+        "reading": "でました",
+        "meaning": "Est sorti ; est apparu. De 出る."
+      },
+      "。",
+      {
+        "text": "犬",
+        "reading": "いぬ",
+        "meaning": "Un chien."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "じっと",
+        "reading": "じっと",
+        "meaning": "Fixement ; sans bouger."
+      },
+      {
+        "text": "見ています",
+        "reading": "みています",
+        "meaning": "Regarde ; est en train de regarder."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "おはよう",
+        "reading": "おはよう",
+        "meaning": "Bonjour, le matin ; forme familière."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "犬",
+        "reading": "いぬ",
+        "meaning": "Un chien."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "言う",
+        "reading": "いう",
+        "meaning": "Dire."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Quand… ; relie ici le salut à la réponse du voisin."
+      },
+      "、",
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      "「",
+      {
+        "text": "おはようございます",
+        "reading": "おはようございます",
+        "meaning": "Bonjour, le matin ; forme polie."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "Ai dit ; passé poli de 言う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "一階",
+        "reading": "いっかい",
+        "meaning": "Le rez-de-chaussée, au Japon."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      {
+        "text": "ドア",
+        "reading": "どあ",
+        "meaning": "Une porte."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "開きました",
+        "reading": "あきました",
+        "meaning": "S’est ouvert ; passé poli de 開く."
+      },
+      "。",
+      {
+        "text": "明日",
+        "reading": "あした",
+        "meaning": "Demain."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "朝",
+        "reading": "あさ",
+        "meaning": "Le matin."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      "、",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "犬",
+        "reading": "いぬ",
+        "meaning": "Un chien."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "会いたい",
+        "reading": "あいたい",
+        "meaning": "Avoir envie de voir ou de rencontrer ; de 会う."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "C’est ; marque une fin de phrase polie."
+      },
+      "。"
+    ]
+  ]
+}

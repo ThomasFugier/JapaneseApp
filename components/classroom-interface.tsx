@@ -3,7 +3,7 @@
 import { Check } from 'lucide-react';
 import type { InterfaceStyle, WorkspaceTab } from './use-workspace-context';
 
-const icons: Record<WorkspaceTab, string> = { home: '🏡', review: '📇', library: '📚', lessons: '🎓', writing: '✏️', stats: '📊', reference: 'あ' };
+const icons: Record<WorkspaceTab, string> = { home: '🏡', review: '📇', library: '📚', lessons: '🎓', writing: '✏️', stats: '📊', reference: 'あ', stories: '📖' };
 
 export function ClassroomEmoji({ children }: { children: string }) {
   return <span className="classroom-emoji" aria-hidden="true">{children}</span>;

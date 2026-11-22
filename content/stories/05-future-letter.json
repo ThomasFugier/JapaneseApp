@@ -1,0 +1,292 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "future-letter",
+  "title": "未来の私へ",
+  "reading": "みらいのわたしへ",
+  "subtitle": "À mon moi du futur",
+  "level": "N4",
+  "theme": "letter",
+  "description": "Entre les pages d’un livre, un message attendait son heure.",
+  "paragraphs": [
+    [
+      {
+        "text": "古い",
+        "reading": "ふるい",
+        "meaning": "Vieux ; ancien."
+      },
+      {
+        "text": "本",
+        "reading": "ほん",
+        "meaning": "Un livre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      "、",
+      {
+        "text": "手紙",
+        "reading": "てがみ",
+        "meaning": "Une lettre."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "一枚",
+        "reading": "いちまい",
+        "meaning": "Une feuille ; une unité d’objet plat."
+      },
+      {
+        "text": "入っていました",
+        "reading": "はいっていました",
+        "meaning": "Se trouvait à l’intérieur ; de 入る."
+      },
+      "。",
+      {
+        "text": "十年",
+        "reading": "じゅうねん",
+        "meaning": "Dix ans."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant ; avant."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "自分",
+        "reading": "じぶん",
+        "meaning": "Soi-même ; moi-même, ici."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "書いた",
+        "reading": "かいた",
+        "meaning": "Ai écrit ; passé neutre de 書く."
+      },
+      {
+        "text": "手紙",
+        "reading": "てがみ",
+        "meaning": "Une lettre."
+      },
+      {
+        "text": "でした",
+        "reading": "でした",
+        "meaning": "C’était ; passé poli de です."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "未来",
+        "reading": "みらい",
+        "meaning": "L’avenir ; le futur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "へ",
+        "reading": "へ",
+        "meaning": "Indique la direction (se prononce « e »)."
+      },
+      "。",
+      {
+        "text": "元気",
+        "reading": "げんき",
+        "meaning": "En forme ; en bonne santé."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Être ; forme polie de fin de phrase."
+      },
+      {
+        "text": "か",
+        "reading": "か",
+        "meaning": "Particule qui marque une question."
+      },
+      "。",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "夢",
+        "reading": "ゆめ",
+        "meaning": "Un rêve ; un projet."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "覚えています",
+        "reading": "おぼえています",
+        "meaning": "Se souvient ; de 覚えている."
+      },
+      {
+        "text": "か",
+        "reading": "か",
+        "meaning": "Particule qui marque une question."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "夢",
+        "reading": "ゆめ",
+        "meaning": "Un rêve ; un projet."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "全部",
+        "reading": "ぜんぶ",
+        "meaning": "Tout ; la totalité."
+      },
+      {
+        "text": "かなった",
+        "reading": "かなった",
+        "meaning": "S’est réalisé (un rêve, un souhait) ; de かなう."
+      },
+      {
+        "text": "わけではありません",
+        "reading": "わけではありません",
+        "meaning": "Cela ne veut pas dire que… ; ce n’est pas que…"
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "また",
+        "reading": "また",
+        "meaning": "À nouveau ; encore."
+      },
+      "、",
+      {
+        "text": "未来",
+        "reading": "みらい",
+        "meaning": "L’avenir ; le futur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "自分",
+        "reading": "じぶん",
+        "meaning": "Soi-même ; moi-même, ici."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "手紙",
+        "reading": "てがみ",
+        "meaning": "Une lettre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "書きました",
+        "reading": "かきました",
+        "meaning": "Ai écrit ; passé poli de 書く."
+      },
+      "。",
+      {
+        "text": "明日",
+        "reading": "あした",
+        "meaning": "Demain."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "楽しみ",
+        "reading": "たのしみ",
+        "meaning": "Une attente heureuse ; 楽しみです : j’ai hâte."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Être ; forme polie de fin de phrase."
+      },
+      "。"
+    ]
+  ]
+}

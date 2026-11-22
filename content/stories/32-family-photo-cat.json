@@ -1,0 +1,332 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "family-photo-cat",
+  "title": "一番いい写真",
+  "reading": "いちばんいいしゃしん",
+  "subtitle": "La meilleure photo",
+  "level": "N5",
+  "theme": "cat",
+  "description": "Le retardateur est lancé. Il ne manque plus que la coopération du chat.",
+  "paragraphs": [
+    [
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "家族",
+        "reading": "かぞく",
+        "meaning": "La famille."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "写真",
+        "reading": "しゃしん",
+        "meaning": "Une photo."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "撮ります",
+        "reading": "とります",
+        "meaning": "Prends une photo ; vais photographier."
+      },
+      "。",
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "カメラ",
+        "reading": "かめら",
+        "meaning": "Un appareil photo."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "机",
+        "reading": "つくえ",
+        "meaning": "Un bureau ; une table de travail."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "置きました",
+        "reading": "おきました",
+        "meaning": "Ai posé ; passé poli de 置く."
+      },
+      "。",
+      "「",
+      {
+        "text": "十秒",
+        "reading": "じゅうびょう",
+        "meaning": "Dix secondes."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "C’est ; forme neutre de です."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "！",
+      "」"
+    ],
+    [
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "急いで",
+        "reading": "いそいで",
+        "meaning": "En se dépêchant ; forme en て de 急ぐ."
+      },
+      {
+        "text": "私たち",
+        "reading": "わたしたち",
+        "meaning": "Nous."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "隣",
+        "reading": "となり",
+        "meaning": "À côté ; la place voisine."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "来ました",
+        "reading": "きました",
+        "meaning": "Est venu ; passé poli de 来る."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "父",
+        "reading": "ちち",
+        "meaning": "Mon père, quand on parle de lui à quelqu’un d’autre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "座りました",
+        "reading": "すわりました",
+        "meaning": "S’est assis ; passé poli de 座る."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "ちょっと",
+        "reading": "ちょっと",
+        "meaning": "Un instant ; un petit peu."
+      },
+      "、",
+      {
+        "text": "どいて",
+        "reading": "どいて",
+        "meaning": "Pousse-toi ; décale-toi. De どく."
+      },
+      "！",
+      "」",
+      {
+        "text": "みんな",
+        "reading": "みんな",
+        "meaning": "Tout le monde ; tous ensemble."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "猫",
+        "reading": "ねこ",
+        "meaning": "Un chat."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見て",
+        "reading": "みて",
+        "meaning": "Regardant ; forme en て de 見る."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A ri ; a souri. Passé poli de 笑う."
+      },
+      "。",
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "時",
+        "reading": "とき",
+        "meaning": "Le moment ; quand."
+      },
+      "、",
+      {
+        "text": "カメラ",
+        "reading": "かめら",
+        "meaning": "Un appareil photo."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "光りました",
+        "reading": "ひかりました",
+        "meaning": "A émis une lumière ; a flashé, ici. De 光る."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "写真",
+        "reading": "しゃしん",
+        "meaning": "Une photo."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      "、",
+      {
+        "text": "誰も",
+        "reading": "だれも",
+        "meaning": "Personne, avec un verbe négatif."
+      },
+      {
+        "text": "カメラ",
+        "reading": "かめら",
+        "meaning": "Un appareil photo."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見ていません",
+        "reading": "みていません",
+        "meaning": "Ne regarde pas ; forme négative de 見ている."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "みんな",
+        "reading": "みんな",
+        "meaning": "Tout le monde ; tous ensemble."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "笑っています",
+        "reading": "わらっています",
+        "meaning": "Sourit ; rit. De 笑っている."
+      },
+      "。"
+    ]
+  ]
+}

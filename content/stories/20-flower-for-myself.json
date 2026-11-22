@@ -1,0 +1,348 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "flower-for-myself",
+  "title": "私に一本",
+  "reading": "わたしにいっぽん",
+  "subtitle": "Une fleur pour moi",
+  "level": "N5",
+  "theme": "letter",
+  "description": "Un achat minuscule pour une longue journée.",
+  "paragraphs": [
+    [
+      {
+        "text": "駅",
+        "reading": "えき",
+        "meaning": "Une gare."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "近く",
+        "reading": "ちかく",
+        "meaning": "À proximité ; près."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "花屋",
+        "reading": "はなや",
+        "meaning": "Un fleuriste ; une boutique de fleurs."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      "、",
+      {
+        "text": "黄色い",
+        "reading": "きいろい",
+        "meaning": "Jaune."
+      },
+      {
+        "text": "花",
+        "reading": "はな",
+        "meaning": "Une fleur."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "一本",
+        "reading": "いっぽん",
+        "meaning": "Une unité d’objet long ; ici, une fleur avec sa tige."
+      },
+      {
+        "text": "買いました",
+        "reading": "かいました",
+        "meaning": "A acheté ; passé poli de 買う."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "誰",
+        "reading": "だれ",
+        "meaning": "Qui."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "あげる",
+        "reading": "あげる",
+        "meaning": "Donner à quelqu’un."
+      },
+      {
+        "text": "んですか",
+        "reading": "んですか",
+        "meaning": "Demande poliment une explication ou une précision."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "店",
+        "reading": "みせ",
+        "meaning": "Un magasin ; une boutique."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "A demandé ; passé poli de 聞く."
+      },
+      "。",
+      "「",
+      {
+        "text": "自分",
+        "reading": "じぶん",
+        "meaning": "Soi-même ; ici, moi-même."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "À ; indique la personne qui reçoit le cadeau."
+      },
+      {
+        "text": "あげます",
+        "reading": "あげます",
+        "meaning": "Je donne ; forme polie de あげる."
+      },
+      "。",
+      {
+        "text": "今日",
+        "reading": "きょう",
+        "meaning": "Aujourd’hui."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "朝から",
+        "reading": "あさから",
+        "meaning": "Depuis le matin."
+      },
+      "、",
+      {
+        "text": "頑張りました",
+        "reading": "がんばりました",
+        "meaning": "Ai fait de mon mieux ; passé poli de 頑張る."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "店",
+        "reading": "みせ",
+        "meaning": "Un magasin ; une boutique."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "花",
+        "reading": "はな",
+        "meaning": "Une fleur."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "リボン",
+        "reading": "りぼん",
+        "meaning": "Un ruban."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "つけました",
+        "reading": "つけました",
+        "meaning": "A attaché ; a ajouté. Passé poli de つける."
+      },
+      "。",
+      "「",
+      {
+        "text": "じゃあ",
+        "reading": "じゃあ",
+        "meaning": "Alors ; dans ce cas (familier)."
+      },
+      "、",
+      {
+        "text": "お疲れさま",
+        "reading": "おつかれさま",
+        "meaning": "Bravo pour tes efforts ; expression après le travail ou un effort."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Fin de phrase polie ; お疲れさまです remercie ou salue les efforts."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "帰って",
+        "reading": "かえって",
+        "meaning": "En rentrant ; forme en て de 帰る."
+      },
+      "、",
+      {
+        "text": "机",
+        "reading": "つくえ",
+        "meaning": "Un bureau ; une table de travail."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "花",
+        "reading": "はな",
+        "meaning": "Une fleur."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "置きました",
+        "reading": "おきました",
+        "meaning": "Ai posé ; passé poli de 置く."
+      },
+      "。",
+      {
+        "text": "宿題",
+        "reading": "しゅくだい",
+        "meaning": "Les devoirs scolaires."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "まだ",
+        "reading": "まだ",
+        "meaning": "Encore ; toujours."
+      },
+      {
+        "text": "あります",
+        "reading": "あります",
+        "meaning": "Il y a (chose) ; posséder."
+      },
+      "。",
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "机",
+        "reading": "つくえ",
+        "meaning": "Un bureau ; une table de travail."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "上",
+        "reading": "うえ",
+        "meaning": "Le dessus ; sur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "明るく",
+        "reading": "あかるく",
+        "meaning": "Plus lumineux ; forme adverbiale de 明るい."
+      },
+      {
+        "text": "なりました",
+        "reading": "なりました",
+        "meaning": "Est devenu ; passé poli de なる."
+      },
+      "。"
+    ]
+  ]
+}

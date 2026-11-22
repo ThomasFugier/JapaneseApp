@@ -1,0 +1,338 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "grandmother-game-button",
+  "title": "おばあちゃんの冒険",
+  "reading": "おばあちゃんのぼうけん",
+  "subtitle": "La première partie de mamie",
+  "level": "N5",
+  "theme": "train",
+  "description": "Pour expliquer un jeu vidéo à sa grand-mère, il faut connaître tous les boutons.",
+  "paragraphs": [
+    [
+      {
+        "text": "日曜日",
+        "reading": "にちようび",
+        "meaning": "Dimanche."
+      },
+      "、",
+      {
+        "text": "ユウ",
+        "reading": "ゆう",
+        "meaning": "Yû, prénom du petit-enfant dans cette histoire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "祖母",
+        "reading": "そぼ",
+        "meaning": "Une grand-mère ; ici, celle de Yû."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "ゲーム",
+        "reading": "げーむ",
+        "meaning": "Un jeu ; ici, un jeu vidéo."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "しました",
+        "reading": "しました",
+        "meaning": "Ai fait ; passé poli de する. 話をする : parler."
+      },
+      "。",
+      "「",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "ボタン",
+        "reading": "ぼたん",
+        "meaning": "Un bouton."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant."
+      },
+      {
+        "text": "へ",
+        "reading": "へ",
+        "meaning": "Vers ; indique la direction et se prononce « e »."
+      },
+      {
+        "text": "歩く",
+        "reading": "あるく",
+        "meaning": "Marcher."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "教えました",
+        "reading": "おしえました",
+        "meaning": "A expliqué ; a appris à quelqu’un. Passé poli de 教える."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "祖母",
+        "reading": "そぼ",
+        "meaning": "Une grand-mère ; ici, celle de Yû."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "ゆっくり",
+        "reading": "ゆっくり",
+        "meaning": "Lentement ; tranquillement."
+      },
+      {
+        "text": "ボタン",
+        "reading": "ぼたん",
+        "meaning": "Un bouton."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "押しました",
+        "reading": "おしました",
+        "meaning": "A appuyé ; passé poli de 押す."
+      },
+      "。",
+      {
+        "text": "画面",
+        "reading": "がめん",
+        "meaning": "Un écran."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "、",
+      {
+        "text": "ずっと",
+        "reading": "ずっと",
+        "meaning": "Tout le temps ; sans arrêt, ici."
+      },
+      {
+        "text": "壁",
+        "reading": "かべ",
+        "meaning": "Un mur."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見ています",
+        "reading": "みています",
+        "meaning": "Regarde ; est en train de regarder."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "おばあちゃん",
+        "reading": "おばあちゃん",
+        "meaning": "Mamie ; façon familière de s’adresser à sa grand-mère."
+      },
+      "、",
+      {
+        "text": "反対",
+        "reading": "はんたい",
+        "meaning": "Le sens contraire ; l’autre direction, ici."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "C’est ; forme neutre de です."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "！",
+      "」",
+      {
+        "text": "祖母",
+        "reading": "そぼ",
+        "meaning": "Une grand-mère ; ici, celle de Yû."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "笑って",
+        "reading": "わらって",
+        "meaning": "En riant ; forme en て de 笑う."
+      },
+      "、",
+      {
+        "text": "また",
+        "reading": "また",
+        "meaning": "À nouveau ; encore une fois."
+      },
+      {
+        "text": "ボタン",
+        "reading": "ぼたん",
+        "meaning": "Un bouton."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "押しました",
+        "reading": "おしました",
+        "meaning": "A appuyé ; passé poli de 押す."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "後",
+        "reading": "あと",
+        "meaning": "Après ; plus tard."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique ici le moment : « un peu plus tard »."
+      },
+      "、",
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "川",
+        "reading": "かわ",
+        "meaning": "Une rivière."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "落ちました",
+        "reading": "おちました",
+        "meaning": "Est tombé ; passé poli de 落ちる."
+      },
+      "。",
+      "「",
+      {
+        "text": "泳ぐ",
+        "reading": "およぐ",
+        "meaning": "Nager."
+      },
+      {
+        "text": "ボタン",
+        "reading": "ぼたん",
+        "meaning": "Un bouton."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "どれ",
+        "reading": "どれ",
+        "meaning": "Lequel ; laquelle."
+      },
+      "？",
+      "」",
+      {
+        "text": "今度",
+        "reading": "こんど",
+        "meaning": "Cette fois-ci ; à présent."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "ユウ",
+        "reading": "ゆう",
+        "meaning": "Yû, prénom du petit-enfant dans cette histoire."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "困りました",
+        "reading": "こまりました",
+        "meaning": "A été embarrassé ; ne savait plus quoi faire. De 困る."
+      },
+      "。"
+    ]
+  ]
+}

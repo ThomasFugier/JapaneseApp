@@ -1,0 +1,323 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "snowman-breakfast",
+  "title": "雪の朝ごはん",
+  "reading": "ゆきのあさごはん",
+  "subtitle": "Le petit-déjeuner du bonhomme",
+  "level": "N5",
+  "theme": "rain",
+  "description": "Un petit frère prépare quelque chose pour son premier bonhomme de neige.",
+  "paragraphs": [
+    [
+      {
+        "text": "朝",
+        "reading": "あさ",
+        "meaning": "Le matin."
+      },
+      "、",
+      {
+        "text": "窓",
+        "reading": "まど",
+        "meaning": "Une fenêtre."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "外",
+        "reading": "そと",
+        "meaning": "L’extérieur ; dehors."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "真っ白",
+        "reading": "まっしろ",
+        "meaning": "Tout blanc ; entièrement blanc."
+      },
+      {
+        "text": "でした",
+        "reading": "でした",
+        "meaning": "C’était ; passé poli de です."
+      },
+      "。",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "急いで",
+        "reading": "いそいで",
+        "meaning": "En se dépêchant ; forme en て de 急ぐ."
+      },
+      {
+        "text": "上着",
+        "reading": "うわぎ",
+        "meaning": "Une veste ; un vêtement porté par-dessus."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "着ました",
+        "reading": "きました",
+        "meaning": "A mis un vêtement ; passé poli de 着る."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "À deux ; indique que les deux personnes agissent ensemble."
+      },
+      {
+        "text": "雪",
+        "reading": "ゆき",
+        "meaning": "De la neige."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "玉",
+        "reading": "たま",
+        "meaning": "Une boule ; une balle."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "三つ",
+        "reading": "みっつ",
+        "meaning": "Trois, pour compter des choses."
+      },
+      {
+        "text": "作りました",
+        "reading": "つくりました",
+        "meaning": "Avons fabriqué ; passé poli de 作る."
+      },
+      "。",
+      "「",
+      {
+        "text": "頭",
+        "reading": "あたま",
+        "meaning": "Une tête."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une unité, pour compter des choses."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Avec ; 一つでいい signifie ici « un seul suffit »."
+      },
+      {
+        "text": "いい",
+        "reading": "いい",
+        "meaning": "Bien ; suffisant, ici."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "Ai dit ; passé poli de 言う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "雪",
+        "reading": "ゆき",
+        "meaning": "De la neige."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "玉",
+        "reading": "たま",
+        "meaning": "Une boule ; une balle."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "手",
+        "reading": "て",
+        "meaning": "Une main."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "持って",
+        "reading": "もって",
+        "meaning": "Tenant ; forme en て de 持つ."
+      },
+      "、",
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A ri ; a souri. Passé poli de 笑う."
+      },
+      "。",
+      "「",
+      {
+        "text": "これ",
+        "reading": "これ",
+        "meaning": "Ceci ; cette chose-ci."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "、",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "子",
+        "reading": "こ",
+        "meaning": "Un enfant ; ici, le petit personnage de neige."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "朝ごはん",
+        "reading": "あさごはん",
+        "meaning": "Le petit-déjeuner."
+      },
+      "！",
+      "」"
+    ],
+    [
+      {
+        "text": "雪だるま",
+        "reading": "ゆきだるま",
+        "meaning": "Un bonhomme de neige."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      "、",
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "おにぎり",
+        "reading": "おにぎり",
+        "meaning": "Une boulette de riz japonaise."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une unité, pour compter des choses."
+      },
+      {
+        "text": "できました",
+        "reading": "できました",
+        "meaning": "A été réalisé ; s’est formé."
+      },
+      "。"
+    ]
+  ]
+}

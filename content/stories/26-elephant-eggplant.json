@@ -1,0 +1,345 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "elephant-eggplant",
+  "title": "なすの鼻",
+  "reading": "なすのはな",
+  "subtitle": "Le nez de l’aubergine",
+  "level": "N5",
+  "theme": "cat",
+  "description": "Au marché, un légume ressemble à un drôle d’animal.",
+  "paragraphs": [
+    [
+      {
+        "text": "市場",
+        "reading": "いちば",
+        "meaning": "Un marché."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      "、",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "変な",
+        "reading": "へんな",
+        "meaning": "Étrange ; bizarre (devant un nom)."
+      },
+      {
+        "text": "形",
+        "reading": "かたち",
+        "meaning": "Une forme."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "なす",
+        "reading": "なす",
+        "meaning": "Une aubergine."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "見つけました",
+        "reading": "みつけました",
+        "meaning": "Ai trouvé ; passé poli de 見つける."
+      },
+      "。",
+      "「",
+      {
+        "text": "見て",
+        "reading": "みて",
+        "meaning": "Regarde ! ; forme en て de 見る, utilisée pour inviter à regarder."
+      },
+      "！",
+      {
+        "text": "長い",
+        "reading": "ながい",
+        "meaning": "Long ; longue."
+      },
+      {
+        "text": "鼻",
+        "reading": "はな",
+        "meaning": "Un nez ; ici, une trompe imaginée."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "ある",
+        "reading": "ある",
+        "meaning": "Se trouver ; il y a (une chose)."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "店",
+        "reading": "みせ",
+        "meaning": "Un magasin ; une boutique."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "おじさん",
+        "reading": "おじさん",
+        "meaning": "Un monsieur d’âge mûr ; un oncle."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "「",
+      {
+        "text": "これは",
+        "reading": "これは",
+        "meaning": "Ceci ; cette chose, en tant que thème de la phrase."
+      },
+      {
+        "text": "ぞう",
+        "reading": "ぞう",
+        "meaning": "Un éléphant."
+      },
+      {
+        "text": "かな",
+        "reading": "かな",
+        "meaning": "Je me demande ; marque une supposition familière."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (déjà mentionné)."
+      },
+      {
+        "text": "なす",
+        "reading": "なす",
+        "meaning": "Une aubergine."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "大事に",
+        "reading": "だいじに",
+        "meaning": "Avec soin ; précieusement."
+      },
+      {
+        "text": "持って",
+        "reading": "もって",
+        "meaning": "En emportant ; forme en て de 持つ (tenir, porter)."
+      },
+      {
+        "text": "帰りました",
+        "reading": "かえりました",
+        "meaning": "Est rentré ; passé poli de 帰る."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "夜",
+        "reading": "よる",
+        "meaning": "La nuit ; le soir."
+      },
+      "、",
+      {
+        "text": "お母さん",
+        "reading": "おかあさん",
+        "meaning": "La maman ; la mère de quelqu’un."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "なす",
+        "reading": "なす",
+        "meaning": "Une aubergine."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "小さく",
+        "reading": "ちいさく",
+        "meaning": "En petits morceaux ; forme adverbiale de 小さい."
+      },
+      {
+        "text": "切りました",
+        "reading": "きりました",
+        "meaning": "A coupé ; passé poli de 切る."
+      },
+      "。",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "悲しい",
+        "reading": "かなしい",
+        "meaning": "Triste."
+      },
+      {
+        "text": "顔",
+        "reading": "かお",
+        "meaning": "Un visage ; une expression."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "Être ; forme polie de fin de phrase."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "一口",
+        "reading": "ひとくち",
+        "meaning": "Une bouchée."
+      },
+      {
+        "text": "食べて",
+        "reading": "たべて",
+        "meaning": "Après avoir mangé ; forme en て de 食べる."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。",
+      "「",
+      {
+        "text": "ぞう",
+        "reading": "ぞう",
+        "meaning": "Un éléphant."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "、",
+      {
+        "text": "おいしい",
+        "reading": "おいしい",
+        "meaning": "Délicieux ; bon (nourriture)."
+      },
+      {
+        "text": "んだね",
+        "reading": "んだね",
+        "meaning": "Ah, donc… ; remarque familière qui partage une découverte."
+      },
+      "。",
+      "」",
+      {
+        "text": "お母さん",
+        "reading": "おかあさん",
+        "meaning": "La maman ; la mère de quelqu’un."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "「",
+      {
+        "text": "なす",
+        "reading": "なす",
+        "meaning": "Une aubergine."
+      },
+      {
+        "text": "だよ",
+        "reading": "だよ",
+        "meaning": "C’est… ! ; affirmation familière pour donner une précision."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "答えました",
+        "reading": "こたえました",
+        "meaning": "A répondu ; passé poli de 答える."
+      },
+      "。"
+    ]
+  ]
+}

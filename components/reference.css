@@ -71,9 +71,9 @@
 .theme-classroom .reference-character:hover { background:#e3efd7; border-color:#a6c5a2; }
 .theme-classroom .kanji-reference-grid .reference-character { background:#fffef5; border:2px solid #d8dec4; }
 .theme-classroom .reference-detail-symbol { color:#285e50; }
-/* Keep all seven destinations reachable without squeezing the header actions. */
-.app-shell .desktop-tabs { grid-template-columns:64px 100px 68px 76px 100px 72px 54px; }
-.theme-classroom .desktop-tabs { grid-template-columns:72px 102px 76px 82px 108px 78px 64px; gap:4px; }
+/* Keep all eight destinations reachable without squeezing the header actions. */
+.app-shell .desktop-tabs { grid-template-columns:64px 100px 68px 86px 76px 100px 72px 54px; }
+.theme-classroom .desktop-tabs { grid-template-columns:72px 102px 76px 90px 82px 108px 78px 64px; gap:4px; }
 .theme-classroom .desktop-tabs>button { font-size:13px; }
 @media (min-width:641px) and (max-width:1100px) {
  .app-shell:not(.theme-classroom) .topbar { height:116px; }
@@ -83,7 +83,7 @@
  .app-shell:not(.theme-classroom) .desktop-tabs { grid-row:2; grid-column:1/-1; justify-content:center; }
 }
 @media (max-width:760px) and (min-width:641px) {
- .app-shell .desktop-tabs { grid-template-columns:54px 86px 56px 66px 90px 60px 48px; gap:2px; }
+ .app-shell .desktop-tabs { grid-template-columns:54px 86px 56px 72px 66px 90px 60px 48px; gap:2px; }
  .theme-classroom .desktop-tabs>button { font-size:12px; }
 }
 @media (max-width:640px) {
@@ -103,7 +103,7 @@
  .reference-character { padding:9px 3px; }
  .reference-character>span { font-size:28px; }
  .kanji-reference-grid { grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:8px; }
- .app-shell .mobile-nav { grid-template-columns:repeat(7,minmax(0,1fr)); padding-left:6px; padding-right:6px; }
+ .app-shell .mobile-nav { grid-template-columns:repeat(8,minmax(54px,1fr)); overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none; padding-left:6px; padding-right:6px; }
  .app-shell .mobile-nav button { min-width:0; padding-left:0; padding-right:0; font-size:9px; letter-spacing:-.2px; }
  .app-shell .mobile-nav button>span:last-child { white-space:nowrap; }
 }

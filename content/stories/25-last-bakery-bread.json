@@ -1,0 +1,388 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "last-bakery-bread",
+  "title": "最後のパン",
+  "reading": "さいごのぱん",
+  "subtitle": "Le dernier pain",
+  "level": "N5",
+  "theme": "sea",
+  "description": "Deux mains se dirigent vers le même pain à la boulangerie.",
+  "paragraphs": [
+    [
+      {
+        "text": "いつもの",
+        "reading": "いつもの",
+        "meaning": "Habituel ; où l’on va d’habitude."
+      },
+      {
+        "text": "パン",
+        "reading": "ぱん",
+        "meaning": "Du pain."
+      },
+      {
+        "text": "屋",
+        "reading": "や",
+        "meaning": "Suffixe de commerce : パン屋, une boulangerie."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "行く",
+        "reading": "いく",
+        "meaning": "Aller."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Quand ; à la suite de cette action."
+      },
+      "、",
+      {
+        "text": "好きな",
+        "reading": "すきな",
+        "meaning": "Que l’on aime ; favori."
+      },
+      {
+        "text": "パン",
+        "reading": "ぱん",
+        "meaning": "Du pain."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une chose."
+      },
+      {
+        "text": "だけ",
+        "reading": "だけ",
+        "meaning": "Seulement ; uniquement."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; se trouvait. Passé poli de ある."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite (devant un nom)."
+      },
+      {
+        "text": "女の子",
+        "reading": "おんなのこ",
+        "meaning": "Une fille."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      "、",
+      {
+        "text": "同時に",
+        "reading": "どうじに",
+        "meaning": "En même temps."
+      },
+      {
+        "text": "手",
+        "reading": "て",
+        "meaning": "Une main."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "伸ばしました",
+        "reading": "のばしました",
+        "meaning": "Avons tendu ; passé poli de 伸ばす."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "あ",
+        "reading": "あ",
+        "meaning": "Ah ! (surprise ou prise de conscience)."
+      },
+      "、",
+      {
+        "text": "どうぞ",
+        "reading": "どうぞ",
+        "meaning": "Je t’en prie ; vas-y."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "二人",
+        "reading": "ふたり",
+        "meaning": "Deux personnes ; nous deux."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "À deux ; indique que les deux personnes font cette action ensemble."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。",
+      {
+        "text": "二人とも",
+        "reading": "ふたりとも",
+        "meaning": "Tous les deux ; toutes les deux."
+      },
+      {
+        "text": "手",
+        "reading": "て",
+        "meaning": "Une main."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "引いて",
+        "reading": "ひいて",
+        "meaning": "En retirant ; forme en て de 引く."
+      },
+      "、",
+      {
+        "text": "また",
+        "reading": "また",
+        "meaning": "À nouveau ; encore."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A souri ; a ri. Passé poli de 笑う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "店",
+        "reading": "みせ",
+        "meaning": "Un magasin ; une boutique."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "人",
+        "reading": "ひと",
+        "meaning": "Une personne."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "A dit ; passé poli de 言う."
+      },
+      "。",
+      "「",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "パン",
+        "reading": "ぱん",
+        "meaning": "Du pain."
+      },
+      "、",
+      {
+        "text": "半分",
+        "reading": "はんぶん",
+        "meaning": "La moitié."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "できます",
+        "reading": "できます",
+        "meaning": "Il est possible de… ; peut être fait."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "外",
+        "reading": "そと",
+        "meaning": "Dehors ; l’extérieur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "ベンチ",
+        "reading": "べんち",
+        "meaning": "Un banc."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      "、",
+      {
+        "text": "女の子",
+        "reading": "おんなのこ",
+        "meaning": "Une fille."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "お母さん",
+        "reading": "おかあさん",
+        "meaning": "La maman ; la mère de quelqu’un."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "食べています",
+        "reading": "たべています",
+        "meaning": "Mange ; forme polie de 食べている."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "妹",
+        "reading": "いもうと",
+        "meaning": "Ma petite sœur."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "« Et », « avec », ou introduit des paroles citées."
+      },
+      {
+        "text": "食べます",
+        "reading": "たべます",
+        "meaning": "Mangerai ; forme polie de 食べる."
+      },
+      "。",
+      {
+        "text": "一つ",
+        "reading": "ひとつ",
+        "meaning": "Un ; une chose."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "パン",
+        "reading": "ぱん",
+        "meaning": "Du pain."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      "、",
+      {
+        "text": "四人",
+        "reading": "よにん",
+        "meaning": "Quatre personnes."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "おやつ",
+        "reading": "おやつ",
+        "meaning": "Un goûter ; une collation."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique le résultat d’un changement : devenir…"
+      },
+      {
+        "text": "なりました",
+        "reading": "なりました",
+        "meaning": "Est devenu ; passé poli de なる."
+      },
+      "。"
+    ]
+  ]
+}

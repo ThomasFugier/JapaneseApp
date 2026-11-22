@@ -1,0 +1,351 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "museum-living-picture",
+  "title": "窓の絵",
+  "reading": "まどのえ",
+  "subtitle": "Un tableau qui change",
+  "level": "N5",
+  "theme": "letter",
+  "description": "Au musée, le tableau préféré d’une visiteuse a une drôle de particularité.",
+  "paragraphs": [
+    [
+      {
+        "text": "美術館",
+        "reading": "びじゅつかん",
+        "meaning": "Un musée d’art."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu ou le moyen de l’action."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "大きな",
+        "reading": "おおきな",
+        "meaning": "Grand ; grande, devant un nom."
+      },
+      {
+        "text": "青い",
+        "reading": "あおい",
+        "meaning": "Bleu ; bleue."
+      },
+      {
+        "text": "絵",
+        "reading": "え",
+        "meaning": "Un tableau ; une image ; une peinture."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見ていました",
+        "reading": "みていました",
+        "meaning": "Regardais ; étais en train de regarder."
+      },
+      "。",
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "雲",
+        "reading": "くも",
+        "meaning": "Un nuage."
+      },
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      "、",
+      {
+        "text": "緑",
+        "reading": "みどり",
+        "meaning": "Le vert ; la couleur verte."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "木",
+        "reading": "き",
+        "meaning": "Un arbre."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "あります",
+        "reading": "あります",
+        "meaning": "Il y a ; se trouve, pour une chose."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "これ",
+        "reading": "これ",
+        "meaning": "Ceci ; cette chose-ci."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "一番",
+        "reading": "いちばん",
+        "meaning": "Le plus ; le premier."
+      },
+      {
+        "text": "好き",
+        "reading": "すき",
+        "meaning": "Que l’on aime ; préféré."
+      },
+      "！",
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "姉",
+        "reading": "あね",
+        "meaning": "Ma grande sœur."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "言いました",
+        "reading": "いいました",
+        "meaning": "Ai dit ; passé poli de 言う."
+      },
+      "。",
+      {
+        "text": "姉",
+        "reading": "あね",
+        "meaning": "Ma grande sœur."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "絵",
+        "reading": "え",
+        "meaning": "Un tableau ; une image ; une peinture."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見て",
+        "reading": "みて",
+        "meaning": "Regardant ; forme en て de 見る."
+      },
+      "、",
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "笑いました",
+        "reading": "わらいました",
+        "meaning": "A ri ; a souri. Passé poli de 笑う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "時",
+        "reading": "とき",
+        "meaning": "Le moment ; quand."
+      },
+      "、",
+      {
+        "text": "絵",
+        "reading": "え",
+        "meaning": "Un tableau ; une image ; une peinture."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "鳥",
+        "reading": "とり",
+        "meaning": "Un oiseau."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "飛びました",
+        "reading": "とびました",
+        "meaning": "A volé ; passé poli de 飛ぶ."
+      },
+      "。",
+      {
+        "text": "あれ",
+        "reading": "あれ",
+        "meaning": "Tiens ? ; exprime ici la surprise."
+      },
+      "、",
+      {
+        "text": "これ",
+        "reading": "これ",
+        "meaning": "Ceci ; cette chose-ci."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "窓",
+        "reading": "まど",
+        "meaning": "Une fenêtre."
+      },
+      {
+        "text": "です",
+        "reading": "です",
+        "meaning": "C’est ; marque une fin de phrase polie."
+      },
+      "！"
+    ],
+    [
+      {
+        "text": "でも",
+        "reading": "でも",
+        "meaning": "Mais ; cependant."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "まだ",
+        "reading": "まだ",
+        "meaning": "Encore ; toujours."
+      },
+      {
+        "text": "その",
+        "reading": "その",
+        "meaning": "Ce ; cette (dont on vient de parler)."
+      },
+      {
+        "text": "前",
+        "reading": "まえ",
+        "meaning": "Devant."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "いました",
+        "reading": "いました",
+        "meaning": "Étais ; se trouvait, pour un être vivant."
+      },
+      "。",
+      {
+        "text": "この",
+        "reading": "この",
+        "meaning": "Ce ; cette (près de celui qui parle)."
+      },
+      {
+        "text": "絵",
+        "reading": "え",
+        "meaning": "Un tableau ; une image ; une peinture."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "、",
+      {
+        "text": "毎日",
+        "reading": "まいにち",
+        "meaning": "Chaque jour ; tous les jours."
+      },
+      {
+        "text": "違う",
+        "reading": "ちがう",
+        "meaning": "Différent ; autre."
+      },
+      {
+        "text": "絵",
+        "reading": "え",
+        "meaning": "Un tableau ; une image ; une peinture."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "なります",
+        "reading": "なります",
+        "meaning": "Devient ; se transforme en."
+      },
+      "。"
+    ]
+  ]
+}

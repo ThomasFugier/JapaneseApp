@@ -15,6 +15,8 @@ import { toggleCardReading } from '@/lib/review-reading';
 import './review-reading.css';
 import { StatisticsView } from './statistics-view';
 import { ReferenceView } from './reference-view';
+import { StoriesView } from './stories-view';
+import type { Story } from '@/lib/stories';
 import { Languages } from 'lucide-react';
 import { LessonsView } from './lessons-view';
 import { markLessonReviewed, setLessonValidated, validatedLessonIds } from '@/lib/lesson-progress';
@@ -51,22 +53,28 @@ import { useStableMobileShell } from './use-stable-mobile-shell';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 
 type Tab = WorkspaceTab;
-const navigationTabs: Tab[] = ['home', 'review', 'library', 'lessons', 'reference', 'writing', 'stats'];
-const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji' };
-const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages };
+const navigationTabs: Tab[] = ['home', 'review', 'library', 'stories', 'lessons', 'reference', 'writing', 'stats'];
+const labels: Record<Tab, string> = { home: 'Home', review: 'Review', library: 'Library', lessons: 'Lessons', writing: 'Writing', stats: 'Stats', reference: 'Kanji', stories: 'Histoires' };
+const icons = { home: Home, review: Layers, library: BookOpen, lessons: GraduationCap, writing: PenLine, stats: BarChart3, reference: Languages, stories: BookOpen };
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 const active = <T extends { deletedAt?: string | null }>(items: T[]) => items.filter(item => !item.deletedAt);
 const countNotes = (data: Snapshot, id: string | null) => new Set(cardsForDeck(data, id).map(card => card.noteId)).size;
 
-export default function Kotoba() {
+export default function Kotoba({ stories }: { stories: readonly Story[] }) {
   const library = useLibrary();
   const { data, ready, update, notice, setNotice, error, setError } = library;
   const shellRef = useRef<HTMLDivElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
   const { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll } = useWorkspaceContext();
   useStableMobileShell(shellRef, ready && hydrated);
   const { prepareSound, playSound } = useActivitySound(interfaceStyle === 'classroom' && activitySounds);
   const [answerFeedback, setAnswerFeedback] = useState<{ id: number; rating: number; label: string } | null>(null);
   useEffect(() => { if (!answerFeedback) return; const timer = setTimeout(() => setAnswerFeedback(null), 950); return () => clearTimeout(timer); }, [answerFeedback]);
+  useEffect(() => {
+    const nav = mobileNavRef.current;
+    const selected = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (nav && selected) nav.scrollLeft = selected.offsetLeft - (nav.clientWidth - selected.offsetWidth) / 2;
+  }, [tab, ready, hydrated]);
   const deckId = reading.deckId;
   const setDeckId = (id: string | null) => setReading({ deckId: id });
   const [editing, setEditing] = useState(false);
@@ -355,6 +363,7 @@ export default function Kotoba() {
         </>}
 
         {tab === 'reference' && <ReferenceView />}
+        {tab === 'stories' && <StoriesView stories={stories} onFuriganaChange={setFuriganaEnabled} />}
         {tab === 'writing' && <WritingView data={data} japaneseFont={japaneseFont} />}
         {tab === 'lessons' && <LessonsView classroom={interfaceStyle === 'classroom'} progress={data.lessonProgress} onFinishReview={id => { prepareSound(); return update(snapshot => markLessonReviewed(snapshot, id)).then(() => playSound()); }} lessonId={lessonId} onSelect={setLessonId} validatedIds={validatedLessonIds(data)} onToggleValidated={id => { const checked = !validatedLessonIds(data).includes(id); void update(snapshot => setLessonValidated(snapshot, id, checked)).catch(() => { /* Local save errors are shown by useLibrary. */ }); }} />}
         {tab === 'stats' && <StatisticsView data={data} now={new Date(clock)} onReview={id => startSession(id)} onOpenLibrary={() => navigate('library')} onOpenCard={note => { navigate('library'); setReading({ deckId: null, search: note.japanese, expanded: note.id, scrollY: 0 }); }} onEditCard={setNoteModal} />}
@@ -369,7 +378,7 @@ export default function Kotoba() {
     </div>
 
     <aside className="display-toolbar" aria-label="Display tools"><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /><span className="translation-control-slot" ref={setTranslationToolbar} /></aside>
-    <nav className="mobile-nav" aria-label="Mobile navigation">{navigationTabs.map(item => { const Icon = icons[item]; return <button key={item} className={tab === item ? 'selected' : ''} onClick={() => navigate(item)} aria-label={item === 'review' ? `Review, ${dueCount} directions ready` : undefined} aria-current={tab === item ? 'page' : undefined}>{interfaceStyle === 'classroom' ? <ClassroomNavIcon tab={item} /> : <Icon size={21} />}<span>{labels[item]}</span>{interfaceStyle === 'classroom' && item === 'review' && dueCount > 0 && <span className="nav-count" aria-hidden="true" title={`${dueCount} review directions ready`}>{dueCount > 99 ? '99+' : dueCount}</span>}</button>; })}</nav>
+    <nav ref={mobileNavRef} className="mobile-nav" aria-label="Mobile navigation">{navigationTabs.map(item => { const Icon = icons[item]; return <button key={item} className={tab === item ? 'selected' : ''} onClick={() => navigate(item)} aria-label={item === 'review' ? `Review, ${dueCount} directions ready` : undefined} aria-current={tab === item ? 'page' : undefined}>{interfaceStyle === 'classroom' ? <ClassroomNavIcon tab={item} /> : <Icon size={21} />}<span>{labels[item]}</span>{interfaceStyle === 'classroom' && item === 'review' && dueCount > 0 && <span className="nav-count" aria-hidden="true" title={`${dueCount} review directions ready`}>{dueCount > 99 ? '99+' : dueCount}</span>}</button>; })}</nav>
     {notice && <div className="toast" role="status"><CheckCheck size={18} /><span>{notice}</span></div>}
     {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={tab === 'home' ? null : deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
     {deckModal && <DeckEditor data={data} deck={deckModal === 'new' ? null : deckModal} defaultParentId={deckId} onClose={() => setDeckModal(null)} onSave={async fn => { await update(fn); setDeckModal(null); setNotice('Deck saved.'); }} />}

@@ -1,0 +1,317 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "shell-sea-sound",
+  "title": "海からの音",
+  "reading": "うみからのおと",
+  "subtitle": "Le bruit de la mer",
+  "level": "N5",
+  "theme": "sea",
+  "description": "Un coquillage ramène un petit morceau de plage dans une chambre.",
+  "paragraphs": [
+    [
+      {
+        "text": "日曜日",
+        "reading": "にちようび",
+        "meaning": "Dimanche."
+      },
+      "、",
+      {
+        "text": "家族",
+        "reading": "かぞく",
+        "meaning": "La famille."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "En famille ; indique que la famille fait l’activité ensemble."
+      },
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "へ",
+        "reading": "へ",
+        "meaning": "Vers ; indique la direction et se prononce « e »."
+      },
+      {
+        "text": "行きました",
+        "reading": "いきました",
+        "meaning": "Sommes allés ; passé poli de 行く, aller."
+      },
+      "。",
+      {
+        "text": "砂",
+        "reading": "すな",
+        "meaning": "Du sable."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "上",
+        "reading": "うえ",
+        "meaning": "Le dessus ; au-dessus."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      "、",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "白い",
+        "reading": "しろい",
+        "meaning": "Blanc ; blanche."
+      },
+      {
+        "text": "貝",
+        "reading": "かい",
+        "meaning": "Un coquillage."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; se trouvait, pour une chose."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "耳",
+        "reading": "みみ",
+        "meaning": "Une oreille."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "当てました",
+        "reading": "あてました",
+        "meaning": "Ai posé contre ; passé poli de 当てる."
+      },
+      "。",
+      "「",
+      {
+        "text": "お母さん",
+        "reading": "おかあさん",
+        "meaning": "Maman ; façon de s’adresser à sa mère."
+      },
+      "、",
+      {
+        "text": "中",
+        "reading": "なか",
+        "meaning": "L’intérieur ; dans."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "ある",
+        "reading": "ある",
+        "meaning": "Il y a ; exister, pour une chose."
+      },
+      {
+        "text": "よ",
+        "reading": "よ",
+        "meaning": "Souligne une information pour l’interlocuteur."
+      },
+      "！",
+      "」"
+    ],
+    [
+      {
+        "text": "母",
+        "reading": "はは",
+        "meaning": "Ma mère, quand on parle d’elle à quelqu’un d’autre."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "耳",
+        "reading": "みみ",
+        "meaning": "Une oreille."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "当てて",
+        "reading": "あてて",
+        "meaning": "Posant contre ; forme en て de 当てる."
+      },
+      "、",
+      {
+        "text": "うなずきました",
+        "reading": "うなずきました",
+        "meaning": "A hoché la tête pour approuver."
+      },
+      "。",
+      "「",
+      {
+        "text": "本当",
+        "reading": "ほんとう",
+        "meaning": "Vrai ; vraiment."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "C’est ; forme neutre de です."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "だ",
+        "reading": "だ",
+        "meaning": "C’est ; forme neutre de です."
+      },
+      "。",
+      "」"
+    ],
+    [
+      {
+        "text": "家",
+        "reading": "いえ",
+        "meaning": "Une maison ; chez soi."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "帰って",
+        "reading": "かえって",
+        "meaning": "Après être rentré ; forme en て de 帰る."
+      },
+      "、",
+      {
+        "text": "机",
+        "reading": "つくえ",
+        "meaning": "Un bureau ; une table de travail."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "置きました",
+        "reading": "おきました",
+        "meaning": "Ai posé ; passé poli de 置く."
+      },
+      "。",
+      {
+        "text": "今夜",
+        "reading": "こんや",
+        "meaning": "Ce soir ; cette nuit."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "部屋",
+        "reading": "へや",
+        "meaning": "Une pièce ; une chambre."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "海",
+        "reading": "うみ",
+        "meaning": "La mer."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "あります",
+        "reading": "あります",
+        "meaning": "Il y a ; se trouve, pour une chose."
+      },
+      "。"
+    ]
+  ]
+}

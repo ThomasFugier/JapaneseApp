@@ -1,0 +1,280 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "library-fish",
+  "title": "図書館の魚",
+  "reading": "としょかんのさかな",
+  "subtitle": "Les poissons de la bibliothèque",
+  "level": "N5",
+  "theme": "sea",
+  "description": "Un petit frère pose une question à voix basse.",
+  "paragraphs": [
+    [
+      {
+        "text": "図書館",
+        "reading": "としょかん",
+        "meaning": "Une bibliothèque."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      "、",
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Particule qui indique le sujet."
+      },
+      {
+        "text": "小さな声",
+        "reading": "ちいさなこえ",
+        "meaning": "Une petite voix ; une voix basse."
+      },
+      {
+        "text": "で",
+        "reading": "で",
+        "meaning": "Indique le lieu de l’action ou le moyen utilisé."
+      },
+      {
+        "text": "聞きました",
+        "reading": "ききました",
+        "meaning": "A demandé ; passé poli de 聞く."
+      },
+      "。",
+      "「",
+      {
+        "text": "魚",
+        "reading": "さかな",
+        "meaning": "Un poisson."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "寝る",
+        "reading": "ねる",
+        "meaning": "Dormir ; se coucher."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Particule finale d’une question familière."
+      },
+      "？",
+      "」"
+    ],
+    [
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "魚",
+        "reading": "さかな",
+        "meaning": "Un poisson."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms : possession ou précision."
+      },
+      {
+        "text": "本",
+        "reading": "ほん",
+        "meaning": "Un livre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "探しました",
+        "reading": "さがしました",
+        "meaning": "Ai cherché ; passé poli de 探す."
+      },
+      "。",
+      {
+        "text": "本",
+        "reading": "ほん",
+        "meaning": "Un livre."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      "、",
+      "「",
+      {
+        "text": "魚",
+        "reading": "さかな",
+        "meaning": "Un poisson."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "寝ます",
+        "reading": "ねます",
+        "meaning": "Dort ; forme polie de 寝る."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Introduit les paroles que l’on dit ou que l’on rapporte."
+      },
+      {
+        "text": "書いてあります",
+        "reading": "かいてあります",
+        "meaning": "C’est écrit ; de 書く, avec l’état résultant en てある."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "弟",
+        "reading": "おとうと",
+        "meaning": "Mon petit frère."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème (se prononce « wa »)."
+      },
+      {
+        "text": "写真",
+        "reading": "しゃしん",
+        "meaning": "Une photographie."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "じっと",
+        "reading": "じっと",
+        "meaning": "Fixement ; sans bouger."
+      },
+      {
+        "text": "見ました",
+        "reading": "みました",
+        "meaning": "Ai regardé ; passé poli de 見る."
+      },
+      "。",
+      {
+        "text": "それから",
+        "reading": "それから",
+        "meaning": "Ensuite ; après cela."
+      },
+      {
+        "text": "目",
+        "reading": "め",
+        "meaning": "Un œil ; les yeux."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Particule du complément d’objet (se prononce « o »)."
+      },
+      {
+        "text": "閉じて",
+        "reading": "とじて",
+        "meaning": "En fermant ; forme en て de 閉じる."
+      },
+      "、",
+      {
+        "text": "静かに",
+        "reading": "しずかに",
+        "meaning": "Silencieusement ; calmement."
+      },
+      {
+        "text": "椅子",
+        "reading": "いす",
+        "meaning": "Une chaise."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou une destination."
+      },
+      {
+        "text": "座りました",
+        "reading": "すわりました",
+        "meaning": "S’est assis ; passé poli de 座る."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "僕",
+        "reading": "ぼく",
+        "meaning": "Je ; moi (souvent employé par les garçons)."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "魚",
+        "reading": "さかな",
+        "meaning": "Un poisson."
+      },
+      {
+        "text": "だよ",
+        "reading": "だよ",
+        "meaning": "C’est… ; forme familière de です, avec une nuance d’affirmation."
+      },
+      "。",
+      "」",
+      {
+        "text": "返事",
+        "reading": "へんじ",
+        "meaning": "Une réponse."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      {
+        "text": "小さな声",
+        "reading": "ちいさなこえ",
+        "meaning": "Une petite voix ; une voix basse."
+      },
+      {
+        "text": "でした",
+        "reading": "でした",
+        "meaning": "C’était ; passé poli de です."
+      },
+      "。"
+    ]
+  ]
+}

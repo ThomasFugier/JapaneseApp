@@ -1,0 +1,352 @@
+{
+  "$schema": "../story.schema.json",
+  "schemaVersion": 1,
+  "language": "ja",
+  "definitionLanguage": "fr",
+  "id": "balcony-first-leaves",
+  "title": "小さな朝",
+  "reading": "ちいさなあさ",
+  "subtitle": "Deux petites feuilles",
+  "level": "N4",
+  "theme": "cat",
+  "description": "Chaque matin, un pot sur le balcon semble ne rien avoir à raconter.",
+  "paragraphs": [
+    [
+      {
+        "text": "ベランダ",
+        "reading": "べらんだ",
+        "meaning": "Un balcon ; une véranda."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "鉢",
+        "reading": "はち",
+        "meaning": "Un pot de fleurs."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      "、",
+      {
+        "text": "花",
+        "reading": "はな",
+        "meaning": "Une fleur."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "種",
+        "reading": "たね",
+        "meaning": "Une graine ; des graines."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "まきました",
+        "reading": "まきました",
+        "meaning": "Ai semé ; passé poli de まく."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "毎朝",
+        "reading": "まいあさ",
+        "meaning": "Tous les matins."
+      },
+      "、",
+      {
+        "text": "水",
+        "reading": "みず",
+        "meaning": "De l’eau."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "あげます",
+        "reading": "あげます",
+        "meaning": "Donne ; de あげる. 水をあげる : arroser."
+      },
+      "。"
+    ],
+    [
+      "「",
+      {
+        "text": "まだ",
+        "reading": "まだ",
+        "meaning": "Pas encore ; まだかな exprime ici une attente impatiente."
+      },
+      {
+        "text": "かな",
+        "reading": "かな",
+        "meaning": "Je me demande ; exprime une interrogation à soi-même."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "毎日",
+        "reading": "まいにち",
+        "meaning": "Chaque jour ; tous les jours."
+      },
+      {
+        "text": "言います",
+        "reading": "いいます",
+        "meaning": "Dis ; dit. Forme polie de 言う."
+      },
+      "。",
+      {
+        "text": "母",
+        "reading": "はは",
+        "meaning": "Ma mère, quand on parle d’elle à quelqu’un d’autre."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      "「",
+      {
+        "text": "もう",
+        "reading": "もう",
+        "meaning": "Encore, dans もう少し : « encore un peu »."
+      },
+      {
+        "text": "少し",
+        "reading": "すこし",
+        "meaning": "Un peu."
+      },
+      {
+        "text": "待とう",
+        "reading": "まとう",
+        "meaning": "Attendons ; forme d’invitation de 待つ."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "」",
+      {
+        "text": "と",
+        "reading": "と",
+        "meaning": "Avec ; et ; introduit aussi des paroles citées."
+      },
+      {
+        "text": "言います",
+        "reading": "いいます",
+        "meaning": "Dis ; dit. Forme polie de 言う."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "今朝",
+        "reading": "けさ",
+        "meaning": "Ce matin."
+      },
+      "、",
+      {
+        "text": "土",
+        "reading": "つち",
+        "meaning": "De la terre ; le sol."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "上",
+        "reading": "うえ",
+        "meaning": "Le dessus ; au-dessus."
+      },
+      {
+        "text": "に",
+        "reading": "に",
+        "meaning": "Indique ici un lieu, un moment ou le destinataire."
+      },
+      {
+        "text": "小さな",
+        "reading": "ちいさな",
+        "meaning": "Petit ; petite, devant un nom."
+      },
+      {
+        "text": "緑",
+        "reading": "みどり",
+        "meaning": "Le vert ; la couleur verte."
+      },
+      {
+        "text": "の",
+        "reading": "の",
+        "meaning": "Relie deux noms ; peut indiquer la possession."
+      },
+      {
+        "text": "葉",
+        "reading": "は",
+        "meaning": "Une feuille de plante."
+      },
+      {
+        "text": "が",
+        "reading": "が",
+        "meaning": "Indique le sujet de la phrase."
+      },
+      {
+        "text": "二枚",
+        "reading": "にまい",
+        "meaning": "Deux feuilles ; compteur pour les objets plats."
+      },
+      {
+        "text": "ありました",
+        "reading": "ありました",
+        "meaning": "Il y avait ; se trouvait, pour une chose."
+      },
+      "。",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "急いで",
+        "reading": "いそいで",
+        "meaning": "En se dépêchant ; forme en て de 急ぐ."
+      },
+      {
+        "text": "母",
+        "reading": "はは",
+        "meaning": "Ma mère, quand on parle d’elle à quelqu’un d’autre."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "呼びました",
+        "reading": "よびました",
+        "meaning": "Ai appelé ; passé poli de 呼ぶ."
+      },
+      "。"
+    ],
+    [
+      {
+        "text": "母",
+        "reading": "はは",
+        "meaning": "Ma mère, quand on parle d’elle à quelqu’un d’autre."
+      },
+      {
+        "text": "は",
+        "reading": "は",
+        "meaning": "Particule du thème ; se prononce « wa »."
+      },
+      {
+        "text": "葉",
+        "reading": "は",
+        "meaning": "Une feuille de plante."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見て",
+        "reading": "みて",
+        "meaning": "Regardant ; forme en て de 見る."
+      },
+      "、",
+      {
+        "text": "私",
+        "reading": "わたし",
+        "meaning": "Je ; moi."
+      },
+      {
+        "text": "を",
+        "reading": "を",
+        "meaning": "Indique ce que l’on fait ou regarde ; se prononce « o »."
+      },
+      {
+        "text": "見ました",
+        "reading": "みました",
+        "meaning": "A regardé ; a vu. Passé poli de 見る."
+      },
+      "。",
+      "「",
+      {
+        "text": "あなた",
+        "reading": "あなた",
+        "meaning": "Toi ; tu."
+      },
+      {
+        "text": "も",
+        "reading": "も",
+        "meaning": "Aussi ; également."
+      },
+      "、",
+      {
+        "text": "毎日",
+        "reading": "まいにち",
+        "meaning": "Chaque jour ; tous les jours."
+      },
+      {
+        "text": "少しずつ",
+        "reading": "すこしずつ",
+        "meaning": "Petit à petit ; un peu à la fois."
+      },
+      {
+        "text": "大きく",
+        "reading": "おおきく",
+        "meaning": "Grand ; forme adverbiale de 大きい."
+      },
+      {
+        "text": "なっている",
+        "reading": "なっている",
+        "meaning": "Est en train de devenir ; de なる."
+      },
+      {
+        "text": "ね",
+        "reading": "ね",
+        "meaning": "Invite l’autre à partager une impression."
+      },
+      "。",
+      "」"
+    ]
+  ]
+}
