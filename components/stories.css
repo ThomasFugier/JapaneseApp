@@ -62,7 +62,7 @@
 .story-definition>strong { display:block; font-size:24px; font-weight:500; padding-right:8px; overflow-wrap:anywhere; }
 .story-definition-reading { display:block; font-size:13px; color:#8d7d6b; margin-top:2px; }
 .story-definition>p { margin-top:13px; padding-top:12px; border-top:1px solid #eee7dc; font-size:15px; }
-@media (hover:hover) and (prefers-reduced-motion:no-preference) { .story-book:hover .story-cover { transform:translateY(-5px) rotate(-1deg); box-shadow:4px 13px 17px #29241d28; } }
+@media (hover:hover) and (prefers-reduced-motion:no-preference) { .story-book:hover .story-cover { transform:translateY(-3px) scale(1.015); box-shadow:4px 13px 17px #29241d28; } }
 @media (max-width:760px) {
   .stories-heading { padding-top:2px; }
   .stories-heading h2 { font-size:32px; }

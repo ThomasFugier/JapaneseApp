@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
 import { BookOpen, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Story } from '@/lib/stories';
 import './stories-bookshelf.css';
@@ -9,12 +9,11 @@ type Props = {
   stories: readonly Story[];
   readIds: readonly string[];
   onOpen: (story: Story, anchor: HTMLButtonElement) => void;
-  renderCover: (story: Story) => ReactNode;
 };
 type Drag = { pointerId: number; x: number; y: number; left: number; moved: boolean };
 const scrollBehavior = (): ScrollBehavior => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
 
-export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Props) {
+export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
   const viewport = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
@@ -113,7 +112,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
           {stories.map((story, index) => {
             const isRead = readIds.includes(story.id);
             return <button type="button" id={`story-spine-${story.id}`} key={story.id}
-              className={`story-volume story-volume-size-${index % 5}${preview.id === story.id ? ' is-preview' : ''}`}
+              className={`story-volume story-volume-size-${index % 5}${previewId === story.id ? ' is-preview' : ''}`}
               style={{ '--title-length': Array.from(story.title).length } as CSSProperties}
               aria-label={`Lire ${story.subtitle}`}
               onPointerMove={event => { if (event.pointerType === 'mouse' && !drag.current?.moved && preview.id !== story.id) setPreviewId(story.id); }}
@@ -123,7 +122,6 @@ export function StoriesBookshelf({ stories, readIds, onOpen, renderCover }: Prop
                 <span className="story-spine-title" lang="ja">{story.title}</span>
                 <span className="story-spine-level">{isRead ? <Check size={14} /> : story.level}</span>
               </span>
-              <span className="story-volume-face" aria-hidden="true">{renderCover(story)}</span>
             </button>;
           })}
         </div>
