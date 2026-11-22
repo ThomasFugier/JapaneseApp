@@ -7,6 +7,7 @@ import { FuriganaToggle, useFuriganaEnabled } from './furigana';
 import { splitFurigana } from '@/lib/furigana';
 import { sanitizeStoryProgress, type Story, type StoryProgress, type StoryWord } from '@/lib/stories';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
+import { StoriesBookshelf } from './stories-bookshelf';
 import './stories.css';
 
 const KEY = 'kotoba-stories-v1';
@@ -143,7 +144,8 @@ export function StoriesView({ stories, onFuriganaChange }: { stories: readonly S
     <header className="stories-heading"><div><h2>Histoires<span lang="ja">物語</span></h2></div><span className="stories-total"><BookOpen size={18} />{stories.length} histoires<span>{progress.readIds.length} lue{progress.readIds.length > 1 ? 's' : ''}</span></span></header>
     {current && <button id="story-resume" className="story-resume" onClick={event => openStory(current, event.currentTarget)}><span className={`story-resume-icon story-cover-${current.theme}`}><Bookmark size={21} /></span><span><small>DERNIÈRE LECTURE</small><strong>{current.subtitle}</strong></span><span className="story-resume-label">Relire</span></button>}
     <div className="stories-tools"><div className="stories-filters" role="group" aria-label="Filtrer les histoires">{(['all', 'N5', 'N4', 'unread'] as const).map(value => <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{({ all: 'Toutes', N5: 'N5 · Débutant', N4: 'N4 · Élémentaire', unread: 'À lire' })[value]}</button>)}</div><label className="stories-search"><Search size={17} /><span className="sr-only">Rechercher une histoire</span><input type="search" placeholder="Rechercher une histoire…" value={query} onChange={event => setQuery(event.target.value)} /></label></div>
-    <div className="stories-shelf" aria-label="Histoires disponibles">{visible.map(story => <button key={story.id} id={`story-book-${story.id}`} className="story-book" onClick={event => openStory(story, event.currentTarget)} aria-label={`Lire ${story.subtitle}`}>
+    <StoriesBookshelf stories={visible} readIds={progress.readIds} onOpen={openStory} renderCover={story => <Cover story={story} />} />
+    <div className="stories-shelf stories-mobile-shelf" aria-label="Histoires disponibles">{visible.map(story => <button key={story.id} id={`story-book-${story.id}`} className="story-book" onClick={event => openStory(story, event.currentTarget)} aria-label={`Lire ${story.subtitle}`}>
       <Cover story={story} />
       <span className="story-book-title">{story.subtitle}</span>
       <span className="story-book-meta">{story.level} · 1 page{progress.readIds.includes(story.id) && <span className="story-book-read"><Check size={13} />Lu</span>}</span>
