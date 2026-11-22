@@ -6,6 +6,23 @@
   "id": "snowman-breakfast",
   "title": "雪の朝ごはん",
   "reading": "ゆきのあさごはん",
+  "titleWords": [
+    {
+      "text": "雪",
+      "reading": "ゆき",
+      "meaning": "La neige."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 雪 à 朝ごはん : « le petit-déjeuner en neige »."
+    },
+    {
+      "text": "朝ごはん",
+      "reading": "あさごはん",
+      "meaning": "Le petit déjeuner."
+    }
+  ],
   "subtitle": "Le petit-déjeuner du bonhomme",
   "level": "N5",
   "theme": "rain",

@@ -6,6 +6,28 @@
   "id": "future-letter",
   "title": "未来の私へ",
   "reading": "みらいのわたしへ",
+  "titleWords": [
+    {
+      "text": "未来",
+      "reading": "みらい",
+      "meaning": "L’avenir ; le futur."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 未来 à 私 : « mon moi du futur »."
+    },
+    {
+      "text": "私",
+      "reading": "わたし",
+      "meaning": "Je ; moi."
+    },
+    {
+      "text": "へ",
+      "reading": "へ",
+      "meaning": "Vers ; à. Indique la direction ou le destinataire et se prononce « e »."
+    }
+  ],
   "subtitle": "À mon moi du futur",
   "level": "N4",
   "theme": "letter",

@@ -6,6 +6,18 @@
   "id": "elevator-small-neighbor",
   "title": "小さなお隣さん",
   "reading": "ちいさなおとなりさん",
+  "titleWords": [
+    {
+      "text": "小さな",
+      "reading": "ちいさな",
+      "meaning": "Petit ; petite, devant un nom."
+    },
+    {
+      "text": "お隣さん",
+      "reading": "おとなりさん",
+      "meaning": "Un voisin ; une voisine."
+    }
+  ],
   "subtitle": "Un petit voisin",
   "level": "N5",
   "theme": "train",

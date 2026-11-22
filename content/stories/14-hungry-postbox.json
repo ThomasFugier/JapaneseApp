@@ -6,6 +6,23 @@
   "id": "hungry-postbox",
   "title": "ポストのおなか",
   "reading": "ぽすとのおなか",
+  "titleWords": [
+    {
+      "text": "ポスト",
+      "reading": "ぽすと",
+      "meaning": "Une boîte aux lettres."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie ポスト à おなか : « le ventre de la boîte aux lettres »."
+    },
+    {
+      "text": "おなか",
+      "reading": "おなか",
+      "meaning": "Le ventre."
+    }
+  ],
   "subtitle": "Le ventre de la boîte aux lettres",
   "level": "N5",
   "theme": "letter",

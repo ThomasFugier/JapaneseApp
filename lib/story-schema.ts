@@ -15,6 +15,7 @@ export const storyDocumentSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: nonEmpty,
   reading,
+  titleWords: z.array(wordSchema).min(1).optional(),
   subtitle: nonEmpty,
   level: z.enum(['N5', 'N4']),
   theme: z.enum(['cat', 'rain', 'moon', 'train', 'letter', 'sea']),
@@ -24,5 +25,9 @@ export const storyDocumentSchema = z.strictObject({
 
 export function parseStoryDocument(value: unknown): Story {
   const { $schema, schemaVersion, language, definitionLanguage, ...story } = storyDocumentSchema.parse(value);
+  if (story.titleWords) {
+    if (story.titleWords.map(word => word.text).join('') !== story.title) throw new Error('Title words must reconstruct the title.');
+    if (story.titleWords.map(word => word.reading).join('') !== story.reading) throw new Error('Title word readings must reconstruct the title reading.');
+  }
   return story;
 }

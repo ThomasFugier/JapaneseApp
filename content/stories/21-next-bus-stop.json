@@ -6,6 +6,23 @@
   "id": "next-bus-stop",
   "title": "次のバス停",
   "reading": "つぎのばすてい",
+  "titleWords": [
+    {
+      "text": "次",
+      "reading": "つぎ",
+      "meaning": "Le suivant ; le prochain."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 次 (« suivant ») à バス停 (« arrêt de bus ») : « le prochain arrêt »."
+    },
+    {
+      "text": "バス停",
+      "reading": "ばすてい",
+      "meaning": "Un arrêt de bus."
+    }
+  ],
   "subtitle": "Au prochain arrêt",
   "level": "N5",
   "theme": "train",

@@ -6,6 +6,23 @@
   "id": "camping-sky-book",
   "title": "明かりを消して",
   "reading": "あかりをけして",
+  "titleWords": [
+    {
+      "text": "明かり",
+      "reading": "あかり",
+      "meaning": "Une lumière ; une lampe allumée."
+    },
+    {
+      "text": "を",
+      "reading": "を",
+      "meaning": "Particule qui indique le complément direct."
+    },
+    {
+      "text": "消して",
+      "reading": "けして",
+      "meaning": "Éteins ; forme en て de 消す (éteindre)."
+    }
+  ],
   "subtitle": "Éteins la lampe",
   "level": "N4",
   "theme": "moon",

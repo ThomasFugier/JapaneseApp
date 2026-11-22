@@ -6,6 +6,23 @@
   "id": "salty-omelet",
   "title": "失敗のおかず",
   "reading": "しっぱいのおかず",
+  "titleWords": [
+    {
+      "text": "失敗",
+      "reading": "しっぱい",
+      "meaning": "Une erreur ; un raté."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 失敗 à おかず : « le plat né d’une erreur »."
+    },
+    {
+      "text": "おかず",
+      "reading": "おかず",
+      "meaning": "Un accompagnement pour le riz ; un plat."
+    }
+  ],
   "subtitle": "Une erreur au menu",
   "level": "N4",
   "theme": "cat",

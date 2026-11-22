@@ -6,6 +6,23 @@
   "id": "bench-lunch",
   "title": "ベンチのお弁当",
   "reading": "べんちのおべんとう",
+  "titleWords": [
+    {
+      "text": "ベンチ",
+      "reading": "べんち",
+      "meaning": "Un banc."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie ベンチ à お弁当 : « le bento du banc »."
+    },
+    {
+      "text": "お弁当",
+      "reading": "おべんとう",
+      "meaning": "Un repas préparé à emporter ; un bento."
+    }
+  ],
   "subtitle": "Les bentos du banc",
   "level": "N5",
   "theme": "cat",

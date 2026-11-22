@@ -29,6 +29,33 @@
       "type": "string",
       "pattern": "^[ぁ-ゖー]+$"
     },
+    "titleWords": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reading": {
+            "type": "string",
+            "pattern": "^[ぁ-ゖー]+$"
+          },
+          "meaning": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "text",
+          "reading",
+          "meaning"
+        ],
+        "additionalProperties": false
+      }
+    },
     "subtitle": {
       "type": "string",
       "minLength": 1

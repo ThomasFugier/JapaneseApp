@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, BookOpen, Bookmark, Cat, Check, CloudRain, Mail, Moon, Search, TrainFront, Waves, X } from 'lucide-react';
 import { FuriganaToggle, useFuriganaEnabled } from './furigana';
 import { splitFurigana } from '@/lib/furigana';
-import { sanitizeStoryProgress, type Story, type StoryProgress, type StoryWord } from '@/lib/stories';
+import { sanitizeStoryProgress, storyTitleWords, type Story, type StoryProgress, type StoryWord } from '@/lib/stories';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import { StoriesBookshelf } from './stories-bookshelf';
 import './stories.css';
@@ -121,19 +121,20 @@ export function StoriesView({ stories, onFuriganaChange }: { stories: readonly S
     setProgress(previous => ({ ...previous, readIds: previous.readIds.includes(id) ? previous.readIds.filter(item => item !== id) : [...previous.readIds, id] }));
   }
 
+  function renderWord(word: StoryWord | string, key: string) {
+    if (typeof word === 'string') return <span key={key}>{word}</span>;
+    return <button type="button" key={key} className={`story-word${selection?.key === key ? ' is-selected' : ''}`} aria-label={word.text} aria-haspopup="dialog" aria-expanded={selection?.key === key} aria-controls={selection?.key === key ? 'story-definition' : undefined} onClick={event => setSelection(selection?.key === key ? null : { word, key, anchor: event.currentTarget })}><StoryJapanese text={word.text} reading={word.reading} /></button>;
+  }
+
   if (reading && current) {
     const isRead = progress.readIds.includes(current.id);
     return <section className="stories-reader" aria-label={current.subtitle} lang="fr">
       <div className="story-reader-toolbar"><button className="story-back" aria-label="Retour à la bibliothèque" onClick={back}><ArrowLeft size={20} /><span>Bibliothèque</span></button><FuriganaToggle onChange={onFuriganaChange} /></div>
       <article className={`story-page${enabled ? ' with-readings' : ''}`}>
         <header className="story-page-heading">
-          <h2 ref={titleRef} tabIndex={-1} lang="ja"><StoryJapanese text={current.title} reading={current.reading} /></h2>
+          <h2 ref={titleRef} tabIndex={-1} lang="ja">{storyTitleWords(current).map((word, index) => renderWord(word, `title-${index}`))}</h2>
         </header>
-        <div className="story-prose" lang="ja">{current.paragraphs.map((paragraph, p) => <p key={p}>{paragraph.map((word, w) => {
-          if (typeof word === 'string') return <span key={w}>{word}</span>;
-          const key = `${p}-${w}`;
-          return <button type="button" key={key} className={`story-word${selection?.key === key ? ' is-selected' : ''}`} aria-label={word.text} aria-haspopup="dialog" aria-expanded={selection?.key === key} aria-controls={selection?.key === key ? 'story-definition' : undefined} onClick={event => setSelection(selection?.key === key ? null : { word, key, anchor: event.currentTarget })}><StoryJapanese text={word.text} reading={word.reading} /></button>;
-        })}</p>)}</div>
+        <div className="story-prose" lang="ja">{current.paragraphs.map((paragraph, p) => <p key={p}>{paragraph.map((word, w) => renderWord(word, `body-${p}-${w}`))}</p>)}</div>
         <footer className="story-page-footer"><button className={`story-read-button${isRead ? ' is-read' : ''}`} aria-pressed={isRead} onClick={() => toggleRead(current.id)}><Check size={17} />{isRead ? 'Histoire lue' : 'Marquer comme lue'}</button></footer>
       </article>
       {selection && <Definition selection={selection} onClose={() => setSelection(null)} />}

@@ -6,6 +6,23 @@
   "id": "shared-umbrella",
   "title": "雨の日",
   "reading": "あめのひ",
+  "titleWords": [
+    {
+      "text": "雨",
+      "reading": "あめ",
+      "meaning": "La pluie."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 雨 à 日 : « un jour de pluie »."
+    },
+    {
+      "text": "日",
+      "reading": "ひ",
+      "meaning": "Un jour."
+    }
+  ],
   "subtitle": "Un jour de pluie",
   "level": "N5",
   "theme": "rain",

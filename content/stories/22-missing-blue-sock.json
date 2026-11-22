@@ -6,6 +6,18 @@
   "id": "missing-blue-sock",
   "title": "青い靴下",
   "reading": "あおいくつした",
+  "titleWords": [
+    {
+      "text": "青い",
+      "reading": "あおい",
+      "meaning": "Bleu ; bleue."
+    },
+    {
+      "text": "靴下",
+      "reading": "くつした",
+      "meaning": "Une chaussette."
+    }
+  ],
   "subtitle": "La chaussette bleue",
   "level": "N4",
   "theme": "rain",

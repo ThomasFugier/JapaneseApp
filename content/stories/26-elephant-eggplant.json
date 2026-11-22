@@ -6,6 +6,23 @@
   "id": "elephant-eggplant",
   "title": "なすの鼻",
   "reading": "なすのはな",
+  "titleWords": [
+    {
+      "text": "なす",
+      "reading": "なす",
+      "meaning": "Une aubergine."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie なす à 鼻 : « le nez de l’aubergine »."
+    },
+    {
+      "text": "鼻",
+      "reading": "はな",
+      "meaning": "Un nez ; une trompe."
+    }
+  ],
   "subtitle": "Le nez de l’aubergine",
   "level": "N5",
   "theme": "cat",

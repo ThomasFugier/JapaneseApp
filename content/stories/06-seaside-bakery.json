@@ -6,6 +6,23 @@
   "id": "seaside-bakery",
   "title": "海のパン屋",
   "reading": "うみのぱんや",
+  "titleWords": [
+    {
+      "text": "海",
+      "reading": "うみ",
+      "meaning": "La mer."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 海 à パン屋 : « la boulangerie de la mer »."
+    },
+    {
+      "text": "パン屋",
+      "reading": "ぱんや",
+      "meaning": "Une boulangerie."
+    }
+  ],
   "subtitle": "La boulangerie de la mer",
   "level": "N5",
   "theme": "sea",

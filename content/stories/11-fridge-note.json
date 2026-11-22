@@ -6,6 +6,23 @@
   "id": "fridge-note",
   "title": "冷蔵庫の手紙",
   "reading": "れいぞうこのてがみ",
+  "titleWords": [
+    {
+      "text": "冷蔵庫",
+      "reading": "れいぞうこ",
+      "meaning": "Un réfrigérateur."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 冷蔵庫 à 手紙 : « la lettre du réfrigérateur »."
+    },
+    {
+      "text": "手紙",
+      "reading": "てがみ",
+      "meaning": "Une lettre."
+    }
+  ],
   "subtitle": "Les mots du réfrigérateur",
   "level": "N5",
   "theme": "letter",

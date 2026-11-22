@@ -6,6 +6,23 @@
   "id": "first-exercise-class",
   "title": "運動と休み方",
   "reading": "うんどうとやすみかた",
+  "titleWords": [
+    {
+      "text": "運動",
+      "reading": "うんどう",
+      "meaning": "Un exercice physique ; du sport."
+    },
+    {
+      "text": "と",
+      "reading": "と",
+      "meaning": "Et ; relie ici deux activités."
+    },
+    {
+      "text": "休み方",
+      "reading": "やすみかた",
+      "meaning": "Une manière de se reposer ; 方 indique la manière de faire."
+    }
+  ],
   "subtitle": "Bouger et se reposer",
   "level": "N5",
   "theme": "cat",

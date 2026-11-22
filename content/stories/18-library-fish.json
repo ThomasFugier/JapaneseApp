@@ -6,6 +6,23 @@
   "id": "library-fish",
   "title": "図書館の魚",
   "reading": "としょかんのさかな",
+  "titleWords": [
+    {
+      "text": "図書館",
+      "reading": "としょかん",
+      "meaning": "Une bibliothèque."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 図書館 à 魚 : « les poissons de la bibliothèque »."
+    },
+    {
+      "text": "魚",
+      "reading": "さかな",
+      "meaning": "Un poisson."
+    }
+  ],
   "subtitle": "Les poissons de la bibliothèque",
   "level": "N5",
   "theme": "sea",

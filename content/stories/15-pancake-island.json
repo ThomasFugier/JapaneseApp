@@ -6,6 +6,23 @@
   "id": "pancake-island",
   "title": "パンケーキの島",
   "reading": "ぱんけーきのしま",
+  "titleWords": [
+    {
+      "text": "パンケーキ",
+      "reading": "ぱんけーき",
+      "meaning": "Une crêpe épaisse ; un pancake."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie パンケーキ à 島 : « une île en pancake »."
+    },
+    {
+      "text": "島",
+      "reading": "しま",
+      "meaning": "Une île."
+    }
+  ],
   "subtitle": "L’île en pancake",
   "level": "N4",
   "theme": "sea",

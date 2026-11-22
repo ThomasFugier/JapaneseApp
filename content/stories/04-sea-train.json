@@ -6,6 +6,28 @@
   "id": "sea-train",
   "title": "海への電車",
   "reading": "うみへのでんしゃ",
+  "titleWords": [
+    {
+      "text": "海",
+      "reading": "うみ",
+      "meaning": "La mer."
+    },
+    {
+      "text": "へ",
+      "reading": "へ",
+      "meaning": "Vers ; à. Indique la direction ou le destinataire et se prononce « e »."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 海へ (« vers la mer ») à 電車 (« train »)."
+    },
+    {
+      "text": "電車",
+      "reading": "でんしゃ",
+      "meaning": "Un train."
+    }
+  ],
   "subtitle": "Le train vers la mer",
   "level": "N4",
   "theme": "train",

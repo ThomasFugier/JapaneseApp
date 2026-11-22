@@ -6,6 +6,18 @@
   "id": "same-moon",
   "title": "同じ月",
   "reading": "おなじつき",
+  "titleWords": [
+    {
+      "text": "同じ",
+      "reading": "おなじ",
+      "meaning": "Même ; identique."
+    },
+    {
+      "text": "月",
+      "reading": "つき",
+      "meaning": "La lune."
+    }
+  ],
   "subtitle": "La même lune",
   "level": "N5",
   "theme": "moon",

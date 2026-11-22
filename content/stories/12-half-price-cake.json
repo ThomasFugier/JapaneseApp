@@ -6,6 +6,23 @@
   "id": "half-price-cake",
   "title": "半分のケーキ",
   "reading": "はんぶんのけーき",
+  "titleWords": [
+    {
+      "text": "半分",
+      "reading": "はんぶん",
+      "meaning": "La moitié."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 半分 à ケーキ : « un demi-gâteau »."
+    },
+    {
+      "text": "ケーキ",
+      "reading": "けーき",
+      "meaning": "Un gâteau."
+    }
+  ],
   "subtitle": "Le gâteau à moitié",
   "level": "N5",
   "theme": "moon",

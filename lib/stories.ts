@@ -3,12 +3,17 @@ export type Story = {
   id: string;
   title: string;
   reading: string;
+  titleWords?: StoryWord[];
   subtitle: string;
   level: 'N5' | 'N4';
   theme: 'cat' | 'rain' | 'moon' | 'train' | 'letter' | 'sea';
   description: string;
   paragraphs: (StoryWord | string)[][];
 };
+
+export function storyTitleWords(story: Story): readonly StoryWord[] {
+  return story.titleWords ?? [{ text: story.title, reading: story.reading, meaning: story.subtitle }];
+}
 
 export function storyText(story: Story): string {
   return story.paragraphs.map(parts => parts.map(part => typeof part === 'string' ? part : part.text).join('')).join('\n');

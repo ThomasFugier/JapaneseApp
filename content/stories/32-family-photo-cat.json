@@ -6,6 +6,23 @@
   "id": "family-photo-cat",
   "title": "一番いい写真",
   "reading": "いちばんいいしゃしん",
+  "titleWords": [
+    {
+      "text": "一番",
+      "reading": "いちばん",
+      "meaning": "Le plus ; marque le degré le plus élevé."
+    },
+    {
+      "text": "いい",
+      "reading": "いい",
+      "meaning": "Bon ; bien."
+    },
+    {
+      "text": "写真",
+      "reading": "しゃしん",
+      "meaning": "Une photo."
+    }
+  ],
   "subtitle": "La meilleure photo",
   "level": "N5",
   "theme": "cat",

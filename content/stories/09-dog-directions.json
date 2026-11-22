@@ -6,6 +6,28 @@
   "id": "dog-directions",
   "title": "犬のいる店",
   "reading": "いぬのいるみせ",
+  "titleWords": [
+    {
+      "text": "犬",
+      "reading": "いぬ",
+      "meaning": "Un chien."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Marque le sujet dans la relative, comme が : 犬のいる店, « le magasin où il y a un chien »."
+    },
+    {
+      "text": "いる",
+      "reading": "いる",
+      "meaning": "Être ; se trouver, pour un être vivant."
+    },
+    {
+      "text": "店",
+      "reading": "みせ",
+      "meaning": "Un magasin ; une boutique."
+    }
+  ],
   "subtitle": "Le chien et le plan",
   "level": "N4",
   "theme": "cat",

@@ -6,6 +6,23 @@
   "id": "rain-concert",
   "title": "雨のコンサート",
   "reading": "あめのこんさーと",
+  "titleWords": [
+    {
+      "text": "雨",
+      "reading": "あめ",
+      "meaning": "La pluie."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 雨 à コンサート : « le concert de la pluie »."
+    },
+    {
+      "text": "コンサート",
+      "reading": "こんさーと",
+      "meaning": "Un concert."
+    }
+  ],
   "subtitle": "Le concert de la pluie",
   "level": "N5",
   "theme": "rain",

@@ -6,6 +6,23 @@
   "id": "museum-living-picture",
   "title": "窓の絵",
   "reading": "まどのえ",
+  "titleWords": [
+    {
+      "text": "窓",
+      "reading": "まど",
+      "meaning": "Une fenêtre."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 窓 à 絵 : « le tableau de la fenêtre »."
+    },
+    {
+      "text": "絵",
+      "reading": "え",
+      "meaning": "Un dessin ; un tableau."
+    }
+  ],
   "subtitle": "Un tableau qui change",
   "level": "N5",
   "theme": "letter",

@@ -6,6 +6,18 @@
   "id": "warm-onigiri",
   "title": "温かいおにぎり",
   "reading": "あたたかいおにぎり",
+  "titleWords": [
+    {
+      "text": "温かい",
+      "reading": "あたたかい",
+      "meaning": "Chaud ; tiède au toucher ou à manger."
+    },
+    {
+      "text": "おにぎり",
+      "reading": "おにぎり",
+      "meaning": "Une boulette de riz japonaise."
+    }
+  ],
   "subtitle": "Un onigiri bien chaud",
   "level": "N5",
   "theme": "moon",

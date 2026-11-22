@@ -6,6 +6,23 @@
   "id": "eraser-in-hand",
   "title": "消しゴムはどこ",
   "reading": "けしごむはどこ",
+  "titleWords": [
+    {
+      "text": "消しゴム",
+      "reading": "けしごむ",
+      "meaning": "Une gomme."
+    },
+    {
+      "text": "は",
+      "reading": "は",
+      "meaning": "Particule du thème, prononcée « wa » : ici, « quant à la gomme »."
+    },
+    {
+      "text": "どこ",
+      "reading": "どこ",
+      "meaning": "Où ?"
+    }
+  ],
   "subtitle": "La gomme introuvable",
   "level": "N5",
   "theme": "letter",

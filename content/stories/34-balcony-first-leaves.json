@@ -6,6 +6,18 @@
   "id": "balcony-first-leaves",
   "title": "小さな朝",
   "reading": "ちいさなあさ",
+  "titleWords": [
+    {
+      "text": "小さな",
+      "reading": "ちいさな",
+      "meaning": "Petit ; petite, devant un nom."
+    },
+    {
+      "text": "朝",
+      "reading": "あさ",
+      "meaning": "Le matin."
+    }
+  ],
   "subtitle": "Deux petites feuilles",
   "level": "N4",
   "theme": "cat",

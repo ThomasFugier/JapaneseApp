@@ -6,6 +6,28 @@
   "id": "dinner-without-electricity",
   "title": "電気のない夜",
   "reading": "でんきのないよる",
+  "titleWords": [
+    {
+      "text": "電気",
+      "reading": "でんき",
+      "meaning": "L’électricité."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Marque le sujet dans la relative, comme が : 電気のない夜, « une nuit sans électricité »."
+    },
+    {
+      "text": "ない",
+      "reading": "ない",
+      "meaning": "Ne pas avoir ; être absent."
+    },
+    {
+      "text": "夜",
+      "reading": "よる",
+      "meaning": "La nuit ; le soir."
+    }
+  ],
   "subtitle": "Un dîner sans électricité",
   "level": "N4",
   "theme": "moon",

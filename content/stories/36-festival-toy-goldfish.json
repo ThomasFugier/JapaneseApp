@@ -6,6 +6,18 @@
   "id": "festival-toy-goldfish",
   "title": "赤い金魚",
   "reading": "あかいきんぎょ",
+  "titleWords": [
+    {
+      "text": "赤い",
+      "reading": "あかい",
+      "meaning": "Rouge ; rouge vif."
+    },
+    {
+      "text": "金魚",
+      "reading": "きんぎょ",
+      "meaning": "Un poisson rouge."
+    }
+  ],
   "subtitle": "Le poisson rouge du festival",
   "level": "N5",
   "theme": "sea",

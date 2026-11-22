@@ -6,6 +6,23 @@
   "id": "leaf-shop",
   "title": "葉っぱのお店",
   "reading": "はっぱのおみせ",
+  "titleWords": [
+    {
+      "text": "葉っぱ",
+      "reading": "はっぱ",
+      "meaning": "Une feuille."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 葉っぱ à お店 : « la boutique de feuilles »."
+    },
+    {
+      "text": "お店",
+      "reading": "おみせ",
+      "meaning": "Un magasin ; une boutique."
+    }
+  ],
   "subtitle": "La boutique de feuilles",
   "level": "N4",
   "theme": "cat",

@@ -6,6 +6,23 @@
   "id": "grandmother-game-button",
   "title": "おばあちゃんの冒険",
   "reading": "おばあちゃんのぼうけん",
+  "titleWords": [
+    {
+      "text": "おばあちゃん",
+      "reading": "おばあちゃん",
+      "meaning": "Mamie ; grand-mère, de façon affectueuse."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie おばあちゃん à 冒険 : « l’aventure de mamie »."
+    },
+    {
+      "text": "冒険",
+      "reading": "ぼうけん",
+      "meaning": "Une aventure."
+    }
+  ],
   "subtitle": "La première partie de mamie",
   "level": "N5",
   "theme": "train",

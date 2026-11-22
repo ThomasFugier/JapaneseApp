@@ -6,6 +6,23 @@
   "id": "last-bakery-bread",
   "title": "最後のパン",
   "reading": "さいごのぱん",
+  "titleWords": [
+    {
+      "text": "最後",
+      "reading": "さいご",
+      "meaning": "Le dernier ; la fin."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 最後 (« dernier ») à パン (« pain ») : « le dernier pain »."
+    },
+    {
+      "text": "パン",
+      "reading": "ぱん",
+      "meaning": "Du pain."
+    }
+  ],
   "subtitle": "Le dernier pain",
   "level": "N5",
   "theme": "sea",

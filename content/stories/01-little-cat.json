@@ -6,6 +6,18 @@
   "id": "little-cat",
   "title": "小さな友達",
   "reading": "ちいさなともだち",
+  "titleWords": [
+    {
+      "text": "小さな",
+      "reading": "ちいさな",
+      "meaning": "Petit ; petite, devant un nom."
+    },
+    {
+      "text": "友達",
+      "reading": "ともだち",
+      "meaning": "Un ami ; une amie."
+    }
+  ],
   "subtitle": "Un petit ami",
   "level": "N5",
   "theme": "cat",

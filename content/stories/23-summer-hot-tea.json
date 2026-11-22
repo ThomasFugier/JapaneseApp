@@ -6,6 +6,28 @@
   "id": "summer-hot-tea",
   "title": "暑い日のお茶",
   "reading": "あついひのおちゃ",
+  "titleWords": [
+    {
+      "text": "暑い",
+      "reading": "あつい",
+      "meaning": "Chaud ; accablant, pour le temps."
+    },
+    {
+      "text": "日",
+      "reading": "ひ",
+      "meaning": "Un jour."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 暑い日 à お茶 : « le thé d’un jour de chaleur »."
+    },
+    {
+      "text": "お茶",
+      "reading": "おちゃ",
+      "meaning": "Du thé."
+    }
+  ],
   "subtitle": "Un thé chaud en été",
   "level": "N5",
   "theme": "sea",

@@ -20,9 +20,12 @@ Les histoires existantes servent d’exemples complets.
   "language": "ja",
   "definitionLanguage": "fr",
   "id": "identifiant-unique-stable",
-  "title": "Titre japonais",
-  "reading": "たいとる",
-  "subtitle": "Titre en français",
+  "title": "猫",
+  "reading": "ねこ",
+  "titleWords": [
+    { "text": "猫", "reading": "ねこ", "meaning": "Un chat." }
+  ],
+  "subtitle": "Le chat",
   "level": "N5",
   "theme": "cat",
   "description": "Une courte présentation en français.",
@@ -43,6 +46,11 @@ Cet extrait illustre la structure ; une histoire complète doit contenir **80 à
   lors des corrections : la progression de lecture utilise cet identifiant.
 - `level` : `N5` ou `N4`, les niveaux actuellement proposés par la bibliothèque.
 - `theme` : `cat`, `rain`, `moon`, `train`, `letter` ou `sea` (couverture existante).
+- `titleWords` : mots du titre, avec `text`, `reading` et `meaning`, comme dans
+  le corps. Les textes joints doivent redonner exactement `title` et les lectures
+  jointes exactement `reading`. À renseigner pour toutes les nouvelles histoires :
+  chaque mot du titre devient cliquable. Les anciens JSON sans ce champ restent
+  lisibles avec une définition du titre complet.
 - `paragraphs` : tableau de paragraphes ; chaque paragraphe est un tableau de
   segments dans l’ordre de lecture. L’application les joint sans espaces.
 - Chaque mot, expression ou particule possède `text`, `reading` en hiragana et

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { sanitizeStoryProgress, storyText } from '../lib/stories';
+import { sanitizeStoryProgress, storyText, storyTitleWords } from '../lib/stories';
 import { stories } from '../lib/story-catalog';
 import { hasKanji, splitFurigana } from '../lib/furigana';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -15,7 +15,7 @@ test('every mini story fits a short page and every word has an offline gloss and
     const text = storyText(story);
     assert.ok(text.length >= 80 && text.length <= 250, `${story.id}: ${text.length} characters`);
     assert.ok(!text.includes(' '));
-    for (const word of story.paragraphs.flat()) {
+    for (const word of [...storyTitleWords(story), ...story.paragraphs.flat()]) {
       if (typeof word === 'string') { assert.match(word, /^[、。「」！？]+$/); continue; }
       assert.ok(word.meaning.trim(), word.text);
       assert.match(word.reading, /^[ぁ-ゖー]+$/, word.text);
@@ -24,6 +24,24 @@ test('every mini story fits a short page and every word has an offline gloss and
       assert.ok(parts.every(part => !hasKanji(part.text) || part.reading), `Missing furigana: ${word.text}`);
     }
   }
+});
+
+test('every published title has individually defined words and matching readings', () => {
+  for (const story of stories) {
+    assert.ok(story.titleWords?.length, `Missing title words: ${story.id}`);
+    assert.equal(storyTitleWords(story).map(word => word.text).join(''), story.title);
+    assert.equal(storyTitleWords(story).map(word => word.reading).join(''), story.reading);
+  }
+});
+
+test('title metadata is validated and legacy stories retain a title definition', () => {
+  const document = { schemaVersion: 1, language: 'ja', definitionLanguage: 'fr', ...stories[0] };
+  assert.throws(() => parseStoryDocument({ ...document, titleWords: [{ text: '猫', reading: 'ねこ', meaning: 'Un chat.' }] }), /reconstruct the title/);
+  assert.throws(() => parseStoryDocument({ ...document, titleWords: [{ text: document.title, reading: 'ねこ', meaning: document.subtitle }] }), /reconstruct the title reading/);
+  assert.throws(() => parseStoryDocument({ ...document, titleWords: [{ text: document.title, reading: document.reading }] }));
+  const { titleWords, ...legacy } = document;
+  const parsed = parseStoryDocument(legacy);
+  assert.deepEqual(storyTitleWords(parsed), [{ text: parsed.title, reading: parsed.reading, meaning: parsed.subtitle }]);
 });
 
 test('the JSON schema provided to generators matches the application validator', () => {

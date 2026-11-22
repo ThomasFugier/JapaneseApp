@@ -6,6 +6,23 @@
   "id": "flower-for-myself",
   "title": "私に一本",
   "reading": "わたしにいっぽん",
+  "titleWords": [
+    {
+      "text": "私",
+      "reading": "わたし",
+      "meaning": "Je ; moi."
+    },
+    {
+      "text": "に",
+      "reading": "に",
+      "meaning": "À ; indique ici le destinataire."
+    },
+    {
+      "text": "一本",
+      "reading": "いっぽん",
+      "meaning": "Une unité pour compter une chose longue, ici une fleur."
+    }
+  ],
   "subtitle": "Une fleur pour moi",
   "level": "N5",
   "theme": "letter",

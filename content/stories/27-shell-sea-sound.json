@@ -6,6 +6,28 @@
   "id": "shell-sea-sound",
   "title": "海からの音",
   "reading": "うみからのおと",
+  "titleWords": [
+    {
+      "text": "海",
+      "reading": "うみ",
+      "meaning": "La mer."
+    },
+    {
+      "text": "から",
+      "reading": "から",
+      "meaning": "Depuis ; indique ici la provenance."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 海から (« venant de la mer ») à 音 (« son »)."
+    },
+    {
+      "text": "音",
+      "reading": "おと",
+      "meaning": "Un son."
+    }
+  ],
   "subtitle": "Le bruit de la mer",
   "level": "N5",
   "theme": "sea",

@@ -6,6 +6,23 @@
   "id": "bicycle-day-off",
   "title": "自転車のお休み",
   "reading": "じてんしゃのおやすみ",
+  "titleWords": [
+    {
+      "text": "自転車",
+      "reading": "じてんしゃ",
+      "meaning": "Un vélo."
+    },
+    {
+      "text": "の",
+      "reading": "の",
+      "meaning": "Relie 自転車 à お休み : « le repos du vélo »."
+    },
+    {
+      "text": "お休み",
+      "reading": "おやすみ",
+      "meaning": "Un repos ; un jour de congé."
+    }
+  ],
   "subtitle": "Le vélo prend sa journée",
   "level": "N4",
   "theme": "train",
