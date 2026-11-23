@@ -1,6 +1,7 @@
 'use client';
 
-import { Cloud, HardDrive } from 'lucide-react';
+import { useState } from 'react';
+import { Cloud, HardDrive, LoaderCircle, Save } from 'lucide-react';
 import { deriveBackupStatus, type BackupState } from '@/lib/backup-status';
 import './backup-status.css';
 
@@ -13,6 +14,21 @@ export function BackupIndicator({ state, onOpen, open = false }: BackupIndicator
   return <button type="button" className={'backup-indicator backup-indicator--' + status.kind + (busy && status.kind !== 'error' ? ' is-busy' : '')} onClick={onOpen} aria-label={'Synchronisation. ' + status.description} aria-haspopup="dialog" aria-expanded={open} title={'Synchronisation · ' + status.label}>
     <span className="backup-indicator-symbol" aria-hidden="true"><Cloud size={17} /><span className="backup-indicator-dot" /></span>
     <span className="backup-indicator-label">Sync</span>
+  </button>;
+}
+
+export function SaveNowButton({ state, onSave, onError }: { state: BackupState; onSave: () => Promise<void>; onError: (message: string) => void }) {
+  const [pending, setPending] = useState(false);
+  async function save() {
+    if (pending) return;
+    setPending(true);
+    try { await onSave(); }
+    catch (cause) { onError(cause instanceof Error ? cause.message : 'La sauvegarde a échoué. Réessaie.'); }
+    finally { setPending(false); }
+  }
+  return <button type="button" className="save-now-button" aria-label="Sauvegarder maintenant" title="Sauvegarder maintenant" aria-busy={pending} disabled={pending || state.saving || state.syncing} onClick={() => void save()}>
+    {pending ? <LoaderCircle size={16} className="spin" aria-hidden="true" /> : <Save size={16} aria-hidden="true" />}
+    <span>{pending ? 'Sauvegarde…' : 'Sauvegarder'}</span>
   </button>;
 }
 

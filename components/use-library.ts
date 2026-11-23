@@ -183,10 +183,13 @@ export function useLibrary() {
     } finally { busy.current = false; }
   }, []);
 
-  const sync = useCallback(async () => {
-    if (!record.current || busy.current || conflictData.current) return;
-    if (!navigator.onLine) return;
-    if (!status?.authenticated) { setNotice('Connect your account to synchronize.'); return; }
+  const sync = useCallback(async (manual = false) => {
+    if (!record.current || busy.current || conflictData.current) {
+      if (manual) throw new Error(conflictData.current ? 'Choisis les versions à conserver avant de sauvegarder sur GitHub.' : 'Une sauvegarde est déjà en cours. Réessaie dans un instant.');
+      return;
+    }
+    if (!navigator.onLine) { if (manual) throw new Error('Connexion perdue. Les données restent sauvegardées sur cet appareil.'); return; }
+    if (!status?.authenticated) { if (manual) throw new Error('Connecte ton compte pour sauvegarder sur GitHub.'); setNotice('Connect your account to synchronize.'); return; }
     busy.current = true; setSyncing(true); setError(''); setSyncError('');
     let savingLocally = true;
     try {
@@ -199,11 +202,12 @@ export function useLibrary() {
         const remote = await response.json();
         if (response.status === 401) setStatus(previous => previous ? { ...previous, authenticated: false, user: undefined } : null);
         if (!response.ok) throw new Error(remote.error || 'Unable to load your cloud library.');
-        if (!needsCloudBootstrap(status, record.current)) return;
+        if (!needsCloudBootstrap(status, record.current)) { if (manual) throw new Error('De nouvelles modifications sont en attente. Relance la sauvegarde.'); return; }
         const snapshot = validateSnapshot(remote.snapshot);
         savingLocally = true;
         await persist({ snapshot, base: snapshot, lastSyncedAt: new Date().toISOString() });
         savingLocally = false;
+        if (manual) setNotice(snapshotsEqual(record.current.snapshot, record.current.base) ? 'Sauvegardé sur cet appareil et GitHub.' : 'Sauvegardé sur cet appareil. De nouvelles modifications attendent la synchronisation.');
         return;
       }
       const response = await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: sent.base, snapshot: sent.snapshot }), signal: AbortSignal.timeout(60000) });
@@ -220,24 +224,42 @@ export function useLibrary() {
         }
         for (const conflict of rebased.conflicts) choices.set(`${conflict.collection}:${conflict.id}`, conflict);
         conflictData.current = { snapshot: rebased.snapshot, remote: result.remote, captured };
-        setConflicts([...choices.values()]); return;
+        setConflicts([...choices.values()]);
+        if (manual) throw new Error('Choisis les versions à conserver pour terminer la sauvegarde GitHub.');
+        return;
       }
       const after = mergeSnapshots(sent.snapshot, record.current.snapshot, result.snapshot);
       if (after.conflicts.length) {
-        conflictData.current = { snapshot: after.snapshot, remote: result.snapshot, captured: structuredClone(record.current.snapshot) }; setConflicts(after.conflicts); return;
+        conflictData.current = { snapshot: after.snapshot, remote: result.snapshot, captured: structuredClone(record.current.snapshot) }; setConflicts(after.conflicts);
+        if (manual) throw new Error('Choisis les versions à conserver pour terminer la sauvegarde GitHub.');
+        return;
       }
       const next = { snapshot: validateSnapshot(after.snapshot), base: validateSnapshot(result.snapshot), lastSyncedAt: result.lastSyncedAt ?? new Date().toISOString() };
       savingLocally = true;
       await persist(next);
       savingLocally = false;
+      if (manual) setNotice(snapshotsEqual(record.current.snapshot, record.current.base) ? 'Sauvegardé sur cet appareil et GitHub.' : 'Sauvegardé sur cet appareil. De nouvelles modifications attendent la synchronisation.');
     } catch (cause) {
-      if (!savingLocally && !navigator.onLine) return;
+      if (!savingLocally && !navigator.onLine && !manual) return;
       const message = savingLocally ? localSaveFailure : cause instanceof Error ? cause.message : 'Synchronization failed. Your data remains on this device.';
       if (!savingLocally) setSyncError(message);
       setError(message);
+      if (manual) throw new Error(message);
     }
     finally { busy.current = false; setSyncing(false); }
   }, [persist, status]);
+
+  const saveNow = useCallback(async () => {
+    if (!record.current) throw new Error('La bibliothèque est encore en cours de chargement.');
+    if (busy.current) throw new Error('Une synchronisation est déjà en cours.');
+    setNotice('');
+    await persist({ ...record.current });
+    if (!navigator.onLine || !status?.authenticated) {
+      setNotice(navigator.onLine ? 'Sauvegardé sur cet appareil. GitHub non connecté.' : 'Sauvegardé sur cet appareil. Hors ligne.');
+      return;
+    }
+    await sync(true);
+  }, [persist, status, sync]);
 
   const base = record.current?.base;
   const dirty = useMemo(() => !!base && JSON.stringify(data) !== JSON.stringify(base), [data, base]);
@@ -290,5 +312,5 @@ export function useLibrary() {
     conflictData.current = null; setConflicts([]); setNotice('Selected versions saved. Synchronize to send them to GitHub.');
   }, [conflicts, persist]);
 
-  return { data, ready, saving, syncing, online, status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, resolve, disconnectGitHub };
+  return { data, ready, saving, syncing, online, status, error, setError, localSaveError, syncError, notice, setNotice, lastSyncedAt, dirty, conflicts, update, sync, saveNow, resolve, disconnectGitHub };
 }

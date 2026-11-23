@@ -21,3 +21,14 @@
 .backup-summary-row.has-problem h3,.backup-summary-row.has-problem>svg { color:var(--red); }
 .backup-summary-row p.backup-last-sync { margin-top:8px; font-size:11px; }
 .backup-last-sync time { white-space:nowrap; }
+.save-now-button { display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0; min-width:36px; height:36px; padding:0 9px; border:1px solid var(--line); border-radius:9px; background:var(--paper); color:var(--ink); font-size:11px; font-weight:500; cursor:pointer; white-space:nowrap; }
+.save-now-button:hover:not(:disabled) { background:var(--soft); }
+.save-now-button:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+.save-now-button:disabled { opacity:.55; cursor:wait; }
+@media (min-width:1101px) and (max-width:1400px), (max-width:640px) { .save-now-button>span { display:none; } }
+@media (max-width:640px) { .save-now-button { height:38px; padding:0; } }
+@media (max-width:400px) {
+  .topbar-inner { padding-inline:16px; gap:8px; }
+  .backup-indicator { min-width:36px; padding-inline:7px; }
+  .backup-indicator-label { display:none; }
+}

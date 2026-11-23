@@ -10,12 +10,15 @@ import './sync-status.css';
 
 export function SyncStatusPanel({ state, status, onSync, onDisconnect }: { state: BackupState; status: CloudConnectionStatus | null; onSync: () => Promise<void>; onDisconnect: () => Promise<void> }) {
   const [error, setError] = useState('');
+  const [pending, setPending] = useState(false);
   async function synchronize() {
-    setError('');
+    if (pending) return;
+    setPending(true); setError('');
     try { await onSync(); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'La synchronisation a échoué. Réessaie.'); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'La sauvegarde a échoué. Réessaie.'); }
+    finally { setPending(false); }
   }
-  const unavailable = state.syncing || state.saving || state.online === false || !!state.localSaveError || state.conflicts > 0;
+  const unavailable = pending || state.syncing || state.saving;
   return <div className="sync-status-panel">
     <BackupSummary state={state} />
     <GitHubConnection status={status} onDisconnect={onDisconnect} />
@@ -24,7 +27,7 @@ export function SyncStatusPanel({ state, status, onSync, onDisconnect }: { state
       {status?.configured && status.repository && <div><dt>Dépôt GitHub</dt><dd><a href={`https://github.com/${status.repository}`} target="_blank" rel="noreferrer">{status.repository}<ExternalLink size={13} aria-hidden="true" /></a></dd></div>}
       {status?.configured && status.branch && <div><dt>Branche</dt><dd><code>{status.branch}</code></dd></div>}
     </dl>
-    {status?.authenticated && <button type="button" className="button primary sync-now" disabled={unavailable} aria-busy={state.syncing} onClick={() => void synchronize()}>{state.syncing ? <LoaderCircle size={16} className="spin" aria-hidden="true" /> : <RefreshCw size={16} aria-hidden="true" />}<span aria-live="polite">{state.syncing ? 'Synchronisation…' : 'Synchroniser maintenant'}</span></button>}
+    <button type="button" className="button primary sync-now" disabled={unavailable} aria-busy={pending} onClick={() => void synchronize()}>{pending ? <LoaderCircle size={16} className="spin" aria-hidden="true" /> : <RefreshCw size={16} aria-hidden="true" />}<span aria-live="polite">{pending ? 'Sauvegarde…' : 'Sauvegarder maintenant'}</span></button>
     {error && <p role="alert" className="form-error">{error}</p>}
   </div>;
 }
