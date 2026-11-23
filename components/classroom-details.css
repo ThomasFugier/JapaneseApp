@@ -18,7 +18,7 @@
 .theme-classroom .classroom-notebook:hover,.theme-classroom .home-decks .deck-tile:hover { outline:none; filter:brightness(.98); }
 .theme-classroom :is(.button,.review-all .button.primary,.classroom-board .button.primary,.study-space .reveal-button) { border-radius:14px; }
 .theme-classroom :is(.desktop-tabs>button,.mobile-nav>button) { flex-direction:column; flex-wrap:nowrap; align-items:center; justify-content:center; }
-.theme-classroom .desktop-tabs>button { gap:6px; }
+.theme-classroom .desktop-tabs>button { gap:4px; }
 .theme-classroom .desktop-tabs .classroom-nav-icon { flex-shrink:0; }
 .theme-classroom :is(.desktop-tabs,.mobile-nav) .nav-count { position:absolute; top:6px; right:4px; min-width:22px; max-width:34px; padding:0 4px; border:2px solid #fffef8; border-radius:999px; background:#f0d47f; color:#59491f; font-size:10px; line-height:16px; font-weight:700; pointer-events:none; }
 .theme-classroom .classroom-nav-tile.classroom-kana-icon { font-family:var(--font-japanese-plain),'Yu Gothic',sans-serif; font-weight:400; color:#315e4c; }

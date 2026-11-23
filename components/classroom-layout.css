@@ -108,14 +108,14 @@
 }
 
 /* Soft game-menu surfaces with clear, compact controls. */
-.theme-classroom .topbar { height:116px; border-bottom:3px solid #e6d9bb; }
+.theme-classroom .topbar { height:88px; border-bottom:3px solid #e6d9bb; }
 .theme-classroom .topbar-inner { max-width:1240px; gap:14px; }
 .theme-classroom .brand { font-size:22px; font-weight:800; }
 .theme-classroom .classroom-brand-mark { border-radius:12px; box-shadow:none; }
-.theme-classroom .desktop-tabs { height:104px; grid-template-columns:84px 108px 88px 96px 92px 80px; gap:8px; }
-.theme-classroom .desktop-tabs>button { align-content:center; gap:6px; padding:11px 0; font-size:15px; font-weight:700; border-radius:24px; color:#6d735d; background:none; transform:none; }
-.theme-classroom .desktop-tabs .classroom-nav-tile { padding:0; font-size:38px; background:none; border-radius:0; transition:transform .16s; }
-.theme-classroom .desktop-tabs>button.selected { color:#285a47; background:#e2efdb; border-radius:24px; box-shadow:none; transform:none; }
+.theme-classroom .desktop-tabs { height:76px; grid-template-columns:84px 108px 88px 96px 92px 80px; gap:8px; }
+.theme-classroom .desktop-tabs>button { align-content:center; gap:4px; padding:8px 0; font-size:13px; font-weight:700; border-radius:16px; color:#6d735d; background:none; transform:none; }
+.theme-classroom .desktop-tabs .classroom-nav-tile { padding:0; font-size:26px; background:none; border-radius:0; transition:transform .16s; }
+.theme-classroom .desktop-tabs>button.selected { color:#285a47; background:#e2efdb; border-radius:16px; box-shadow:none; transform:none; }
 .theme-classroom .desktop-tabs>button:hover:not(.selected) { color:#285a47; background:#f0f2e3; transform:none; }
 .theme-classroom .desktop-tabs>button:is(.selected,:hover,:focus-visible) .classroom-nav-tile { transform:none; }
 .theme-classroom .desktop-tabs>button.selected::after { display:none; }
@@ -156,16 +156,16 @@
 .theme-classroom .rating-button>span { font-weight:800; }
 .theme-classroom :is(.display-toolbar,.writing-toolbar) { border-radius:20px; box-shadow:none; }
 .theme-classroom :is(.modal,.note-editor-sheet,.note-side-panel) { border-radius:5px; box-shadow:none; }
-.theme-classroom .lesson-contents { top:126px; }
-.theme-classroom .lesson-section { scroll-margin-top:216px; }
+.theme-classroom .lesson-contents { top:98px; }
+.theme-classroom .lesson-section { scroll-margin-top:188px; }
 @media(min-width:641px) and (max-width:1100px) {
- .theme-classroom .topbar { height:158px; }
- .theme-classroom .topbar-inner { grid-template-columns:1fr 1fr; grid-template-rows:50px 102px; gap:0; }
+ .theme-classroom .topbar { height:132px; }
+ .theme-classroom .topbar-inner { grid-template-columns:1fr 1fr; grid-template-rows:50px 76px; gap:0; }
  .theme-classroom .brand { grid-column:1; grid-row:1; }
  .theme-classroom .topbar-actions { grid-column:2; grid-row:1; }
  .theme-classroom .desktop-tabs { grid-column:1 / -1; grid-row:2; justify-content:center; }
- .theme-classroom .desktop-tabs { height:98px; gap:4px; grid-template-columns:78px 98px 80px 88px 84px 74px; }
- .theme-classroom .desktop-tabs .classroom-nav-tile { font-size:34px; }
+ .theme-classroom .desktop-tabs { height:72px; gap:4px; grid-template-columns:78px 98px 80px 88px 84px 74px; }
+ .theme-classroom .desktop-tabs .classroom-nav-tile { font-size:26px; }
  .theme-classroom .classroom-home { gap:20px; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); }
  .theme-classroom .classroom-board { padding:22px; }
  .theme-classroom .classroom-board-total strong { font-size:64px; }
@@ -174,8 +174,8 @@
  .theme-classroom .classroom-notebook strong { font-size:22px; }
  .theme-classroom .classroom-notebook>.classroom-emoji { font-size:40px; }
  .theme-classroom .classroom-notebook>svg:last-child { width:18px; }
- .theme-classroom .lesson-contents { top:168px; }
- .theme-classroom .lesson-section { scroll-margin-top:258px; }
+ .theme-classroom .lesson-contents { top:142px; }
+ .theme-classroom .lesson-section { scroll-margin-top:232px; }
 }
 @media(max-width:640px) {
  .theme-classroom .topbar { height:64px; }
