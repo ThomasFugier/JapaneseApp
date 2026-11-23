@@ -83,8 +83,8 @@ function Definition({ selection, textStyle, onClose }: { selection: Selection; t
   </div>, document.body);
 }
 
-export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaChange }: { stories: readonly Story[]; japaneseFont: JapaneseFont; onFontChange: (font: JapaneseFont) => void; onFuriganaChange: (enabled: boolean) => void }) {
-  const [progress, setProgress] = useState<StoryProgress>({ currentId: null, readIds: [] });
+export function StoriesView({ stories, readIds, onReadChange, onMigrateReadIds, japaneseFont, onFontChange, onFuriganaChange }: { stories: readonly Story[]; readIds: readonly string[]; onReadChange: (id: string, read: boolean) => Promise<void>; onMigrateReadIds: (ids: readonly string[]) => Promise<void>; japaneseFont: JapaneseFont; onFontChange: (font: JapaneseFont) => void; onFuriganaChange: (enabled: boolean) => void }) {
+  const [currentId, setCurrentId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [reading, setReading] = useState(false);
   const [query, setQuery] = useState('');
@@ -96,28 +96,32 @@ export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaCha
   const enabled = useFuriganaEnabled();
   const textStyle = { '--story-text-scale': fontSize / 20 } as CSSProperties;
   useEffect(() => {
+    let disposed = false;
+    let legacy: StoryProgress = { currentId: null, readIds: [] };
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-      setProgress(sanitizeStoryProgress(saved, stories));
+      legacy = sanitizeStoryProgress(saved, stories);
+      setCurrentId(legacy.currentId);
       if (Number.isInteger(saved?.fontSize) && saved.fontSize >= 16 && saved.fontSize <= 28) setFontSize(saved.fontSize < 20 ? 18 : saved.fontSize < 24 ? 20 : 24);
     } catch { /* Optional local reading history. */ }
-    setHydrated(true);
-  }, [stories]);
+    void onMigrateReadIds(legacy.readIds).then(() => { if (!disposed) setHydrated(true); }).catch(() => { /* Library reports the save failure; retain the original browser flags for retry. */ });
+    return () => { disposed = true; };
+  }, [stories, onMigrateReadIds]);
   useEffect(() => {
-    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify({ ...progress, fontSize })); } catch { /* Reading remains available without storage. */ }
-  }, [progress, fontSize, hydrated]);
+    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify({ currentId, readIds, fontSize })); } catch { /* Optional reading preferences; read status is saved with the library. */ }
+  }, [currentId, readIds, fontSize, hydrated]);
   useLayoutEffect(() => {
     if (reading) titleRef.current?.focus({ preventScroll: true });
-  }, [reading, progress.currentId]);
+  }, [reading, currentId]);
 
-  const current = stories.find(story => story.id === progress.currentId);
+  const current = stories.find(story => story.id === currentId);
   const normalized = query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-  const visible = stories.filter(story => (filter === 'all' || filter === 'unread' ? filter !== 'unread' || !progress.readIds.includes(story.id) : story.level === filter)
+  const visible = stories.filter(story => (filter === 'all' || filter === 'unread' ? filter !== 'unread' || !readIds.includes(story.id) : story.level === filter)
     && `${story.title} ${story.reading} ${story.subtitle} ${story.description}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(normalized));
 
   function openStory(story: Story, anchor: HTMLButtonElement) {
     shelfFocus.current = anchor.id;
-    setProgress(previous => ({ ...previous, currentId: story.id }));
+    setCurrentId(story.id);
     setSelection(null); setReading(true); scrollWorkspaceTo(0);
   }
   function back() {
@@ -125,7 +129,7 @@ export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaCha
     requestAnimationFrame(() => shelfFocus.current && document.getElementById(shelfFocus.current)?.focus({ preventScroll: true }));
   }
   function toggleRead(id: string) {
-    setProgress(previous => ({ ...previous, readIds: previous.readIds.includes(id) ? previous.readIds.filter(item => item !== id) : [...previous.readIds, id] }));
+    void onReadChange(id, !readIds.includes(id)).catch(() => { /* Library reports the error and restores the previous saved status. */ });
   }
 
   function renderWord(word: StoryWord | string, key: string) {
@@ -134,7 +138,7 @@ export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaCha
   }
 
   if (reading && current) {
-    const isRead = progress.readIds.includes(current.id);
+    const isRead = readIds.includes(current.id);
     return <section className="stories-reader" aria-label={current.subtitle} lang="fr" style={textStyle}>
       <div className="story-reader-toolbar">
         <button className="story-back" aria-label="Retour à la bibliothèque" onClick={back}><ArrowLeft size={20} /><span>Bibliothèque</span></button>
@@ -158,14 +162,14 @@ export function StoriesView({ stories, japaneseFont, onFontChange, onFuriganaCha
   }
 
   return <section className="stories-library" aria-label="Bibliothèque d’histoires" lang="fr">
-    <header className="stories-heading"><div><h2>Histoires<span lang="ja">物語</span></h2></div><span className="stories-total"><BookOpen size={18} />{stories.length} histoires<span>{progress.readIds.length} lue{progress.readIds.length > 1 ? 's' : ''}</span></span></header>
+    <header className="stories-heading"><div><h2>Histoires<span lang="ja">物語</span></h2></div><span className="stories-total"><BookOpen size={18} />{stories.length} histoires<span>{readIds.length} lue{readIds.length > 1 ? 's' : ''}</span></span></header>
     {current && <button id="story-resume" className="story-resume" onClick={event => openStory(current, event.currentTarget)}><span className={`story-resume-icon story-cover-${current.theme}`}><Bookmark size={21} /></span><span><small>DERNIÈRE LECTURE</small><strong>{current.subtitle}</strong></span><span className="story-resume-label">Relire</span></button>}
     <div className="stories-tools"><div className="stories-filters" role="group" aria-label="Filtrer les histoires">{(['all', 'N5', 'N4', 'unread'] as const).map(value => <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{({ all: 'Toutes', N5: 'N5 · Débutant', N4: 'N4 · Élémentaire', unread: 'À lire' })[value]}</button>)}</div><label className="stories-search"><Search size={17} /><span className="sr-only">Rechercher une histoire</span><input type="search" placeholder="Rechercher une histoire…" value={query} onChange={event => setQuery(event.target.value)} /></label></div>
-    <StoriesBookshelf stories={visible} readIds={progress.readIds} onOpen={openStory} />
+    <StoriesBookshelf stories={visible} readIds={readIds} onOpen={openStory} />
     <div className="stories-shelf stories-mobile-shelf" aria-label="Histoires disponibles">{visible.map(story => <button key={story.id} id={`story-book-${story.id}`} className="story-book" onClick={event => openStory(story, event.currentTarget)} aria-label={`Lire ${story.subtitle}`}>
       <Cover story={story} />
       <span className="story-book-title">{story.subtitle}</span>
-      <span className="story-book-meta">{story.level} · 1 page{progress.readIds.includes(story.id) && <span className="story-book-read"><Check size={13} />Lu</span>}</span>
+      <span className="story-book-meta">{story.level} · 1 page{readIds.includes(story.id) && <span className="story-book-read"><Check size={13} />Lu</span>}</span>
       <span className="story-book-description">{story.description}</span>
     </button>)}</div>
     {!visible.length && <div className="stories-empty"><BookOpen size={30} /><h3>{filter === 'unread' && !query ? 'Toutes les histoires ont été lues !' : 'Aucune histoire trouvée'}</h3><p>Essayez un autre filtre ou une autre recherche.</p><button className="button secondary" onClick={() => { setFilter('all'); setQuery(''); }}>Voir toutes les histoires</button></div>}

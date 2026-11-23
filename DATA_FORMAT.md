@@ -19,7 +19,8 @@ La bibliothèque synchronisée est un fichier UTF-8 `library.json`. L’export Z
   "notes": [],
   "cards": [],
   "reviews": [],
-  "reviewUndos": []
+  "reviewUndos": [],
+  "storyProgress": []
 }
 ```
 
@@ -28,6 +29,9 @@ La bibliothèque synchronisée est un fichier UTF-8 `library.json`. L’export Z
 - `cards` : `id`, `noteId`, `direction` (`ja-fr` ou `fr-ja`), `deckIds` (tableau), `showReading` facultatif (booléen : afficher la lecture au recto ; absent = masquée), `updatedAt`, `deletedAt` facultatif.
 - `reviews` : `id`, `cardId`, `rating` (1 à 4), `reviewedAt`, `dueAt` facultatif (échéance personnalisée immuable).
 - `reviewUndos` : `id`, `reviewId` (révision annulée), `undoneAt`.
+- `storyProgress` facultatif : `id` (identifiant stable de l’histoire), `read` (booléen lu/non lu), `updatedAt`. L’absence d’un livre signifie « à lire ». Un retour à « non lu » conserve un enregistrement `read: false` pour éviter qu’un ancien appareil le recoche.
+
+Les états des histoires sont enregistrés sur l’appareil, synchronisés et inclus dans le ZIP. La fusion conserve chaque livre et retient son `updatedAt` le plus récent ; à instant égal, « non lu » gagne. Les anciennes marques locales sans date sont reprises uniquement pour les identifiants sans état sauvegardé, avec une date minimale. Le dernier livre ouvert et les réglages de lecture restent des préférences de cet appareil.
 
 Les dates utilisent ISO 8601 avec fuseau horaire ; l’application écrit en UTC. Une note est la fiche unique visible dans la bibliothèque et contient le contenu pédagogique. Chaque note active possède automatiquement deux enregistrements de révision dans `cards`, un par sens, avec des historiques et des échéances indépendants. Les valeurs historiques `ja-fr` et `fr-ja` désignent japonais → sens et sens → japonais ; elles restent inchangées pour préserver les sauvegardes. Les deux sens partagent les mêmes decks. Un tableau `deckIds` vide laisse la fiche accessible dans « All cards ».
 
