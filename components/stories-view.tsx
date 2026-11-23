@@ -2,17 +2,14 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, BookOpen, Bookmark, Cat, Check, CloudRain, LoaderCircle, Mail, Moon, Plus, Search, TrainFront, Waves, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Bookmark, Cat, Check, CloudRain, Mail, Moon, Plus, Search, TrainFront, Waves, X } from 'lucide-react';
 import { FuriganaToggle, useFuriganaEnabled } from './furigana';
 import { splitFurigana } from '@/lib/furigana';
 import { sanitizeStoryProgress, storyTitleWords, storyCategoryIds, storyCategoryLabels, storyCategoryText, type Story, type StoryCategory, type StoryProgress, type StoryWord } from '@/lib/stories';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import { StoriesBookshelf } from './stories-bookshelf';
 import type { JapaneseFont } from './use-workspace-context';
-import type { Snapshot } from '@/lib/model';
 import type { StoryFlashcardDraft } from '@/lib/story-flashcards';
-import { findDuplicateNote } from '@/lib/note-similarity';
-import { deckOptions } from '@/lib/deck-picker';
 import './stories.css';
 
 const KEY = 'kotoba-stories-v1';
@@ -38,25 +35,11 @@ function Cover({ story }: { story: Story }) {
 }
 
 type Selection = { word: StoryWord; anchor: HTMLButtonElement; key: string; example: string };
-type FlashcardsProps = { flashcards: Snapshot; onAddFlashcard: (draft: StoryFlashcardDraft, deckId: string | null) => Promise<void> };
-function Definition({ selection, story, flashcards, deckId, onDeckChange, onAddFlashcard, textStyle, onClose }: FlashcardsProps & { selection: Selection; story: Story; deckId: string; onDeckChange: (id: string) => void; textStyle: CSSProperties; onClose: () => void }) {
+type FlashcardsProps = { onAddFlashcard: (draft: StoryFlashcardDraft) => void };
+function Definition({ selection, story, onAddFlashcard, textStyle, onClose }: FlashcardsProps & { selection: Selection; story: Story; textStyle: CSSProperties; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ left: 12, top: 12 });
-  const [busy, setBusy] = useState(false);
-  const [added, setAdded] = useState(false);
-  const [error, setError] = useState('');
-  const options = useMemo(() => deckOptions(flashcards.decks), [flashcards.decks]);
-  const selectedDeck = options.some(option => option.id === deckId) ? deckId : '';
-  const duplicate = useMemo(() => findDuplicateNote(flashcards, { japanese: selection.word.text, reading: selection.word.reading, meaning: selection.word.meaning }), [flashcards, selection.word]);
-  const alreadySaved = !!duplicate && (!selectedDeck || flashcards.cards.filter(card => card.noteId === duplicate.id && !card.deletedAt).every(card => card.deckIds.includes(selectedDeck)));
-  async function add() {
-    if (busy || alreadySaved) return;
-    setBusy(true); setError('');
-    try { await onAddFlashcard({ word: selection.word, example: selection.example, story }, selectedDeck || null); setAdded(true); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Impossible d’enregistrer la flashcard. Réessaie.'); }
-    finally { setBusy(false); }
-  }
   useLayoutEffect(() => {
     function place() {
       if (!panel.current) return;
@@ -103,14 +86,12 @@ function Definition({ selection, story, flashcards, deckId, onDeckChange, onAddF
     <span className="story-definition-reading" lang="ja">{selection.word.reading}</span>
     <p>{selection.word.meaning}</p>
     <div className="story-flashcard-actions">
-      <label><span>Deck</span><select aria-label="Deck de la flashcard" value={selectedDeck} disabled={busy} onChange={event => { onDeckChange(event.target.value); setAdded(false); setError(''); }}><option value="">Sans deck</option>{options.map(option => <option key={option.id} value={option.id}>{option.path}</option>)}</select></label>
-      <button type="button" className="story-add-flashcard" aria-busy={busy} disabled={busy || alreadySaved} onClick={() => void add()}>{busy ? <LoaderCircle size={16} className="spin" /> : alreadySaved ? <Check size={16} /> : <Plus size={16} />}<span aria-live="polite">{busy ? 'Enregistrement…' : alreadySaved ? added ? 'Ajoutée' : 'Déjà en flashcard' : duplicate ? 'Ajouter au deck' : 'Ajouter en flashcard'}</span></button>
-      {error && <p role="alert" className="story-flashcard-error">{error}</p>}
+      <button type="button" className="story-add-flashcard" onClick={() => { onClose(); selection.anchor.focus({ preventScroll: true }); onAddFlashcard({ word: selection.word, example: selection.example, story }); }}><Plus size={16} /><span>Ajouter en flashcard</span></button>
     </div>
   </div>, document.body);
 }
 
-export function StoriesView({ stories, flashcards, defaultFlashcardDeckId, onAddFlashcard, readIds, onReadChange, onMigrateReadIds, japaneseFont, onFontChange, onFuriganaChange }: FlashcardsProps & { stories: readonly Story[]; defaultFlashcardDeckId: string | null; readIds: readonly string[]; onReadChange: (id: string, read: boolean) => Promise<void>; onMigrateReadIds: (ids: readonly string[]) => Promise<void>; japaneseFont: JapaneseFont; onFontChange: (font: JapaneseFont) => void; onFuriganaChange: (enabled: boolean) => void }) {
+export function StoriesView({ stories, onAddFlashcard, readIds, onReadChange, onMigrateReadIds, japaneseFont, onFontChange, onFuriganaChange }: FlashcardsProps & { stories: readonly Story[]; readIds: readonly string[]; onReadChange: (id: string, read: boolean) => Promise<void>; onMigrateReadIds: (ids: readonly string[]) => Promise<void>; japaneseFont: JapaneseFont; onFontChange: (font: JapaneseFont) => void; onFuriganaChange: (enabled: boolean) => void }) {
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [reading, setReading] = useState(false);
@@ -119,7 +100,6 @@ export function StoriesView({ stories, flashcards, defaultFlashcardDeckId, onAdd
   const [category, setCategory] = useState<StoryCategory | 'all'>('all');
   const [selection, setSelection] = useState<Selection | null>(null);
   const [fontSize, setFontSize] = useState(20);
-  const [flashcardDeckId, setFlashcardDeckId] = useState(defaultFlashcardDeckId ?? '');
   const closeDefinition = useCallback(() => setSelection(null), []);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const shelfFocus = useRef<string | null>(null);
@@ -132,15 +112,14 @@ export function StoriesView({ stories, flashcards, defaultFlashcardDeckId, onAdd
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       legacy = sanitizeStoryProgress(saved, stories);
       setCurrentId(legacy.currentId);
-      if (typeof saved?.flashcardDeckId === 'string') setFlashcardDeckId(saved.flashcardDeckId);
       if (Number.isInteger(saved?.fontSize) && saved.fontSize >= 16 && saved.fontSize <= 28) setFontSize(saved.fontSize < 20 ? 18 : saved.fontSize < 24 ? 20 : 24);
     } catch { /* Optional local reading history. */ }
     void onMigrateReadIds(legacy.readIds).then(() => { if (!disposed) setHydrated(true); }).catch(() => { /* Library reports the save failure; retain the original browser flags for retry. */ });
     return () => { disposed = true; };
   }, [stories, onMigrateReadIds]);
   useEffect(() => {
-    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify({ currentId, readIds, fontSize, flashcardDeckId })); } catch { /* Optional reading preferences; read status is saved with the library. */ }
-  }, [currentId, readIds, fontSize, flashcardDeckId, hydrated]);
+    if (hydrated) try { localStorage.setItem(KEY, JSON.stringify({ currentId, readIds, fontSize })); } catch { /* Optional reading preferences; read status is saved with the library. */ }
+  }, [currentId, readIds, fontSize, hydrated]);
   useLayoutEffect(() => {
     if (reading) titleRef.current?.focus({ preventScroll: true });
   }, [reading, currentId]);
@@ -190,7 +169,7 @@ export function StoriesView({ stories, flashcards, defaultFlashcardDeckId, onAdd
         <div className="story-prose" lang="ja">{current.paragraphs.map((paragraph, p) => <p key={p}>{paragraph.map((word, w) => renderWord(word, `body-${p}-${w}`, paragraph.map(part => typeof part === 'string' ? part : part.text).join('')))}</p>)}</div>
         <footer className="story-page-footer"><button className={`story-read-button${isRead ? ' is-read' : ''}`} aria-pressed={isRead} onClick={() => toggleRead(current.id)}><Check size={17} />{isRead ? 'Histoire lue' : 'Marquer comme lue'}</button></footer>
       </article>
-      {selection && <Definition key={selection.key} selection={selection} story={current} flashcards={flashcards} deckId={flashcardDeckId} onDeckChange={setFlashcardDeckId} onAddFlashcard={onAddFlashcard} textStyle={textStyle} onClose={closeDefinition} />}
+      {selection && <Definition key={selection.key} selection={selection} story={current} onAddFlashcard={onAddFlashcard} textStyle={textStyle} onClose={closeDefinition} />}
     </section>;
   }
 

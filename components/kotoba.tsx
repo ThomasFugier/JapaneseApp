@@ -17,7 +17,7 @@ import { StatisticsView } from './statistics-view';
 import { ReferenceView } from './reference-view';
 import { StoriesView } from './stories-view';
 import type { Story } from '@/lib/stories';
-import { addStoryFlashcard, type StoryFlashcardDraft } from '@/lib/story-flashcards';
+import { storyFlashcardValues, type StoryFlashcardDraft } from '@/lib/story-flashcards';
 import { importLegacyStoryReads, mergeStoryProgress, setStoryRead } from '@/lib/story-progress';
 import { Languages } from 'lucide-react';
 import { LessonsView } from './lessons-view';
@@ -69,7 +69,6 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
   const storyReadIds = useMemo(() => (data.storyProgress ?? []).filter(record => record.read && stories.some(story => story.id === record.id)).map(record => record.id), [data.storyProgress, stories]);
   const saveStoryRead = useCallback((id: string, read: boolean) => update(snapshot => setStoryRead(snapshot, id, read)), [update]);
   const migrateStoryReads = useCallback((ids: readonly string[]) => ids.length ? update(snapshot => importLegacyStoryReads(snapshot, ids)) : Promise.resolve(), [update]);
-  const saveStoryFlashcard = useCallback((draft: StoryFlashcardDraft, deckId: string | null) => update(snapshot => addStoryFlashcard(snapshot, draft, deckId)), [update]);
   const shellRef = useRef<HTMLDivElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
   const { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll } = useWorkspaceContext();
@@ -87,6 +86,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
   const [editing, setEditing] = useState(false);
   const [searchActions, setSearchActions] = useState<HTMLDivElement | null>(null);
   const [noteModal, setNoteModal] = useState<Note | 'new' | null>(null);
+  const [newNoteValues, setNewNoteValues] = useState<Partial<Note> | undefined>(undefined);
   const [deckModal, setDeckModal] = useState<Deck | 'new' | null>(null);
   const [settings, setSettings] = useState(false);
   const [syncDetails, setSyncDetails] = useState(false);
@@ -133,7 +133,8 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
     if (!await finishEditor()) return;
     await library.saveNow();
   }
-  function openNoteEditor(note: Note | 'new') { withSavedEditor(() => { setNoteModal(note); }); }
+  function openNoteEditor(note: Note | 'new', initialValues?: Partial<Note>) { withSavedEditor(() => { setNewNoteValues(initialValues); setNoteModal(note); }); }
+  function openStoryFlashcard(draft: StoryFlashcardDraft) { openNoteEditor('new', storyFlashcardValues(draft)); }
   async function applyLibraryAction(ids: string[], action: LibraryAction) {
     if (!await finishEditor()) throw new Error('Finish or discard the current edit first.');
     await update(snapshot => bulkLibraryAction(snapshot, ids, action));
@@ -376,7 +377,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
         </>}
 
         {tab === 'reference' && <ReferenceView />}
-        {tab === 'stories' && <StoriesView stories={stories} flashcards={data} defaultFlashcardDeckId={reading.deckId} onAddFlashcard={saveStoryFlashcard} readIds={storyReadIds} onReadChange={saveStoryRead} onMigrateReadIds={migrateStoryReads} japaneseFont={japaneseFont} onFontChange={setJapaneseFont} onFuriganaChange={setFuriganaEnabled} />}
+        {tab === 'stories' && <StoriesView stories={stories} onAddFlashcard={openStoryFlashcard} readIds={storyReadIds} onReadChange={saveStoryRead} onMigrateReadIds={migrateStoryReads} japaneseFont={japaneseFont} onFontChange={setJapaneseFont} onFuriganaChange={setFuriganaEnabled} />}
         {tab === 'writing' && <WritingView data={data} japaneseFont={japaneseFont} />}
         {tab === 'lessons' && <LessonsView classroom={interfaceStyle === 'classroom'} progress={data.lessonProgress} onFinishReview={id => { prepareSound(); return update(snapshot => markLessonReviewed(snapshot, id)).then(() => playSound()); }} lessonId={lessonId} onSelect={setLessonId} validatedIds={validatedLessonIds(data)} onToggleValidated={id => { const checked = !validatedLessonIds(data).includes(id); void update(snapshot => setLessonValidated(snapshot, id, checked)).catch(() => { /* Local save errors are shown by useLibrary. */ }); }} />}
         {tab === 'stats' && <StatisticsView data={data} now={new Date(clock)} onReview={id => startSession(id)} onOpenLibrary={() => navigate('library')} onOpenCard={note => { navigate('library'); setReading({ deckId: null, search: note.japanese, expanded: note.id, scrollY: 0 }); }} onEditCard={setNoteModal} />}
@@ -393,7 +394,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
     <aside className="display-toolbar" aria-label="Display tools"><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /><FuriganaToggle onChange={setFuriganaEnabled} /><span className="translation-control-slot" ref={setTranslationToolbar} /></aside>
     <nav ref={mobileNavRef} className="mobile-nav" aria-label="Mobile navigation">{navigationTabs.map(item => { const Icon = icons[item]; return <button key={item} className={tab === item ? 'selected' : ''} onClick={() => navigate(item)} aria-label={item === 'review' ? `Review, ${dueCount} directions ready` : undefined} aria-current={tab === item ? 'page' : undefined}>{interfaceStyle === 'classroom' ? <ClassroomNavIcon tab={item} /> : <Icon size={21} />}<span>{labels[item]}</span>{interfaceStyle === 'classroom' && item === 'review' && dueCount > 0 && <span className="nav-count" aria-hidden="true" title={`${dueCount} review directions ready`}>{dueCount > 99 ? '99+' : dueCount}</span>}</button>; })}</nav>
     {notice && <div className="toast" role="status"><CheckCheck size={18} /><span>{notice}</span></div>}
-    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? 'new' : noteModal.id} data={data} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={tab === 'home' ? null : deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
+    {noteModal && !sideEditor && <NoteEditor key={noteModal === 'new' ? `new:${newNoteValues?.japanese ?? ''}` : noteModal.id} data={data} initialValues={newNoteValues} contentOnly={!!session} note={noteModal === 'new' ? null : noteModal} defaultDeckId={tab === 'home' ? null : deckId} onClose={() => setNoteModal(null)} onSave={async fn => { await update(fn); setNoteModal(null); setNotice(session ? '' : 'Note saved on this device.'); }} />}
     {deckModal && <DeckEditor data={data} deck={deckModal === 'new' ? null : deckModal} defaultParentId={deckId} onClose={() => setDeckModal(null)} onSave={async fn => { await update(fn); setDeckModal(null); setNotice('Deck saved.'); }} />}
     {syncDetails && <Modal title="Synchronisation" subtitle="Sauvegarde et GitHub" focusInput={false} onClose={() => setSyncDetails(false)}><SyncStatusPanel state={backupState} status={library.status} onSync={saveNow} onDisconnect={library.disconnectGitHub} /></Modal>}
     {settings && <Modal title="Settings" focusInput={false} onClose={() => setSettings(false)}><InterfaceStylePicker value={interfaceStyle} onChange={setInterfaceStyle} />{interfaceStyle === 'classroom' && <label className="activity-sound-setting"><span>Activity sounds</span><input type="checkbox" role="switch" checked={activitySounds} onChange={event => setActivitySounds(event.target.checked)} /></label>}{interfaceStyle === 'classic' && <PageThemePicker value={pageTheme} onChange={setPageTheme} />}<ReviewSettingsEditor settings={data.reviewSettings} onSave={async reviewSettings => { await update(snapshot => validateSnapshot({ ...snapshot, reviewSettings })); if (session) setSettings(false); }} /><section className="mobile-display-settings" aria-label="Display settings"><h3>Display</h3><div className="mobile-display-row"><span>Japanese font</span><JapaneseFontToggle value={japaneseFont} onChange={setJapaneseFont} /></div><div className="mobile-display-row"><span>Reading aids</span><div className="display-reading-aids"><FuriganaToggle onChange={setFuriganaEnabled} /><span className="translation-control-slot" ref={setTranslationSettings} /></div></div></section><hr /><h3>Export my data</h3><p className="muted">The ZIP preserves decks, notes, cards, and the full review history.</p><div className="settings-buttons"><button className="button secondary" onClick={() => { try { downloadBackup(data); setNotice('ZIP backup downloaded.'); } catch (cause) { setError(String(cause)); } }}><ArrowDownToLine size={17} />Full backup</button><button className="button ghost" onClick={() => downloadCsv(data)}>CSV content</button></div><hr /><h3>Restore a backup</h3><p className="muted">Open a Japanese export in ZIP or JSON format. A preview will appear before any changes.</p><button className="button secondary" onClick={() => inputFile.current?.click()}><Upload size={16} />Choose a file</button><input type="file" accept=".zip,.json,application/zip,application/json" ref={inputFile} hidden onChange={async event => { const file = event.target.files?.[0]; event.target.value = ''; if (!file) return; try { setImporting(await parseImport(file)); } catch (cause) { setError(cause instanceof Error ? cause.message : 'Unable to read file.'); } }} /><div className="settings-footnote"><CircleHelp size={16} /><span>After an online visit, you can use this site offline in the same browser. Your progress syncs and merges automatically when the site is open and the connection returns.</span></div><p className="dictionary-credits"><a href="/furigana/NOTICE.txt" target="_blank" rel="noreferrer">Dictionary credits</a></p></Modal>}
