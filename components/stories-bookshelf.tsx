@@ -1,6 +1,7 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { Check } from 'lucide-react';
 import { storyCategoryText, type Story } from '@/lib/stories';
 import './stories-bookshelf.css';
@@ -12,18 +13,54 @@ type Props = {
 };
 const SPINE_WIDTHS = [54, 60, 48, 64, 52];
 
-function BookRow({ stories, readIds, onOpen, offset, total }: Props & { offset: number; total: number }) {
-  const [previewId, setPreviewId] = useState<string | null>(null);
-  const preview = stories.find(story => story.id === previewId) ?? stories[0];
-  if (!preview) return null;
+type Preview = { story: Story; anchor: HTMLButtonElement };
+function BookTooltip({ preview, id, onEnter, onLeave }: { preview: Preview; id: string; onEnter: () => void; onLeave: () => void }) {
+  const panel = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ left: 12, top: 12 });
+  useLayoutEffect(() => {
+    function place() {
+      if (!panel.current || !preview.anchor.isConnected) return;
+      const anchor = preview.anchor.getBoundingClientRect(), box = panel.current.getBoundingClientRect();
+      const view = window.visualViewport;
+      const left = view?.offsetLeft ?? 0, top = view?.offsetTop ?? 0;
+      const right = left + (view?.width ?? window.innerWidth), bottom = top + (view?.height ?? window.innerHeight);
+      const below = anchor.bottom + 10;
+      setPosition({
+        left: Math.max(left + 12, Math.min(anchor.left + anchor.width / 2 - box.width / 2, right - box.width - 12)),
+        top: Math.max(top + 12, Math.min(below + box.height <= bottom - 12 ? below : anchor.top - box.height - 10, bottom - box.height - 12)),
+      });
+    }
+    place();
+    const observer = new ResizeObserver(place);
+    if (panel.current) observer.observe(panel.current);
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    window.visualViewport?.addEventListener('resize', place);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+      window.visualViewport?.removeEventListener('resize', place);
+    };
+  }, [preview]);
+  return createPortal(<div ref={panel} id={id} role="tooltip" className="story-book-tooltip" style={position} lang="fr" onPointerEnter={onEnter} onPointerLeave={onLeave}>
+    <strong>{preview.story.subtitle}</strong>
+    <span>{preview.story.level}{preview.story.categories?.length ? ` · ${storyCategoryText(preview.story)}` : ''}</span>
+    <p>{preview.story.description}</p>
+  </div>, document.body);
+}
+
+function BookRow({ stories, readIds, onOpen, offset, previewId, tooltipId, onPreview, onLeave }: Props & { offset: number; previewId?: string; tooltipId: string; onPreview: (story: Story, anchor: HTMLButtonElement, focus?: boolean) => void; onLeave: (anchor: HTMLButtonElement) => void }) {
   return <div className="story-shelf-row">
     <div className="story-shelf-track">
       {stories.map((story, index) => <button type="button" id={`story-spine-${story.id}`} key={story.id}
         className={`story-volume story-volume-size-${(offset + index) % 5}`}
         style={{ '--title-length': Array.from(story.title).length, '--spine-width': `${SPINE_WIDTHS[(offset + index) % SPINE_WIDTHS.length]}px` } as CSSProperties}
         aria-label={`Lire ${story.subtitle}`}
-        onPointerMove={event => { if (event.pointerType === 'mouse' && previewId !== story.id) setPreviewId(story.id); }}
-        onFocus={() => setPreviewId(story.id)} onClick={event => onOpen(story, event.currentTarget)}>
+        aria-describedby={previewId === story.id ? tooltipId : undefined}
+        onPointerMove={event => { if (event.pointerType === 'mouse') onPreview(story, event.currentTarget); }}
+        onPointerLeave={event => onLeave(event.currentTarget)} onBlur={event => onLeave(event.currentTarget)}
+        onFocus={event => onPreview(story, event.currentTarget, true)} onClick={event => onOpen(story, event.currentTarget)}>
         <span className={`story-spine story-cover-${story.theme}`} aria-hidden="true">
           <span className="story-spine-cap">{String(offset + index + 1).padStart(2, '0')}</span>
           <span className="story-spine-title" lang="ja">{story.title}</span>
@@ -31,16 +68,40 @@ function BookRow({ stories, readIds, onOpen, offset, total }: Props & { offset: 
         </span>
       </button>)}
     </div>
-    <div className="story-shelf-caption">
-      <div className="story-shelf-preview"><span className="story-shelf-level">{preview.level}</span><div><strong>{preview.subtitle}</strong>{preview.categories?.length ? <span className="story-category-labels">{storyCategoryText(preview)}</span> : null}<p>{preview.description}</p></div></div>
-      <span className="story-shelf-position">{String(offset + stories.indexOf(preview) + 1).padStart(2, '0')}<span> / {total}</span></span>
-    </div>
   </div>;
 }
 
 export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
   const shelf = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const dismissed = useRef<HTMLButtonElement | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const tooltipId = useId();
+  const visibleIds = stories.map(story => story.id).join('|');
+  const cancelClose = () => clearTimeout(closeTimer.current);
+  function showPreview(story: Story, anchor: HTMLButtonElement, focus = false) {
+    cancelClose();
+    if (focus) dismissed.current = null;
+    if (dismissed.current === anchor) return;
+    setPreview(current => current?.anchor === anchor ? current : { story, anchor });
+  }
+  function leavePreview(anchor: HTMLButtonElement) {
+    dismissed.current = null;
+    cancelClose();
+    if (document.activeElement === anchor) return;
+    closeTimer.current = setTimeout(() => setPreview(null), 140);
+  }
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+  useLayoutEffect(() => { setPreview(null); }, [width, visibleIds]);
+  useEffect(() => {
+    if (!preview) return;
+    function dismiss(event: globalThis.KeyboardEvent) {
+      if (event.key === 'Escape') { dismissed.current = preview!.anchor; clearTimeout(closeTimer.current); setPreview(null); }
+    }
+    document.addEventListener('keydown', dismiss);
+    return () => document.removeEventListener('keydown', dismiss);
+  }, [preview]);
   useLayoutEffect(() => {
     const element = shelf.current;
     if (!element) return;
@@ -81,6 +142,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
     buttons[next]?.focus();
   }
   return <div ref={shelf} className="stories-desktop-bookshelf" aria-label="Sélection d’histoires" onKeyDown={moveFocus}>
-    {rows.map(row => <BookRow key={row.stories[0].id} stories={row.stories} readIds={readIds} onOpen={onOpen} offset={row.offset} total={stories.length} />)}
+    {rows.map(row => <BookRow key={row.stories[0].id} stories={row.stories} readIds={readIds} onOpen={onOpen} offset={row.offset} previewId={preview?.story.id} tooltipId={tooltipId} onPreview={showPreview} onLeave={leavePreview} />)}
+    {preview && <BookTooltip preview={preview} id={tooltipId} onEnter={cancelClose} onLeave={() => leavePreview(preview.anchor)} />}
   </div>;
 }
