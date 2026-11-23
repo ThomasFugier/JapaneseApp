@@ -18,6 +18,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
   const suppressClick = useRef(false);
+  const wakeMotion = useRef(() => {});
   const [dragging, setDragging] = useState(false);
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
@@ -42,6 +43,59 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
     if (track.current) observer.observe(track.current);
     return () => observer.disconnect();
   }, [visibleIds]);
+
+  useLayoutEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const books = [...element.querySelectorAll<HTMLButtonElement>('.story-volume')];
+    const springs = books.map(() => ({ value: 0, velocity: 0 }));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 760px)');
+    let frame = 0;
+    let previous = 0;
+
+    function animate(time: number) {
+      const elapsed = Math.min(previous ? (time - previous) / 1000 : 1 / 60, 1 / 30);
+      previous = time;
+      const disabled = reduced.matches || !!drag.current?.moved;
+      const active = !disabled && element!.matches(':hover,:focus-within') ? books.findIndex(book => book.classList.contains('is-preview')) : -1;
+      // Keep velocity when the target changes, so quick passes feel like a soft spring.
+      const steps = Math.ceil(elapsed * 120);
+      const dt = elapsed / Math.max(1, steps);
+      let moving = false;
+      springs.forEach((spring, index) => {
+        const target = index === active ? 1 : 0;
+        if (disabled) { spring.value = 0; spring.velocity = 0; }
+        else for (let step = 0; step < steps; step++) {
+          spring.velocity += ((target - spring.value) * 260 - spring.velocity * 20) * dt;
+          spring.value += spring.velocity * dt;
+        }
+        if (Math.abs(target - spring.value) < .001 && Math.abs(spring.velocity) < .005) { spring.value = target; spring.velocity = 0; }
+        else moving = true;
+      });
+      books.forEach((book, index) => {
+        book.style.setProperty('--volume-activity', String(springs[index].value));
+        book.style.setProperty('--volume-near', String((springs[index - 1]?.value ?? 0) - (springs[index + 1]?.value ?? 0)));
+        book.style.setProperty('--volume-far', String((springs[index - 2]?.value ?? 0) - (springs[index + 2]?.value ?? 0)));
+      });
+      frame = moving ? requestAnimationFrame(animate) : 0;
+    }
+    function wake() {
+      if (!frame) { previous = 0; frame = requestAnimationFrame(animate); }
+    }
+    wakeMotion.current = wake;
+    const events = ['pointermove', 'pointerleave', 'focusin', 'focusout'] as const;
+    events.forEach(event => element.addEventListener(event, wake));
+    reduced.addEventListener('change', wake);
+    wake();
+    return () => {
+      cancelAnimationFrame(frame);
+      wakeMotion.current = () => {};
+      events.forEach(event => element.removeEventListener(event, wake));
+      reduced.removeEventListener('change', wake);
+    };
+  }, [visibleIds]);
+
+  useLayoutEffect(() => { wakeMotion.current(); }, [previewId, dragging]);
 
   function startDrag(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== 'mouse' || event.button !== 0 || !event.isPrimary) return;
@@ -115,7 +169,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
               className={`story-volume story-volume-size-${index % 5}${previewId === story.id ? ' is-preview' : ''}`}
               style={{ '--title-length': Array.from(story.title).length } as CSSProperties}
               aria-label={`Lire ${story.subtitle}`}
-              onPointerMove={event => { if (event.pointerType === 'mouse' && !drag.current?.moved && preview.id !== story.id) setPreviewId(story.id); }}
+              onPointerMove={event => { if (event.pointerType === 'mouse' && !drag.current?.moved && previewId !== story.id) setPreviewId(story.id); }}
               onFocus={event => previewBook(story, event.currentTarget)} onClick={event => onOpen(story, event.currentTarget)}>
               <span className={`story-spine story-cover-${story.theme}`} aria-hidden="true">
                 <span className="story-spine-cap">{String(index + 1).padStart(2, '0')}</span>
