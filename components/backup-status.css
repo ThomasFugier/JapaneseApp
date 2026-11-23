@@ -27,6 +27,11 @@
 .save-now-button:disabled { opacity:.55; cursor:wait; }
 @media (min-width:1101px) and (max-width:1400px), (max-width:640px) { .save-now-button>span { display:none; } }
 @media (max-width:640px) { .save-now-button { height:38px; padding:0; } }
+@media (min-width:1101px) { .topbar-inner { grid-template-columns:minmax(0,1fr) auto auto; } }
+@media (min-width:1101px) and (max-width:1400px) {
+  .backup-indicator { min-width:36px; padding-inline:7px; }
+  .backup-indicator-label { display:none; }
+}
 @media (max-width:400px) {
   .topbar-inner { padding-inline:16px; gap:8px; }
   .backup-indicator { min-width:36px; padding-inline:7px; }
