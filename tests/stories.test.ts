@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { sanitizeStoryProgress, storyText, storyTitleWords } from '../lib/stories';
+import { sanitizeStoryProgress, storyText, storyTitleWords, storyCategoryIds, storyCategoryText } from '../lib/stories';
 import { stories } from '../lib/story-catalog';
 import { hasKanji, splitFurigana } from '../lib/furigana';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -31,6 +31,31 @@ test('every published title has individually defined words and matching readings
     assert.ok(story.titleWords?.length, `Missing title words: ${story.id}`);
     assert.equal(storyTitleWords(story).map(word => word.text).join(''), story.title);
     assert.equal(storyTitleWords(story).map(word => word.reading).join(''), story.reading);
+  }
+});
+
+test('published stories have accurate format metadata and controlled categories', () => {
+  for (const story of stories) {
+    assert.ok(story.categories?.length, `Missing categories: ${story.id}`);
+    assert.ok(story.categories.includes('nouvelle'));
+    assert.ok(story.categories.every(category => storyCategoryIds.includes(category)));
+    assert.equal(new Set(story.categories).size, story.categories.length);
+    assert.ok(storyCategoryText(story).length);
+  }
+});
+
+test('genre and format are independent of Japanese reading difficulty', () => {
+  const document = { schemaVersion: 1, language: 'ja', definitionLanguage: 'fr', ...stories[0] };
+  for (const category of ['science-fiction', 'aventure', 'manga', 'roman']) {
+    const story = parseStoryDocument({ ...document, level: 'N5', categories: [category] });
+    assert.equal(story.level, 'N5');
+    assert.deepEqual(story.categories, [category]);
+  }
+  const { categories, ...legacy } = document;
+  assert.equal(parseStoryDocument(legacy).categories, undefined);
+  assert.equal(storyCategoryText(parseStoryDocument(legacy)), '');
+  for (const invalid of [[], ['unknown'], ['humour', 'humour'], ['jeunesse', 'humour', 'aventure', 'nouvelle', 'mystere']]) {
+    assert.throws(() => parseStoryDocument({ ...document, categories: invalid }));
   }
 });
 

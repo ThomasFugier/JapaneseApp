@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, BookOpen, Bookmark, Cat, Check, CloudRain, Mail, Moon, Search, TrainFront, Waves, X } from 'lucide-react';
 import { FuriganaToggle, useFuriganaEnabled } from './furigana';
 import { splitFurigana } from '@/lib/furigana';
-import { sanitizeStoryProgress, storyTitleWords, type Story, type StoryProgress, type StoryWord } from '@/lib/stories';
+import { sanitizeStoryProgress, storyTitleWords, storyCategoryIds, storyCategoryLabels, storyCategoryText, type Story, type StoryCategory, type StoryProgress, type StoryWord } from '@/lib/stories';
 import { scrollWorkspaceTo } from '@/lib/workspace-scroll';
 import { StoriesBookshelf } from './stories-bookshelf';
 import type { JapaneseFont } from './use-workspace-context';
@@ -89,6 +89,7 @@ export function StoriesView({ stories, readIds, onReadChange, onMigrateReadIds, 
   const [reading, setReading] = useState(false);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'N5' | 'N4' | 'unread'>('all');
+  const [category, setCategory] = useState<StoryCategory | 'all'>('all');
   const [selection, setSelection] = useState<Selection | null>(null);
   const [fontSize, setFontSize] = useState(20);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -117,7 +118,8 @@ export function StoriesView({ stories, readIds, onReadChange, onMigrateReadIds, 
   const current = stories.find(story => story.id === currentId);
   const normalized = query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   const visible = stories.filter(story => (filter === 'all' || filter === 'unread' ? filter !== 'unread' || !readIds.includes(story.id) : story.level === filter)
-    && `${story.title} ${story.reading} ${story.subtitle} ${story.description}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(normalized));
+    && (category === 'all' || story.categories?.includes(category))
+    && `${story.title} ${story.reading} ${story.subtitle} ${story.description} ${storyCategoryText(story)}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(normalized));
 
   function openStory(story: Story, anchor: HTMLButtonElement) {
     shelfFocus.current = anchor.id;
@@ -153,6 +155,7 @@ export function StoriesView({ stories, readIds, onReadChange, onMigrateReadIds, 
       <article className={`story-page${enabled ? ' with-readings' : ''}`}>
         <header className="story-page-heading">
           <h2 ref={titleRef} tabIndex={-1} lang="ja">{storyTitleWords(current).map((word, index) => renderWord(word, `title-${index}`))}</h2>
+          <p className="story-reader-meta">{current.level}{current.categories?.length ? ` · ${storyCategoryText(current)}` : ''}</p>
         </header>
         <div className="story-prose" lang="ja">{current.paragraphs.map((paragraph, p) => <p key={p}>{paragraph.map((word, w) => renderWord(word, `body-${p}-${w}`))}</p>)}</div>
         <footer className="story-page-footer"><button className={`story-read-button${isRead ? ' is-read' : ''}`} aria-pressed={isRead} onClick={() => toggleRead(current.id)}><Check size={17} />{isRead ? 'Histoire lue' : 'Marquer comme lue'}</button></footer>
@@ -164,14 +167,15 @@ export function StoriesView({ stories, readIds, onReadChange, onMigrateReadIds, 
   return <section className="stories-library" aria-label="Bibliothèque d’histoires" lang="fr">
     <header className="stories-heading"><div><h2>Histoires<span lang="ja">物語</span></h2></div><span className="stories-total"><BookOpen size={18} />{stories.length} histoires<span>{readIds.length} lue{readIds.length > 1 ? 's' : ''}</span></span></header>
     {current && <button id="story-resume" className="story-resume" onClick={event => openStory(current, event.currentTarget)}><span className={`story-resume-icon story-cover-${current.theme}`}><Bookmark size={21} /></span><span><small>DERNIÈRE LECTURE</small><strong>{current.subtitle}</strong></span><span className="story-resume-label">Relire</span></button>}
-    <div className="stories-tools"><div className="stories-filters" role="group" aria-label="Filtrer les histoires">{(['all', 'N5', 'N4', 'unread'] as const).map(value => <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{({ all: 'Toutes', N5: 'N5 · Débutant', N4: 'N4 · Élémentaire', unread: 'À lire' })[value]}</button>)}</div><label className="stories-search"><Search size={17} /><span className="sr-only">Rechercher une histoire</span><input type="search" placeholder="Rechercher une histoire…" value={query} onChange={event => setQuery(event.target.value)} /></label></div>
+    <div className="stories-tools"><div className="stories-filters" role="group" aria-label="Filtrer les histoires">{(['all', 'N5', 'N4', 'unread'] as const).map(value => <button key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{({ all: 'Toutes', N5: 'N5 · Débutant', N4: 'N4 · Élémentaire', unread: 'À lire' })[value]}</button>)}</div><div className="stories-discovery"><label className="stories-category-filter"><span className="sr-only">Catégorie des histoires</span><select value={category} onChange={event => setCategory(event.target.value as StoryCategory | "all")}><option value="all">Toutes catégories</option>{storyCategoryIds.map(id => { const count = stories.filter(story => story.categories?.includes(id)).length; return <option key={id} value={id} disabled={!count}>{storyCategoryLabels[id]} · {count}</option>; })}</select></label><label className="stories-search"><Search size={17} /><span className="sr-only">Rechercher une histoire</span><input type="search" placeholder="Rechercher une histoire…" value={query} onChange={event => setQuery(event.target.value)} /></label></div></div>
     <StoriesBookshelf stories={visible} readIds={readIds} onOpen={openStory} />
     <div className="stories-shelf stories-mobile-shelf" aria-label="Histoires disponibles">{visible.map(story => <button key={story.id} id={`story-book-${story.id}`} className="story-book" onClick={event => openStory(story, event.currentTarget)} aria-label={`Lire ${story.subtitle}`}>
       <Cover story={story} />
       <span className="story-book-title">{story.subtitle}</span>
       <span className="story-book-meta">{story.level} · 1 page{readIds.includes(story.id) && <span className="story-book-read"><Check size={13} />Lu</span>}</span>
+      {story.categories?.length ? <span className="story-book-categories">{storyCategoryText(story)}</span> : null}
       <span className="story-book-description">{story.description}</span>
     </button>)}</div>
-    {!visible.length && <div className="stories-empty"><BookOpen size={30} /><h3>{filter === 'unread' && !query ? 'Toutes les histoires ont été lues !' : 'Aucune histoire trouvée'}</h3><p>Essayez un autre filtre ou une autre recherche.</p><button className="button secondary" onClick={() => { setFilter('all'); setQuery(''); }}>Voir toutes les histoires</button></div>}
+    {!visible.length && <div className="stories-empty"><BookOpen size={30} /><h3>{filter === 'unread' && !query ? 'Toutes les histoires ont été lues !' : 'Aucune histoire trouvée'}</h3><p>Essayez un autre filtre ou une autre recherche.</p><button className="button secondary" onClick={() => { setFilter('all'); setCategory('all'); setQuery(''); }}>Voir toutes les histoires</button></div>}
   </section>;
 }

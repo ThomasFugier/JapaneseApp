@@ -67,6 +67,26 @@
         "N4"
       ]
     },
+    "categories": {
+      "minItems": 1,
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "jeunesse",
+          "tranche-de-vie",
+          "aventure",
+          "science-fiction",
+          "fantastique",
+          "mystere",
+          "humour",
+          "nouvelle",
+          "roman",
+          "manga"
+        ]
+      }
+    },
     "theme": {
       "type": "string",
       "enum": [

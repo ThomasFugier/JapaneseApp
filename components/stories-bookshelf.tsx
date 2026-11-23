@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { Check } from 'lucide-react';
-import type { Story } from '@/lib/stories';
+import { storyCategoryText, type Story } from '@/lib/stories';
 import './stories-bookshelf.css';
 
 type Props = {
@@ -32,7 +32,7 @@ function BookRow({ stories, readIds, onOpen, offset, total }: Props & { offset: 
       </button>)}
     </div>
     <div className="story-shelf-caption">
-      <div className="story-shelf-preview"><span className="story-shelf-level">{preview.level}</span><div><strong>{preview.subtitle}</strong><p>{preview.description}</p></div></div>
+      <div className="story-shelf-preview"><span className="story-shelf-level">{preview.level}</span><div><strong>{preview.subtitle}</strong>{preview.categories?.length ? <span className="story-category-labels">{storyCategoryText(preview)}</span> : null}<p>{preview.description}</p></div></div>
       <span className="story-shelf-position">{String(offset + stories.indexOf(preview) + 1).padStart(2, '0')}<span> / {total}</span></span>
     </div>
   </div>;

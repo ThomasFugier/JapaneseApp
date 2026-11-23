@@ -27,6 +27,7 @@ Les histoires existantes servent d’exemples complets.
   ],
   "subtitle": "Le chat",
   "level": "N5",
+  "categories": ["jeunesse", "tranche-de-vie", "nouvelle"],
   "theme": "cat",
   "description": "Une courte présentation en français.",
   "paragraphs": [
@@ -45,6 +46,16 @@ Cet extrait illustre la structure ; une histoire complète doit contenir **80 à
 - `id` : unique, minuscules ASCII/chiffres séparés par des tirets. Le conserver
   lors des corrections : la progression de lecture utilise cet identifiant.
 - `level` : `N5` ou `N4`, les niveaux actuellement proposés par la bibliothèque.
+- `categories` : un à quatre identifiants distincts, indépendants du niveau.
+  Public : `jeunesse`. Genres : `tranche-de-vie`, `aventure`, `science-fiction`,
+  `fantastique`, `mystere`, `humour`. Formats : `nouvelle`, `roman`, `manga`.
+  Par exemple, une nouvelle de science-fiction accessible peut être `N5` avec
+  `["jeunesse", "science-fiction", "nouvelle"]`. Classer le contenu réel : une
+  imagination d’enfant n’est pas forcément fantastique, et une histoire en prose
+  n’est pas un manga. Les 36 mini-histoires actuelles sont des nouvelles.
+  Ce champ reste facultatif pour lire les anciens fichiers ; le renseigner pour
+  les nouvelles histoires. Ajouter une catégorie dans `lib/stories.ts`, puis
+  régénérer le schéma pour étendre cette liste.
 - `theme` : `cat`, `rain`, `moon`, `train`, `letter` ou `sea` (couverture existante).
 - `titleWords` : mots du titre, avec `text`, `reading` et `meaning`, comme dans
   le corps. Les textes joints doivent redonner exactement `title` et les lectures

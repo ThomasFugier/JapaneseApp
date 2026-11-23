@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Story, StoryWord } from './stories';
+import { storyCategoryIds, type Story, type StoryWord } from './stories';
 
 const nonEmpty = z.string().trim().min(1);
 const reading = z.string().regex(/^[ぁ-ゖー]+$/, 'Use hiragana for readings.');
@@ -18,6 +18,7 @@ export const storyDocumentSchema = z.strictObject({
   titleWords: z.array(wordSchema).min(1).optional(),
   subtitle: nonEmpty,
   level: z.enum(['N5', 'N4']),
+  categories: z.array(z.enum(storyCategoryIds)).min(1).max(4).refine(categories => new Set(categories).size === categories.length, 'Categories must be unique.').optional(),
   theme: z.enum(['cat', 'rain', 'moon', 'train', 'letter', 'sea']),
   description: nonEmpty,
   paragraphs: z.array(z.array(z.union([wordSchema, z.string().regex(/^[、。「」！？]+$/)])).min(1)).min(1),
