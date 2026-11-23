@@ -17,6 +17,7 @@ import { StatisticsView } from './statistics-view';
 import { ReferenceView } from './reference-view';
 import { StoriesView } from './stories-view';
 import type { Story } from '@/lib/stories';
+import { addStoryFlashcard, type StoryFlashcardDraft } from '@/lib/story-flashcards';
 import { importLegacyStoryReads, mergeStoryProgress, setStoryRead } from '@/lib/story-progress';
 import { Languages } from 'lucide-react';
 import { LessonsView } from './lessons-view';
@@ -67,6 +68,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
   const storyReadIds = useMemo(() => (data.storyProgress ?? []).filter(record => record.read && stories.some(story => story.id === record.id)).map(record => record.id), [data.storyProgress, stories]);
   const saveStoryRead = useCallback((id: string, read: boolean) => update(snapshot => setStoryRead(snapshot, id, read)), [update]);
   const migrateStoryReads = useCallback((ids: readonly string[]) => ids.length ? update(snapshot => importLegacyStoryReads(snapshot, ids)) : Promise.resolve(), [update]);
+  const saveStoryFlashcard = useCallback((draft: StoryFlashcardDraft, deckId: string | null) => update(snapshot => addStoryFlashcard(snapshot, draft, deckId)), [update]);
   const shellRef = useRef<HTMLDivElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
   const { activitySounds, setActivitySounds, interfaceStyle, setInterfaceStyle, tab, setTab, reading, setReading, japaneseFont, setJapaneseFont, pageTheme, setPageTheme, lessonId, setLessonId, furiganaEnabled, setFuriganaEnabled, hydrated, captureReadingScroll, restoreReadingScroll } = useWorkspaceContext();
@@ -368,7 +370,7 @@ export default function Kotoba({ stories }: { stories: readonly Story[] }) {
         </>}
 
         {tab === 'reference' && <ReferenceView />}
-        {tab === 'stories' && <StoriesView stories={stories} readIds={storyReadIds} onReadChange={saveStoryRead} onMigrateReadIds={migrateStoryReads} japaneseFont={japaneseFont} onFontChange={setJapaneseFont} onFuriganaChange={setFuriganaEnabled} />}
+        {tab === 'stories' && <StoriesView stories={stories} flashcards={data} defaultFlashcardDeckId={reading.deckId} onAddFlashcard={saveStoryFlashcard} readIds={storyReadIds} onReadChange={saveStoryRead} onMigrateReadIds={migrateStoryReads} japaneseFont={japaneseFont} onFontChange={setJapaneseFont} onFuriganaChange={setFuriganaEnabled} />}
         {tab === 'writing' && <WritingView data={data} japaneseFont={japaneseFont} />}
         {tab === 'lessons' && <LessonsView classroom={interfaceStyle === 'classroom'} progress={data.lessonProgress} onFinishReview={id => { prepareSound(); return update(snapshot => markLessonReviewed(snapshot, id)).then(() => playSound()); }} lessonId={lessonId} onSelect={setLessonId} validatedIds={validatedLessonIds(data)} onToggleValidated={id => { const checked = !validatedLessonIds(data).includes(id); void update(snapshot => setLessonValidated(snapshot, id, checked)).catch(() => { /* Local save errors are shown by useLibrary. */ }); }} />}
         {tab === 'stats' && <StatisticsView data={data} now={new Date(clock)} onReview={id => startSession(id)} onOpenLibrary={() => navigate('library')} onOpenCard={note => { navigate('library'); setReading({ deckId: null, search: note.japanese, expanded: note.id, scrollY: 0 }); }} onEditCard={setNoteModal} />}

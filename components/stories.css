@@ -81,6 +81,13 @@
 .story-definition>strong { display:block; font-size:calc(24px * var(--story-text-scale,1)); font-weight:500; padding-right:8px; overflow-wrap:anywhere; }
 .story-definition-reading { display:block; font-size:calc(13px * var(--story-text-scale,1)); color:#8d7d6b; margin-top:2px; }
 .story-definition>p { margin-top:13px; padding-top:12px; border-top:1px solid #eee7dc; font-size:calc(15px * var(--story-text-scale,1)); }
+.story-flashcard-actions { display:grid; gap:10px; margin-top:16px; }
+.story-flashcard-actions>label { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; }
+.story-flashcard-actions select { flex:1; min-width:0; width:100%; min-height:36px; padding:6px 8px; border:1px solid #e6ded1; border-radius:7px; color:#302d29; background:transparent; font:12px var(--font); }
+.story-flashcard-actions .story-add-flashcard { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; min-height:42px; padding:9px 10px; border:1px solid #d9cbb7; border-radius:9px; color:#64533e; background:#f5f0e7; font:13px var(--font); }
+.story-flashcard-actions .story-add-flashcard:disabled { color:#68775d; background:#eff3eb; border-color:#dbe4d4; cursor:default; }
+.story-flashcard-actions :is(button,select):focus-visible { outline:2px solid #a84930; outline-offset:2px; }
+.story-flashcard-error { margin:0; color:#a84930; font-size:12px; line-height:1.5; }
 @media (hover:hover) and (prefers-reduced-motion:no-preference) { .story-book:hover .story-cover { transform:translateY(-3px) scale(1.015); box-shadow:4px 13px 17px #29241d28; } }
 @media (max-width:760px) {
   .stories-heading { padding-top:2px; }
