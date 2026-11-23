@@ -12,6 +12,7 @@ type Props = {
   onOpen: (story: Story, anchor: HTMLButtonElement) => void;
 };
 const SPINE_WIDTHS = [54, 60, 48, 64, 52];
+const SPINE_GAP = 3;
 
 type Preview = { story: Story; anchor: HTMLButtonElement };
 function BookTooltip({ preview, id, onEnter, onLeave }: { preview: Preview; id: string; onEnter: () => void; onLeave: () => void }) {
@@ -117,9 +118,9 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
   let used = 0;
   stories.forEach((story, index) => {
     const bookWidth = SPINE_WIDTHS[index % SPINE_WIDTHS.length];
-    if (!rows.length || used + bookWidth > available) { rows.push({ offset: index, stories: [] }); used = 0; }
+    if (!rows.length || used + SPINE_GAP + bookWidth > available) { rows.push({ offset: index, stories: [] }); used = 0; }
+    used += bookWidth + (rows[rows.length - 1].stories.length ? SPINE_GAP : 0);
     rows[rows.length - 1].stories.push(story);
-    used += bookWidth;
   });
 
   function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
@@ -141,7 +142,7 @@ export function StoriesBookshelf({ stories, readIds, onOpen }: Props) {
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : Math.max(0, Math.min(buttons.length - 1, index + step));
     buttons[next]?.focus();
   }
-  return <div ref={shelf} className="stories-desktop-bookshelf" aria-label="Sélection d’histoires" onKeyDown={moveFocus}>
+  return <div ref={shelf} className="stories-desktop-bookshelf" style={{ '--spine-gap': `${SPINE_GAP}px` } as CSSProperties} aria-label="Sélection d’histoires" onKeyDown={moveFocus}>
     {rows.map(row => <BookRow key={row.stories[0].id} stories={row.stories} readIds={readIds} onOpen={onOpen} offset={row.offset} previewId={preview?.story.id} tooltipId={tooltipId} onPreview={showPreview} onLeave={leavePreview} />)}
     {preview && <BookTooltip preview={preview} id={tooltipId} onEnter={cancelClose} onLeave={() => leavePreview(preview.anchor)} />}
   </div>;
