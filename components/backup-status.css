@@ -1,13 +1,16 @@
-.backup-indicator { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:28px; height:36px; padding:0; margin-right:-6px; border:0; border-radius:50%; background:transparent; cursor:pointer; }
+.backup-indicator { display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0; min-width:66px; height:36px; padding:0 9px; margin:0; border:1px solid var(--line); border-radius:9px; background:var(--paper); color:var(--muted); cursor:pointer; }
 .backup-indicator:hover { background:var(--soft); }
 .backup-indicator:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
-.backup-indicator-dot { width:8px; height:8px; border-radius:50%; background:#92969c; }
+.backup-indicator[aria-expanded=true] { border-color:#b5b8b2; background:var(--soft); color:var(--ink); }
+.backup-indicator-symbol { position:relative; display:grid; place-items:center; width:18px; height:20px; }
+.backup-indicator-dot { position:absolute; right:-2px; bottom:1px; width:7px; height:7px; border:1.5px solid var(--paper); border-radius:50%; background:#92969c; }
+.backup-indicator-label { font-size:11px; font-weight:500; }
 .backup-indicator--synced .backup-indicator-dot { background:#3f9974; }
 .backup-indicator--pending .backup-indicator-dot,.backup-indicator--offline .backup-indicator-dot { background:#c28a32; }
 .backup-indicator--error .backup-indicator-dot { background:#c84550; }
 .backup-indicator.is-busy .backup-indicator-dot { background:#538fa6; animation:backup-dot-pulse 1.2s ease-in-out infinite; }
 @keyframes backup-dot-pulse { 50% { opacity:.45; } }
-@media (max-width:760px) { .backup-indicator { margin-right:-2px; } }
+@media (max-width:760px) { .backup-indicator { min-height:38px; padding-inline:7px; } }
 @media (prefers-reduced-motion:reduce) { .backup-indicator.is-busy .backup-indicator-dot { animation:none; } }
 .backup-summary { display:grid; gap:18px; padding:18px; margin:0 0 22px; border:1px solid var(--line); border-radius:10px; background:var(--paper); }
 .backup-summary-row { display:flex; align-items:flex-start; gap:11px; min-width:0; }

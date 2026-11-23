@@ -4,14 +4,15 @@ import { Cloud, HardDrive } from 'lucide-react';
 import { deriveBackupStatus, type BackupState } from '@/lib/backup-status';
 import './backup-status.css';
 
-export type BackupIndicatorProps = { state: BackupState; onOpen: () => void };
+export type BackupIndicatorProps = { state: BackupState; onOpen: () => void; open?: boolean };
 export type BackupSummaryProps = { state: BackupState };
 
-export function BackupIndicator({ state, onOpen }: BackupIndicatorProps) {
+export function BackupIndicator({ state, onOpen, open = false }: BackupIndicatorProps) {
   const status = deriveBackupStatus(state);
   const busy = status.kind === 'saving' || (state.syncing && state.online !== false);
-  return <button type="button" className={'backup-indicator backup-indicator--' + status.kind + (busy && status.kind !== 'error' ? ' is-busy' : '')} onClick={onOpen} aria-label={status.description + ' Open backup settings.'} title={status.description}>
-    <span className="backup-indicator-dot" aria-hidden="true" />
+  return <button type="button" className={'backup-indicator backup-indicator--' + status.kind + (busy && status.kind !== 'error' ? ' is-busy' : '')} onClick={onOpen} aria-label={'Synchronisation. ' + status.description} aria-haspopup="dialog" aria-expanded={open} title={'Synchronisation · ' + status.label}>
+    <span className="backup-indicator-symbol" aria-hidden="true"><Cloud size={17} /><span className="backup-indicator-dot" /></span>
+    <span className="backup-indicator-label">Sync</span>
   </button>;
 }
 
